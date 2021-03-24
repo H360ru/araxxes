@@ -1,2 +1,2 @@
-# araxxes
+# Araxxes
 Online Turn Based Strategy
