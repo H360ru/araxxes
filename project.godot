@@ -1,0 +1,223 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Object",
+"class": "ArrayRect",
+"language": "GDScript",
+"path": "res://scripts/array_rect.gd"
+}, {
+"base": "Object",
+"class": "Base",
+"language": "GDScript",
+"path": "res://scripts/base.gd"
+}, {
+"base": "Base",
+"class": "Buttons",
+"language": "GDScript",
+"path": "res://scripts/buttons.gd"
+}, {
+"base": "Base",
+"class": "CPU",
+"language": "GDScript",
+"path": "res://scripts/cpu.gd"
+}, {
+"base": "Base",
+"class": "CameraGame",
+"language": "GDScript",
+"path": "res://scripts/camera_game.gd"
+}, {
+"base": "Object",
+"class": "Command",
+"language": "GDScript",
+"path": "res://scripts/command.gd"
+}, {
+"base": "Object",
+"class": "Dimension",
+"language": "GDScript",
+"path": "res://scripts/dimension.gd"
+}, {
+"base": "Base",
+"class": "Game",
+"language": "GDScript",
+"path": "res://scripts/game.gd"
+}, {
+"base": "Base",
+"class": "Joystick",
+"language": "GDScript",
+"path": "res://scripts/joystick.gd"
+}, {
+"base": "Base",
+"class": "Labels",
+"language": "GDScript",
+"path": "res://scripts/labels.gd"
+}, {
+"base": "Base",
+"class": "ManagerMap",
+"language": "GDScript",
+"path": "res://scripts/manager_map.gd"
+}, {
+"base": "Base",
+"class": "MapGame",
+"language": "GDScript",
+"path": "res://scripts/map_game.gd"
+}, {
+"base": "Base",
+"class": "Menu",
+"language": "GDScript",
+"path": "res://scripts/menu.gd"
+}, {
+"base": "Base",
+"class": "Navigator",
+"language": "GDScript",
+"path": "res://scripts/navigator.gd"
+}, {
+"base": "Base",
+"class": "Player",
+"language": "GDScript",
+"path": "res://scripts/player.gd"
+}, {
+"base": "Base",
+"class": "Players",
+"language": "GDScript",
+"path": "res://scripts/players.gd"
+}, {
+"base": "Base",
+"class": "Queue",
+"language": "GDScript",
+"path": "res://scripts/queue.gd"
+}, {
+"base": "Object",
+"class": "Route",
+"language": "GDScript",
+"path": "res://scripts/route.gd"
+}, {
+"base": "Object",
+"class": "RouteTile",
+"language": "GDScript",
+"path": "res://scripts/route_tile.gd"
+}, {
+"base": "Base",
+"class": "Setting",
+"language": "GDScript",
+"path": "res://scripts/setting.gd"
+}, {
+"base": "Object",
+"class": "SpeedM",
+"language": "GDScript",
+"path": "res://scripts/speedm.gd"
+}, {
+"base": "Object",
+"class": "Tile",
+"language": "GDScript",
+"path": "res://scripts/tile.gd"
+}, {
+"base": "Object",
+"class": "TileBlock",
+"language": "GDScript",
+"path": "res://scripts/tile_block.gd"
+}, {
+"base": "Base",
+"class": "TileBlocks",
+"language": "GDScript",
+"path": "res://scripts/tile_blocks.gd"
+}, {
+"base": "Object",
+"class": "UI",
+"language": "GDScript",
+"path": "res://scripts/ui.gd"
+}, {
+"base": "Base",
+"class": "UiTile",
+"language": "GDScript",
+"path": "res://scripts/ui_tile.gd"
+}, {
+"base": "Base",
+"class": "UiUnitMenu",
+"language": "GDScript",
+"path": "res://scripts/ui_unit_menu.gd"
+}, {
+"base": "Base",
+"class": "Unit",
+"language": "GDScript",
+"path": "res://scripts/unit.gd"
+}, {
+"base": "Base",
+"class": "UnitMove",
+"language": "GDScript",
+"path": "res://scripts/unit_move.gd"
+}, {
+"base": "Base",
+"class": "UnitSatate",
+"language": "GDScript",
+"path": "res://scripts/unit_state.gd"
+}, {
+"base": "Base",
+"class": "UnitStates",
+"language": "GDScript",
+"path": "res://scripts/unit_states.gd"
+}, {
+"base": "Base",
+"class": "Units",
+"language": "GDScript",
+"path": "res://scripts/units.gd"
+} ]
+_global_script_class_icons={
+"ArrayRect": "",
+"Base": "",
+"Buttons": "",
+"CPU": "",
+"CameraGame": "",
+"Command": "",
+"Dimension": "",
+"Game": "",
+"Joystick": "",
+"Labels": "",
+"ManagerMap": "",
+"MapGame": "",
+"Menu": "",
+"Navigator": "",
+"Player": "",
+"Players": "",
+"Queue": "",
+"Route": "",
+"RouteTile": "",
+"Setting": "",
+"SpeedM": "",
+"Tile": "",
+"TileBlock": "",
+"TileBlocks": "",
+"UI": "",
+"UiTile": "",
+"UiUnitMenu": "",
+"Unit": "",
+"UnitMove": "",
+"UnitSatate": "",
+"UnitStates": "",
+"Units": ""
+}
+
+[application]
+
+config/name="Araxes"
+run/main_scene="res://scenes/game.tscn"
+boot_splash/bg_color=Color( 0, 0, 0, 1 )
+config/icon="res://icon.png"
+
+[display]
+
+window/size/width=1200
+window/size/fullscreen=true
+
+[rendering]
+
+2d/snapping/use_gpu_pixel_snap=true
+environment/default_environment="res://default_env.tres"
+quality/2d/use_pixel_snap=true
