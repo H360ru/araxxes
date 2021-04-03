@@ -27,7 +27,7 @@ __meta__ = {
 }
 
 [node name="button_newgameharw" type="Button" parent="."]
-margin_left = 106.719
+margin_left = 107.0
 margin_top = 372.056
 margin_right = 308.719
 margin_bottom = 418.056
