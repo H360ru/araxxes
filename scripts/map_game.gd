@@ -81,14 +81,11 @@ func initMap():
 	
 	#=======Выставить рандомно игроков
 	
+	
 	var playHwo=["player","cpu"]
 	
 	var harv=addUnit(Vector2(5,5),"harvestr",game.players.getPlayerByName(playHwo[(game.whoToPlay%2)]))
 	var worm=addUnit(Vector2(6,5),"worm",game.players.getPlayerByName(playHwo[(game.whoToPlay+1)%2]))
-	
-	
-	manMap.blockTile(harv)
-	manMap.blockTile(worm)
 	
 	
 	#=====Устнаовка накарту
@@ -156,11 +153,15 @@ func addUnit(tileid,name,forPlayer):
 		unitsNode.add_child(unitNode)
 		var unitSprite=unitNode.get_child(0)
 		
+		
+		
 		var unit=units.addUnit(unitSprite,name)
 		
 		unit.player=forPlayer
 		
 		unit.setInTile(tileid.x,tileid.y)
+		
+		units.onUnitMoveStop(unit)
 		
 		return unit
 	

@@ -63,6 +63,9 @@ var hoSteps
 #Можно ли двигаться при клике
 var canMove=false
 
+#Заблокированная плитка
+var blockTile:Vector2
+
 
 
 
@@ -76,7 +79,7 @@ func getTileUnit():
 func isTakeSpace():
 	var tile=getTileUnit()
 	if tile!=null:
-		if game.map.manMap.isTileSpice(tile.x,tile.y):
+		if game.map.manMap.isTileSpice(tile.x as int,tile.y as int):
 			if player.points>=pointSpice:
 				return true
 	return false
@@ -126,7 +129,7 @@ func selecTilesForMove():
 		if hoSteps!=null:
 			if hoSteps[0]<4:
 				hoSteps[0]+=1
-			routeSelectMove=getTilesMap(hoSteps[0])
+			routeSelectMove=getTilesMap(hoSteps[0],self)
 			game.map.manMap.setTileSelect(routeSelectMove,Tile.tile_select_move)
 			
 			pass
@@ -200,11 +203,11 @@ func setInTile(x,y):
 
 
 #Вернуть плитки дял атаки или передвижения
-func getTilesMap(limitStep):
+func getTilesMap(limitStep,unit):
 	
 	var cooPam=getUnitTileCenter()
 	
-	var route:Route=self.navigator.buildRoute(cooPam,cooPam+Vector2(99999,99999),false,limitStep,true);
+	var route:Route=self.navigator.buildRoute(cooPam,cooPam+Vector2(99999,99999),true,limitStep,true,unit);
 	return route;
 	
 	pass
@@ -230,13 +233,11 @@ func getUnitTileCenter():
 func moveToTile(vec2d,limitsStep):
 	
 	if navigator!=null:
-#		
+		
 		#uMove.pos=game.map.di.pixToM(vec2d);
 		
 		var cooPam=getUnitTileCenter()
-		
-		
-		var route:Route=self.navigator.buildRoute(cooPam,vec2d,false,limitsStep,false,self);
+		var route:Route=self.navigator.buildRoute(cooPam,vec2d,true,limitsStep,false,self);
 		moveOnRoute(route,limitsStep,0)
 		pass
 	pass
@@ -263,7 +264,8 @@ func moveOnRoute(route,limitStep,offsetBack):
 				
 				
 		self.route=route
-		
+		 
+		print("set points "+pointsMap.size() as String)
 		self.uMove.setMovePoints(pointsMap)
 	pass
 
@@ -279,13 +281,15 @@ func run(delta):
 	if uMove!=null:
 		uMove.run(delta)
 
+		
 		#Определение кадра юнита
 		node.frame=getFrame()
 		
 		#позицуия бнгита на карте
 		var pixpos=getCooUnitInMap()
 		node.transform.origin=pixpos
-
+		
+		
 		#Определить на какой плитке юнит
 		var tile=manMap.getCooTile(pixpos)
 		if manMap.isTileBlock(tile.x,tile.y)==false:

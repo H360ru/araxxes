@@ -21,7 +21,7 @@ func run(delta):
 	
 	#=============Управление игроком
 	if player!=null:
-		if game!=null && player!=null:
+		if game!=null:
 			
 			if que!=null:
 				if que.isThisPlayPlayer(player):
@@ -32,12 +32,15 @@ func run(delta):
 					var tileFrom=null
 					var tileTo=null
 					
-					
 					if unitMove==null:
+						
 						var unitsCpu=units.getUnitsPlayer(player,false,1)
 						if unitsCpu!=null && unitsCpu.size()>0:
+							
 							var unitCpu=unitsCpu[0]
 							
+							
+							var unitPlayer=null
 							
 							if unitCpu.name=="worm":
 								#============Играть за червя
@@ -45,16 +48,15 @@ func run(delta):
 								var unitsPl=units.getUnitsOtherPlayer(player,1)
 								if unitsPl!=null && unitsPl.size()>0:
 									#Идем к этому юниту
-									var unitPlayer:Unit=unitsPl[0]
+									unitPlayer=unitsPl[0]
 									
 									#=====Проложить маршрут к юниту игрока
 									tileFrom=unitCpu.getUnitTileCenter()
 									tileTo=unitPlayer.getUnitTileCenter()
 									
-									
-									
 								else:
 									#нету4 юнитов противника
+									
 									units.checkEndedAfterEnd(player)
 									pass
 									
@@ -65,32 +67,26 @@ func run(delta):
 								#поиск спайса
 								if unitMove==null:
 									var tileUnit=game.map.manMap.getCooTile(unitCpu.getCooUnitInMap())
-								
 									if tileUnit!=null:
-										
 										#====Взять спайс если на спайсе
 										if game.map.manMap.isTileSpice(tileUnit.x,tileUnit.y):
 											unitCpu.takeSpace()
-										
 										#====поиск нового спайса
 										var tileSpice=game.map.manMap.searchTileSpice(tileUnit)
 										
 										if tileSpice!=null:
 											#Идти к спайсу
-											
 											var hoSteps=unitCpu.getStepsByPoint(player.points)
 											if hoSteps!=null:
 												if hoSteps[0]>0:
 													
+													var route=unitCpu.navigator.buildRoute(unitCpu.getCooUnitInMap(),game.map.manMap.cooTileInPix(tileSpice),true,-1,true,unitCpu)
+													unitCpu.moveOnRoute(route,hoSteps[0],0)
+													#unitCpu.moveToTile(game.map.manMap.cooTileInPix(tileSpice),hoSteps[0])
 													
-													
-													#var route=unitCpu.navigator.buildRoute(unitCpu.getCooUnitInMap(),game.map.manMap.cooTileInPix(tileSpice),false,-1,true,unitCpu)
-													#unitCpu.moveOnRoute(route,hoSteps[0],0)
-													unitCpu.moveToTile(game.map.manMap.cooTileInPix(tileSpice),hoSteps[0])
 													player.minusPoints(hoSteps[1])
 													
 													unitMove=unitCpu
-
 
 												else:
 													unitCpu.ended=true	
@@ -112,39 +108,32 @@ func run(delta):
 							#===============================Ходить если нужно
 							if tileFrom!=null && tileTo!=null:
 								
-								var route=unitCpu.navigator.buildRoute(tileFrom,tileTo,false,-1,true,unitCpu)
+								var route=unitCpu.navigator.buildRoute(tileFrom,tileTo,false,-1,true,unitCpu,[unitPlayer])
 								if route!=null:
-									
 									#========Проверка ограничений
-
 									if player.points>0:
-										
 										#На скольок можно ходить
 										var hoSteps=unitCpu.getStepsByPoint(player.points)
-										if hoSteps!=null && hoSteps is Array && hoSteps.size()==2:
-										
-											if hoSteps[0]>0:
-												#Можно ходить
-
-												if route.tiles.size()>1:
-													#передвигаемся
-													
-
-													unitCpu.moveOnRoute(route,hoSteps[0],1)
-
-													player.minusPoints(hoSteps[1])
-
-													unitMove=unitCpu
-
-												else:
-													unitCpu.ended=true	
-												pass
-
-
+										if hoSteps!=null && hoSteps[0]>0:
+											if route.tiles.size()>1:
+												#передвигаемсяprint("fewfwefg 4")
+												unitCpu.moveOnRoute(route,hoSteps[0],1)
+												#unitCpu.moveToTile(tileTo,-1)
+												player.minusPoints(hoSteps[1])
+												
+												
+												unitMove=unitCpu
+											
+											else:
+												unitCpu.ended=true	
+											pass
+									
+									else:
+										#Нету очков, конец хода для юнита
+										unitCpu.ended=true	
 								else:
-									#Нету очков, конец хода для юнита
+									#Невозможно посториить маршрут
 									unitCpu.ended=true	
-								
 						else:
 							
 							#Уже нету юнитов для хода

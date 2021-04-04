@@ -108,6 +108,8 @@ func getUnitsOtherPlayer(player,limit):
 					
 #Добавить юнит по ноду
 func addUnit(node,name):
+	
+	
 	var un=Unit.new(game,node,name)
 	arrUnits.push_back(un)
 	
@@ -125,6 +127,8 @@ func addUnit(node,name):
 	
 	un.uMove.connect("onUnitMoveStart",self,"onUnitMoveStart")
 	un.uMove.connect("onUnitMoveFinished",self,"onUnitMoveFinished")
+	un.uMove.connect("onUnitMoveStop",self,"onUnitMoveStop")
+	
 	return un
 	pass
 	
@@ -137,6 +141,12 @@ func onUnitMoveStart(unit):
 	pass
 
 
+func onUnitMoveStop(unit):
+	#Бллокировака кетки		
+	game.map.manMap.blockTile(unit)
+	
+	pass
+
 #Вызывается при начале окончания движения
 func onUnitMoveFinished(unit):
 	if unit!=null:
@@ -144,10 +154,9 @@ func onUnitMoveFinished(unit):
 		if idU!=-1:
 			unitsMove.remove(idU)
 			
-	#===Бллокировака кетки		
-	game.map.manMap.blockTile(unit)
+	print("unit finished: "+unit.name)
 	
-			
+	
 	game.map.manMap.clearSelect()
 	
 	game.refreshPlayerLabel(unit.player)
@@ -168,6 +177,7 @@ func clear():
 			var par=unit.node.get_parent()
 			if par!=null:
 				par.remove_child(unit.node)
+	arrUnits=[]
 
 	
 #Вызывается при клике по карте
@@ -195,7 +205,6 @@ func onClickMap(vec2d:Vector2):
 			#на выделенной плитке ли кликнули
 			var routeSelect=unit.routeSelectMove
 			if routeSelect!=null:
-				
 				
 				var hoSteps=unit.hoSteps
 				

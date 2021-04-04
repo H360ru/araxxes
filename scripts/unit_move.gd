@@ -7,7 +7,8 @@ extends Base
 signal onUnitMoveStart(unitMove)
 #Вызываетсяпри начале окончания движения
 signal onUnitMoveFinished(unitMove)
-
+#когда юнит останавливается
+signal onUnitMoveStop(unitMove)
 
 var unit
 #направление юнита
@@ -30,6 +31,8 @@ var setToPoint=false
 
 #Двигается ли юнит к точке
 var end=true;
+#Остановился ли юнит полностью
+var stopped=true
 
 
 #Устновить точки для передвижения
@@ -89,8 +92,17 @@ func move(delta):
 	else:
 		speed.move=false
 		
-		
-	pos+=direction.normalized()*speed.thisSpeed
+	var moveadd=direction.normalized()*speed.thisSpeed
+	pos+=moveadd
+	
+	#=====Остановка
+	if moveadd.length()<0.01:
+		if stopped==false:
+			emit_signal("onUnitMoveStop",self.unit)
+		stopped=true
+	else:
+		stopped=false
+	
 	pass	
 	
 func run(delta):
@@ -100,7 +112,6 @@ func run(delta):
 	
 	lastPos=pos;
 			
-	
 	
 	
 	pass

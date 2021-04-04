@@ -8,7 +8,7 @@ var key_right=KEY_D;
 var key_down=KEY_S;
 
 #Скорость движения
-var speed=1;
+var speed=5;
 
 
 

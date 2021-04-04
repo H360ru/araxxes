@@ -4,12 +4,14 @@ extends Base
 
 #Для какого юнита проверяется маршрут
 var checkUnit
+var ignoreTo;
+var ignoreUnits
 
 #построить маршрут Route, или вернет null, если этого сделать невозможно
 #limitStep - Использовать для получения карты возможности движения или атака к примеру
 #ignoreTo - если не интересует конечная плитка какая она
 #unit - для какого юнита строить маршрут
-func buildRoute(from:Vector2,to:Vector2,checkBlock,limitStep=-1,ignoreTo=false,unit=null):
+func buildRoute(from:Vector2,to:Vector2,checkBlock,limitStep=-1,ignoreTo=false,unit=null,ignoreUnits=null):
 	
 	var manmap:ManagerMap=game.map.manMap
 	
@@ -20,16 +22,15 @@ func buildRoute(from:Vector2,to:Vector2,checkBlock,limitStep=-1,ignoreTo=false,u
 	var cellTo=manmap.tileMapGround.get_cell(tileTo.x,tileTo.y)
 	
 	checkUnit=unit
-	
+	self.ignoreTo=ignoreTo
+	self.ignoreUnits=ignoreUnits
 	
 	if cellFrom!=-1 && (cellTo!=-1 || ignoreTo):
 		
 		
 		#====Проверка блокировки для юнита
-		var checkUnit
-#		
 		
-		var isBlock=manmap.isTileBlockForUnit(tileTo.x,tileTo.y,unit)
+		var isBlock=manmap.isTileBlockForUnit(tileTo.x,tileTo.y,unit,ignoreUnits)
 		if isBlock==false:
 			isBlock=manmap.isTileBlock(tileTo.x,tileTo.y)
 			
@@ -63,7 +64,7 @@ func buildRoute(from:Vector2,to:Vector2,checkBlock,limitStep=-1,ignoreTo=false,u
 					route.build(tileStart,chTile)
 					route.arrTiles=tilesCheked
 					route.arrTilesLimit=indexArrayCheck
-					
+					checkUnit=null
 					return route
 					
 				#Получаем соседние плитки
@@ -162,6 +163,8 @@ func buildRoute(from:Vector2,to:Vector2,checkBlock,limitStep=-1,ignoreTo=false,u
 		#Не возможно посторить маршрут, нету плиток
 		pass
 	
+	checkUnit=null
+	
 	pass
 
 
@@ -189,7 +192,7 @@ func issetTile(arr,x,y):
 
 #Можно ли быть на плитке
 func checkTile(x,y):
-	if game.map.manMap.tileMapGround.get_cell(x,y)!=-1 && game.map.manMap.isTileBlock(x,y)==false && game.map.manMap.isTileBlockForUnit(x,y,checkUnit)==false:
+	if game.map.manMap.tileMapGround.get_cell(x,y)!=-1 && game.map.manMap.isTileBlock(x,y)==false && (game.map.manMap.isTileBlockForUnit(x,y,checkUnit,ignoreUnits)==false):
 		return true
 	return false;
 	

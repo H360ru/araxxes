@@ -215,15 +215,10 @@ config/icon="res://icon.png"
 
 enable_audio_input=true
 
-[debug]
-
-settings/stdout/print_fps=true
-
 [display]
 
-window/size/width=1920
-window/size/height=1080
-window/size/fullscreen=true
+window/size/width=1020
+window/size/height=700
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 

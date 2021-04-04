@@ -69,7 +69,7 @@ func setTileSand(x,y):
 func getCooTile(point2d):
 	return tileMapGround.world_to_map(point2d)
 	
-#Вернуть кординаты плитки в метрах
+#Вернуть кординаты плитки в пикселях
 func cooTileInPix(posTile:Vector2):
 	return tileMapGround.map_to_world(posTile)
 	
@@ -106,18 +106,32 @@ func isTileSpice(x,y):
 	pass
 
 
+
+#Разблокировать ранне заблокированную плитку этим юнитом
+func unBlockTile(unit):
+	if unit!=null:
+		if unit.blockTile!=null:
+			blockedTiles.unBlock(unit.blockTile,unit)
+	pass
+	
+
 #заблокировать питку, где сейчас юнит
 func blockTile(unit):
+	#Разблокировать прежнюю
+	unBlockTile(unit)
+	
+	
+	#Блокировака новой
 	var tile=unit.getTileUnit()
+	unit.blockTile=tile
 	blockedTiles.block(tile,unit)
 	pass
 
 #Заблокирована ли плитка для юнита
-func isTileBlockForUnit(x,y,unit):
-	
+func isTileBlockForUnit(x,y,unit,ignoreUnits):
 	
 	if unit!=null:
-		if blockedTiles.isBlockTile(Vector2(x,y),unit):
+		if blockedTiles.isBlockTile(Vector2(x,y),unit,ignoreUnits):
 			return true
 		
 	return false;
@@ -129,28 +143,40 @@ func getRandomNotBlockTile(startTile:Vector2,unit):
 	if startTile!=null && unit!=null:
 		
 		
-		var dir:Vector2=Vector2(0,1)
-		var i=0
+		var dir:Vector2=Vector2(0 as int,1 as int)
+		var i:int=0
 		var c:int=1
 		while true:
 			
-			if isTileBlock(startTile.x,startTile.y):
+			var checkTile=startTile
+			var ch=0
+			while true:
 				
-				startTile+=dir*c
-				
-				
-				var x=dir.x
-				dir.x=-dir.y
-				dir.y=x
-				
-				i+=1
-				if i%2==0:
-					c+=1
-				if i>1000:
+				if !isTileBlock(startTile.x,startTile.y):
+					return checkTile
+					
+				checkTile+=dir
+				ch+=1
+				if ch>=c:
+					startTile=checkTile
 					break
-			else:
-				return startTile;
+			
+			i+=1
+			if i==2:
+				i=0
+				c+=1
+				
+			var x=dir.x
+			dir.x=-dir.y
+			dir.y=x
+			
+
+			if c>1000:
+				break
+			
+			
 			pass
+		
 	
 	
 	pass
@@ -161,27 +187,80 @@ func getRandomNotBlockTile(startTile:Vector2,unit):
 func searchTileSpice(startTile:Vector2):
 	if startTile!=null:
 		
-		var dir:Vector2=Vector2(0,1)
-		var i=0
+		
+		var dir:Vector2=Vector2(0 as int,1 as int)
+		var i:int=0
 		var c:int=1
 		while true:
 			
-			if !isTileSpice(startTile.x,startTile.y):
+			var checkTile=startTile
+			var ch=0
+			while true:
 				
-				startTile+=dir*c
-				
-				dir=dir.rotated(PI/2)
-				
-				dir.x=dir.x as int
-				dir.y=dir.y as int
-				
-				i+=1
-				if i%2==0:
-					c+=1
-				if i>10000:
+				if isTileSpice(checkTile.x,checkTile.y):
+					return checkTile
+					
+				checkTile+=dir
+				ch+=1
+				if ch>=c:
+					startTile=checkTile
 					break
-			else:
-				return startTile;
+			
+			i+=1
+			if i==2:
+				i=0
+				c+=1
+				
+			var x=dir.x
+			dir.x=-dir.y
+			dir.y=x
+			
+
+			if c>1000:
+				break
+			
+			
+			pass
+	
+	pass
+
+func testTiles(startTile:Vector2):
+	if startTile!=null:
+		
+		var dir:Vector2=Vector2(0 as int,1 as int)
+		var i:int=0
+		var c:int=1
+		while true:
+			
+			var checkTile=startTile
+			var ch=0
+			while true:
+				
+				if true:
+					tileMapGround.set_cell(checkTile.x as int,checkTile.y as int,-1)
+					
+				else:
+					return checkTile;
+				checkTile+=dir
+				ch+=1
+				if ch>=c:
+					startTile=checkTile
+					break
+			
+			i+=1
+			if i==2:
+				i=0
+				c+=1
+				
+			var x=dir.x
+			dir.x=-dir.y
+			dir.y=x
+			
+
+			if c>1000:
+				break
+			
+			
 			pass
 	
 	pass

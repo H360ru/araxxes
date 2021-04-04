@@ -71,7 +71,6 @@ func _init(game,node).(game):
 	
 	#=============
 	
-	newGame()
 	
 	pass 
 	

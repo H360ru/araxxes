@@ -7,10 +7,10 @@ extends Base
 var tiles:ArrayRect
 
 #заблокирована ли плитка для юнита
-func isBlockTile(vecint,unit):
+func isBlockTile(vecint,unit,ignoreUnits):
 	var tileB:TileBlock=tiles.getV(vecint)
 	if tileB!=null:
-		return tileB.isBlockForUnit(unit)
+		return tileB.isBlockForUnit(unit,ignoreUnits)
 		
 	return false
 	pass
@@ -19,25 +19,26 @@ func isBlockTile(vecint,unit):
 
 #Заблокировать плитку юнитом vecint - Vector2
 func block(vecint,unit):
-	if vecint!=null:
+	if vecint!=null && unit!=null:
 		var tileB:TileBlock=tiles.getV(vecint)
 		if tileB==null:
 			tileB=TileBlock.new(vecint)
-		if unit!=null:
-			tileB.addUnit(unit)
 		
+		
+		tileB.addUnit(unit)
 		
 		tiles.setV(vecint,tileB)
 		
 	pass
 	
+
 #разблокировать плитку
 func unBlock(vecint,unit):
 	
 	var tileB:TileBlock=tiles.getV(vecint)
-	tileB.removeUnit(unit)
-	if tileB.units.size()==0:
-		tiles.setV(vecint,null)
+	if tileB!=null:
+		tileB.removeUnit(unit)
+		tiles.setV(vecint,tileB)
 		
 	pass
 
