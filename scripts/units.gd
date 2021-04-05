@@ -16,6 +16,17 @@ var arrUnits:Array=[]
 
 
 
+#Вернуть юниты а плитке
+func getUnitsInTile(vec2int):
+	var unitsInTile:Array=[]
+	if vec2int!=null && vec2int is Vector2:
+		for chu in arrUnits:
+			if chu!=null && chu.stopTile!=null:
+				if chu.stopTile==vec2int:
+					unitsInTile.push_back(chu)
+					
+	return unitsInTile				
+	pass
 
 #Вернуть юнита по имени
 func getByName(name):
@@ -25,13 +36,14 @@ func getByName(name):
 				return u
 				
 
-#Обновить возможность ходить юнитам
+#Установка парамеитров в начале хода
 func refreshEndedBYPlayer(player):
 	if player!=null:
 		for u in arrUnits:
 			if u!=null:
 				if u.player==player:
 					u.ended=false
+					u.isSafe=false
 					#Очистить состояния
 					u.states.clear()
 					
@@ -143,12 +155,6 @@ func onUnitMoveStart(unit):
 
 func onUnitMoveStop(unit):
 	#Бллокировака кетки		
-	game.map.manMap.blockTile(unit)
-	
-	pass
-
-#Вызывается при начале окончания движения
-func onUnitMoveFinished(unit):
 	if unit!=null:
 		var idU=unitsMove.find(unit)
 		if idU!=-1:
@@ -158,6 +164,12 @@ func onUnitMoveFinished(unit):
 	game.map.manMap.clearSelect()
 	
 	game.refreshPlayerLabel(unit.player)
+	
+	pass
+
+#Вызывается при начале окончания движения
+func onUnitMoveFinished(unit):
+	
 	
 	pass	
 
@@ -185,7 +197,7 @@ func onClickMap(vec2d:Vector2):
 
 	var player=game.queue.getThisPlayer()
 	var inMap=game.map.manMap.getCooTile(vec2d)
-
+	#var inMap=game.map.manMap.getTileByPointPix(vec2d)
 	var nextEvent=true
 	
 	for unit in arrUnits:
@@ -195,31 +207,47 @@ func onClickMap(vec2d:Vector2):
 				nextEvent=false
 				
 	
-	#=====================провера начала перемещения юнита			
+	#=====================провера клика по выделениям		
 	if nextEvent && player!=null:
-		if game.unUnitMenu.unit!=null && game.unUnitMenu.unit.canMove:
+		#===========перемещения юнита
+		var unit=game.unUnitMenu.unit
+		if unit!=null && game.map.manMap.selectType==ManagerMap.SELECT_TYPE_MOVE && unit==game.map.manMap.unitSelect:# game.unUnitMenu.unit.canMove:
 			
-			var unit=game.unUnitMenu.unit
+			
 			#на выделенной плитке ли кликнули
 			var routeSelect=unit.routeSelectMove
 			if routeSelect!=null:
 				
 				var hoSteps=unit.hoSteps
 				
-				
 				var indexStep=routeSelect.containTile(inMap)
 				if indexStep!=-1:
 					
 					#передвижение
-					unit.canMove=false
+					#unit.canMove=false
 					unit.moveToTile(vec2d,-1)
 					game.unUnitMenu.close()
 					
 					#=====Убрать очки
 					var pointsMinu=unit.getPointsByStep(indexStep+1)
 					unit.player.minusPoints(pointsMinu)
-					
-					
+				
+				
+			
+		if unit!=null && game.map.manMap.selectType==ManagerMap.SELECT_TYPE_ATTACK && unit==game.map.manMap.unitSelect:# game.unUnitMenu.unit.canMove:
+			#======проверка выбора атаки
+			var routeSelect=unit.routeSelectAttack
+			if routeSelect!=null:
+				
+				var indexStep=routeSelect.containTile(inMap)
+				if indexStep!=-1:
+					#поиск врага в плитке
+					var units=game.map.units.getUnitsInTile(inMap)
+					if units!=null && units.size()>0:
+						pass
+					pass
+			
+			pass			
 					
 					
 			
@@ -235,13 +263,13 @@ func run(delta):
 			u.run(delta)
 			
 	
-	#=======Выделение маршрута
+	#=======Выделение маршрута для движещихся юнитов
 	if unitsMove!=null && unitsMove.size()>0:
 		var forUnitSleect=unitsMove[unitsMove.size()-1]
 		if forUnitSleect.isRunning():
 			if forUnitSleect.route!=null && forUnitSleect.uMove.movePoints!=null:
 				var limit=forUnitSleect.uMove.movePoints.size()
-				game.map.manMap.setTileSelectRoad(forUnitSleect.route,Tile.tile_select_move,limit)
+				game.map.manMap.selectTileRoad(forUnitSleect.route,forUnitSleect,limit)
 				pass
 	
 		pass

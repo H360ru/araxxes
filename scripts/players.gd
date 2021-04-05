@@ -19,11 +19,16 @@ func clear():
 #Вызвать при начале нового тура
 func newTour():
 	
+	
 	for pl in players:
+		
 		#==Новые сочки
 		pl.points=NEW_POINTS_MIN+((randf()*NEW_POINTS_MAX) as int)
+		
+		
 		#==Юниты должны ходить заново
 		game.map.units.refreshEndedBYPlayer(pl)
+	
 	pass
 
 

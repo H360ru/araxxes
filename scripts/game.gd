@@ -33,6 +33,8 @@ var menu:Menu;
 #0 - харвестром, 1 - червяком
 var whoToPlay=0
 
+var labelGameOvet
+
 
 func _init(game,node).(game):
 	game=self
@@ -65,6 +67,8 @@ func _init(game,node).(game):
 	map=MapGame.new(self,node.get_node("Viewport/map"))
 	
 	menu=Menu.new(self,node.get_node("main_menu"))
+	
+	labelGameOvet=node.get_node("gameover")
 	
 	#============
 	calcNodes(node,"checkNode")
@@ -203,7 +207,6 @@ func onUiUnitMenuClick(ui:UiUnitMenu,tile):
 		
 		
 		
-		
 		if tile.name==UI.NAME_TILE_CLOSE:
 			ui.close()
 		if tile.name==UI.NAME_TILE_END:
@@ -215,7 +218,7 @@ func onUiUnitMenuClick(ui:UiUnitMenu,tile):
 			
 			unit.saveSave()
 			
-			ui.unit.canMove=true
+			#ui.unit.canMove=true
 			ui.unit.selecTilesForMove()
 			ui.close()
 			
@@ -237,9 +240,12 @@ func onUiUnitMenuClick(ui:UiUnitMenu,tile):
 			
 			unit.takeSpace()
 			ui.close()
+		if tile.name==UI.NAME_TILE_ATTACK:
+			
+			ui.unit.selecTilesForAttack()
+			ui.close()	
 			
 			
-	
 		ui.checkIconsMenuByUnit(ui.unit)
 		
 		

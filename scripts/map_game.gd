@@ -94,7 +94,6 @@ func initMap():
 	setInRandomPos(worm)
 	
 	
-	
 	cameraGame.setTarget(harv.node)
 	
 	
@@ -104,13 +103,13 @@ func initMap():
 #Установить юнита в рандомное место
 func setInRandomPos(unit):
 	if unit!=null:
-		var pos=ransomPosMap()
+		var pos=randomPosMap()
 		
 		var tile=manMap.getRandomNotBlockTile(pos,unit)
 		unit.setInTile(tile.x,tile.y)
 	
 #получить случайную клетку н карте
-func ransomPosMap():
+func randomPosMap():
 	return Vector2(3+((randf()*(manMap.mapWidth-6)) as int),3+((randf()*(manMap.mapHeight-6)) as int))
 
 #Открыть меню для юнита
@@ -137,10 +136,22 @@ func onClickUnit(units,unit,sceenPos):
 		if unit!=null:
 			var thisPlayer=game.queue.getThisPlayer()
 			
-			#====меню для игркоа за этим компом
+			#==============меню для игркоа за этим компом
 			if thisPlayer!=null && thisPlayer.type==Player.TYPE_PLAYER && unit.player==thisPlayer:
 				
+				manMap.clearSelect()
 				openMenuForUnit(unit)
+				
+				
+			
+			#===============для атаки
+			if game.unUnitMenu.unit!=null && game.unUnitMenu.unit.player==thisPlayer:
+				var unitAttack=game.unUnitMenu.unit
+				if unit.player!=thisPlayer && unit.isSafe==false:
+					#====Атака на игрока
+					unitAttack.attackToUnit(unit)
+					
+					pass
 				
 	pass	
 	

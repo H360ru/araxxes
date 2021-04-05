@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scenes/map.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/root.gd" type="Script" id=2]
 [ext_resource path="res://scenes/menu_unit.tscn" type="PackedScene" id=3]
 [ext_resource path="res://fonts/Ubuntu-Th.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://scenes/menu.tscn" type="PackedScene" id=5]
+[ext_resource path="res://fonts/Ubuntu-M.ttf" type="DynamicFontData" id=6]
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("Viewport")
@@ -36,6 +37,10 @@ border_color = Color( 0, 0, 0, 1 )
 [sub_resource type="DynamicFont" id=7]
 size = 35
 font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=8]
+size = 50
+font_data = ExtResource( 6 )
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 2 )
@@ -101,6 +106,20 @@ margin_bottom = 14.0
 custom_styles/normal = SubResource( 6 )
 custom_fonts/font = SubResource( 7 )
 text = "кто ходит"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gameover" type="Label" parent="."]
+visible = false
+margin_left = 306.0
+margin_top = 293.0
+margin_right = 735.0
+margin_bottom = 334.0
+custom_styles/normal = SubResource( 2 )
+custom_fonts/font = SubResource( 8 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "окнец игры"
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -3,10 +3,6 @@ class_name Player
 extends Base
 
 
-#Ничего особненого
-const ACTION_DEF=1;
-#Выбор клетки для хода
-const ACTION_SELECT_TILE=2;
 
 #Тип плеера Игрок
 const TYPE_PLAYER=1
@@ -23,8 +19,6 @@ var points=0
 #Имя игрока, должно быть уникальным среди всех игроков
 var name=""
 
-#Что сейчас делает игрок
-var action=ACTION_DEF
 #Скольок собрано спайса
 var spices=0
 

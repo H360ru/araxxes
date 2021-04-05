@@ -94,11 +94,13 @@ func move(delta):
 		speed.move=false
 		
 	var moveadd=direction.normalized()*speed.thisSpeed
+	
 	pos+=moveadd
 	
-	#=====Остановка
-	if moveadd.length()<0.01:
+	#=======Остановка
+	if moveadd.length()<0.001:
 		if stopped==false:
+			unit.onUnitStop()
 			emit_signal("onUnitMoveStop",self.unit)
 		stopped=true
 	else:

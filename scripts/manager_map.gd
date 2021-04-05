@@ -1,14 +1,23 @@
 class_name ManagerMap
 extends Base
 
-
+#нету выделения
+const SELECT_TYPE_NONE=0
+#для выбора куда двигаться
+const SELECT_TYPE_MOVE=1
+#Выделение пути вдижеия
+const SELECT_TYPE_ROAD=2
+#Для выдекление клеток для атаки
+const SELECT_TYPE_ATTACK=3
 
 #поверхность с плитки
 var tileMapGround:TileMap
 #Для выделения клеток
 var tileMapSelect:TileMap
 
+#Плиток по ширине
 var mapWidth=50
+#Плиток по высоте
 var mapHeight=25
 
 var cameraGame:CameraGame
@@ -16,13 +25,116 @@ var cameraGame:CameraGame
 #Заблокированные плитеи на которые нельзя стать
 var blockedTiles:TileBlocks
 
+#констранты SELECT_TYPE_*, какого типа выделение установлено 
+var selectType=SELECT_TYPE_NONE
+
+#для какого юнита выдеоено
+var unitSelect
+
+
+
+#Вернуть массив соседних плиток, vec2int - плитка, для которой нужно получить координаты плиток соседей
+func getNightboring(vec2int):
+	
+	var vecsTiles:Array=[]
+	if tileMapGround.cell_half_offset==TileMap.HALF_OFFSET_Y:
+		#====
+		var x=vec2int.x-1
+		var y=vec2int.y
+		
+		var xt=vec2int.x
+		xt=xt as int
+		if xt%2==0:
+			y-=1
+		vecsTiles.push_back(Vector2(x,y))
+		
+		#===
+		x=vec2int.x+1
+		y=vec2int.y
+		
+		xt=vec2int.x as int
+		
+		if xt%2==0:
+			y-=1
+		
+		vecsTiles.push_back(Vector2(x,y))
+		
+		#===
+		x=vec2int.x+2
+		y=vec2int.y
+		
+		
+		vecsTiles.push_back(Vector2(x,y))
+		
+		#===
+		x=vec2int.x+1
+		y=vec2int.y
+		xt=vec2int.x as int
+		if xt%2==1:
+			y+=1
+		
+		vecsTiles.push_back(Vector2(x,y))
+		
+		#===
+		x=vec2int.x-1
+		y=vec2int.y
+		xt=vec2int.x as int
+		if xt%2==1:
+			y+=1
+		
+		vecsTiles.push_back(Vector2(x,y))
+		
+		#====
+		x=vec2int.x-2
+		y=vec2int.y
+		
+		vecsTiles.push_back(Vector2(x,y))
+		
+	return vecsTiles
+	pass
+
+
+#Вернуть плитку по клике на карту. Картинка плитки может выходить за границы, поэтому нужен этот метод
+func getTileByPointPix(vecPix):
+	
+	
+	#Плитка на которую кликнули
+	var vec2int=tileMapGround.world_to_map(vecPix)
+	
+	
+	#Соседние плитки
+	var dist=9999999
+	var tileSelect=vec2int
+	
+	var nightboring=getNightboring(vec2int)
+	if nightboring!=null && nightboring.size()>0:
+		if tileMapGround.cell_half_offset==TileMap.HALF_OFFSET_Y:
+			for nig in nightboring:
+				
+				#кордината центра
+				var cooCenterTile=tileMapGround.map_to_world(nig) 
+				cooCenterTile=tileMapGround.cell_size/2
+				var centerToClick=cooCenterTile-vecPix
+				
+				if centerToClick.length()<=dist:
+					tileSelect=nig
+				
+	return tileSelect	
+	
+	pass
 
 #очистить выделение
 func clearSelect():
+	selectType=SELECT_TYPE_NONE
 	tileMapSelect.clear()
+	unitSelect=null
+
 
 #Выделить плитки idtile типа tile_select_attack
-func setTileSelectRoad(route,idTile,limit):
+func selectTileRoad(route,unit,limit):
+	selectType=SELECT_TYPE_ROAD
+	unitSelect=unit
+	
 	if route!=null && route.tiles!=null && route.tiles.size()>0:
 		tileMapSelect.clear()
 		var i=0;
@@ -30,7 +142,7 @@ func setTileSelectRoad(route,idTile,limit):
 			if i<route.tiles.size():
 				var tile=route.tiles[i]
 				if tile!=null:
-					tileMapSelect.set_cell(tile.x,tile.y,idTile)
+					tileMapSelect.set_cell(tile.x,tile.y,Tile.tile_select_move)
 				i+=1
 				if i>=limit:
 					break
@@ -38,6 +150,19 @@ func setTileSelectRoad(route,idTile,limit):
 				break
 	pass
 	
+#Выделить плитки для перемещения
+func selectTileMove(route,unit):
+	selectType=SELECT_TYPE_MOVE
+	unitSelect=unit
+	
+	setTileSelect(route,Tile.tile_select_move)
+
+#Выделить плитки для перемещения
+func selectTileAttack(route,unit):
+	selectType=SELECT_TYPE_ATTACK
+	unitSelect=unit
+	
+	setTileSelect(route,Tile.tile_select_attack)
 
 
 #Выделить плитки idtile типа tile_select_attack

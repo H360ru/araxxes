@@ -102,6 +102,8 @@ func checkIconsMenuByUnit(unit):
 		
 		enableByName(UI.NAME_TILE_TAKE,settileTak)	
 		
+		#=======Атака
+		enableByName(UI.NAME_TILE_ATTACK,unit.player.points>=unit.pointAttack)	
 	
 	#===========когда выключены все иконки
 	if game.queue.isThisPlayPlayer(unit.player)==false:
@@ -206,11 +208,16 @@ func setPositionTiles():
 func checkPosition():
 	
 	#==========Что бы меню не выходило за пределы камеры
-	var cam=game.map.cameraGame
-	var camSize=cam.getCameraSize()
-	var posCam=cam.nodeCamera2d.transform.origin
 	
-
+	var vs=node.get_viewport().size
+	
+	pos.x=max(sizeTile,pos.x)
+	pos.y=max(sizeTile,pos.y)
+	
+	pos.x=min(vs.x-(sizeTile*2),pos.x)
+	pos.y=min(vs.y-(sizeTile*2),pos.y)
+	
+	
 	
 	#========Устнаовка позиции
 	var i=0

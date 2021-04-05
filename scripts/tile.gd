@@ -12,8 +12,7 @@ const tile_spice=2;
 const tile_select_attack=0;
 const tile_select_move=1;
 
-#Соотношение сторон тайла w/h
-const aspect=1.316872427983539;
+
 
 
 

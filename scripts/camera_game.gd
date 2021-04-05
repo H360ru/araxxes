@@ -27,6 +27,10 @@ var limit:Rect2
 #направлться ли не цель, если нажать передвижения камеры, то на цель двигаться не будет
 var moveToTarget=true
 
+var zoomMax=Vector2(40,40)
+var zoomMin=Vector2(8,8)
+var zoomTarget
+
 
 #Вернуть позицую камеры
 func getPosCam():
@@ -92,6 +96,11 @@ func run(delta):
 		
 		nodeCamera2d.transform.origin=posc
 		
+	#================Зуммирование
+	
+	if zoomTarget!=null:
+		nodeCamera2d.zoom+=(zoomTarget-nodeCamera2d.zoom)/10
+		
 	pass
 	
 	
@@ -100,6 +109,7 @@ func getCooInMap(cooScreen:Vector2):
 	if cooScreen!=null:
 		var sizeC2=getCameraSize()/2
 		return cooScreen-sizeC2
+		
 #Установить цель для камеры
 func setTarget(node):
 	self.nodeTarget=node
@@ -110,6 +120,17 @@ func setTarget(node):
 	
 	pass
 
+func addZoom():
+	zoomTarget=nodeCamera2d.zoom+Vector2(3,3)
+	zoomTarget.x=min(zoomMax.x,zoomTarget.x)
+	zoomTarget.y=min(zoomMax.y,zoomTarget.y)
+	pass
+	
+func removeZoom():
+	zoomTarget=nodeCamera2d.zoom-Vector2(3,3)
+	zoomTarget.x=max(zoomMin.x,zoomTarget.x)
+	zoomTarget.y=max(zoomMin.y,zoomTarget.y)
+	pass
 
 func getCameraSize():
 	var vps=nodeCamera2d.get_viewport().size;
@@ -131,7 +152,13 @@ func input(e):
 			
 			emit_signal("onCameraGameClickMap",clickInMap)
 			return false
+		if e.button_index==BUTTON_WHEEL_DOWN && e.pressed:
+			addZoom()
+			pass
+		if e.button_index==BUTTON_WHEEL_UP && e.pressed:
+			removeZoom()
 			
+			pass
 	return true
 			
 	
@@ -155,7 +182,7 @@ func _init(game,nodeCamera2d).(game):
 	
 	var c=0
 	while true:
-		speedCam.push_back(SpeedM.new(1.0,0.1,0.1,0.0))
+		speedCam.push_back(SpeedM.new(1.0,0.5,0.5,0.0))
 		c+=1
 		if c==keyMove.size():
 			break;

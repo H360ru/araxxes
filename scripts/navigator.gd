@@ -6,6 +6,7 @@ extends Base
 var checkUnit
 var ignoreTo;
 var ignoreUnits
+var checkBlock
 
 #построить маршрут Route, или вернет null, если этого сделать невозможно
 #limitStep - Использовать для получения карты возможности движения или атака к примеру
@@ -24,6 +25,7 @@ func buildRoute(from:Vector2,to:Vector2,checkBlock,limitStep=-1,ignoreTo=false,u
 	checkUnit=unit
 	self.ignoreTo=ignoreTo
 	self.ignoreUnits=ignoreUnits
+	self.checkBlock=checkBlock
 	
 	if cellFrom!=-1 && (cellTo!=-1 || ignoreTo):
 		
@@ -192,7 +194,7 @@ func issetTile(arr,x,y):
 
 #Можно ли быть на плитке
 func checkTile(x,y):
-	if game.map.manMap.tileMapGround.get_cell(x,y)!=-1 && game.map.manMap.isTileBlock(x,y)==false && (game.map.manMap.isTileBlockForUnit(x,y,checkUnit,ignoreUnits)==false):
+	if game.map.manMap.tileMapGround.get_cell(x,y)!=-1 && game.map.manMap.isTileBlock(x,y)==false && (game.map.manMap.isTileBlockForUnit(x,y,checkUnit,ignoreUnits)==false || checkBlock==false):
 		return true
 	return false;
 	

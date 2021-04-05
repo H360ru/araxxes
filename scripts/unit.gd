@@ -35,6 +35,8 @@ var ended=false
 var route
 #последний маршрут для передвижения
 var routeSelectMove
+#последний маршрут для атаки
+var routeSelectAttack
 
 var states:UnitStates
 
@@ -51,7 +53,7 @@ var moveX1Point
 var moveX2Point
 
 #Атака очков на 2 клеки
-var pointArrack
+var pointAttack
 #Собрать спайс
 var pointSpice
 #защититься
@@ -61,12 +63,45 @@ var pointSafe
 var hoSteps
 
 #Можно ли двигаться при клике
-var canMove=false
+#var canMove=false
 
 #Заблокированная плитка
 var blockTile:Vector2
 
+#дальность атаки
+var attackLen=1;
 
+#координаты плитки при сотановке юнита. Она получается при остановке 1 раз vec2int
+var stopTile
+
+
+
+#9попробовать атаковать юнита
+func attackToUnit(unit):
+	
+	selecTilesForAttack()
+	if routeSelectAttack!=null && unit.isSafe==false:
+		
+		#==обчки
+		if player.points>=pointAttack:
+			
+			#==Дальность
+			var tileUnit=unit.getTileUnit()
+			if tileUnit!=null:
+				
+				var stepToAttack=routeSelectAttack.containTile(tileUnit)
+				
+				if stepToAttack!=-1 && stepToAttack+1<=attackLen:
+					
+					#===Временное
+					game.labelGameOvet.visible=true
+					
+
+#Вызывается при остановке юнита
+func onUnitStop():
+	stopTile=getTileUnit()
+	game.map.manMap.blockTile(self)
+	pass
 
 
 #на кой плите юнит
@@ -129,8 +164,22 @@ func selecTilesForMove():
 		if hoSteps!=null:
 			if hoSteps[0]<4:
 				hoSteps[0]+=1
-			routeSelectMove=getTilesMap(hoSteps[0],self)
-			game.map.manMap.setTileSelect(routeSelectMove,Tile.tile_select_move)
+			routeSelectMove=getTilesMap(hoSteps[0],self,true)
+			game.map.manMap.selectTileMove(routeSelectMove,self)
+			
+			pass
+	pass
+
+#Выделить плитки для атаки
+func selecTilesForAttack():
+	
+	if player!=null:
+		
+		
+		if player.points>=pointAttack:
+			
+			routeSelectAttack=getTilesMap(attackLen+1,self,false)
+			game.map.manMap.selectTileAttack(routeSelectAttack,self)
 			
 			pass
 	pass
@@ -193,21 +242,25 @@ func getPosInScreen():
 func isRunning():
 	return uMove.end==false
 
+
 #Установить юнит в плитку
 func setInTile(x,y):
 	
 	var cooPix=game.map.manMap.getCenterTile(Vector2(x,y))
 	uMove.pos=game.map.di.pixToM(cooPix)
 	
+	onUnitStop()
+	
+	
 	pass
 
 
 #Вернуть плитки дял атаки или передвижения
-func getTilesMap(limitStep,unit):
+func getTilesMap(limitStep,unit,checkBlock):
 	
 	var cooPam=getUnitTileCenter()
 	
-	var route:Route=self.navigator.buildRoute(cooPam,cooPam+Vector2(99999,99999),true,limitStep,true,unit);
+	var route:Route=self.navigator.buildRoute(cooPam,cooPam+Vector2(99999,99999),checkBlock,limitStep,true,unit);
 	return route;
 	
 	pass
@@ -304,7 +357,7 @@ func run(delta):
 func getFrame():
 	if rotationFrames!=null && rotationFrames.size()>0:
 		
-		var rad=uMove.direction.angle_to(Vector2(1,0))
+		var rad=uMove.direction.rotated(-(PI/2)/rotationFrames.size()*2).angle_to(Vector2(1,0))
 		
 		
 		rad-=(PI/2)
@@ -313,6 +366,9 @@ func getFrame():
 		if rad<0:
 			frame=rotationFrames.size()-abs(frame)
 		
+		
+		frame=min(rotationFrames.size()-1,frame)
+		frame=max(0,frame)
 		
 		return rotationFrames[frame]
 		
@@ -340,10 +396,13 @@ func _init(game,node,name).(game):
 		moveX1Point=1
 		moveX2Point=3
 		
-		pointArrack=999999
+		pointAttack=999999
 		
 		pointSafe=2
 		pointSpice=1
+		
+		#Скорость
+		uMove.speed.maxSpeed=15
 		
 	if name=="worm":
 		moveX1Len=5
@@ -351,10 +410,14 @@ func _init(game,node,name).(game):
 		moveX1Point=1
 		moveX2Point=3
 		
-		pointArrack=3
+		pointAttack=3
 		
 		pointSafe=9999999
 		pointSpice=99999
 	
-	
+		#Скорость
+		uMove.speed.maxSpeed=10
+		uMove.speed.speedDown=1
+		
+		
 	pass

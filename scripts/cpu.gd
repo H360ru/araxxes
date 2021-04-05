@@ -29,6 +29,7 @@ func run(delta):
 					
 					#======Нужно управлять игроком
 					
+					
 					var tileFrom=null
 					var tileTo=null
 					
@@ -43,6 +44,7 @@ func run(delta):
 							var unitPlayer=null
 							
 							if unitCpu.name=="worm":
+								
 								#============Играть за червя
 								#==========Просто идти к направлдению первого юнита врага
 								var unitsPl=units.getUnitsOtherPlayer(player,1)
@@ -101,7 +103,6 @@ func run(delta):
 									else:
 										unitCpu.ended=true	
 										
-										
 									
 								pass
 								
@@ -110,36 +111,45 @@ func run(delta):
 								
 								var route=unitCpu.navigator.buildRoute(tileFrom,tileTo,false,-1,true,unitCpu,[unitPlayer])
 								if route!=null:
+									
 									#========Проверка ограничений
 									if player.points>0:
+										
 										#На скольок можно ходить
 										var hoSteps=unitCpu.getStepsByPoint(player.points)
 										if hoSteps!=null && hoSteps[0]>0:
+											
 											if route.tiles.size()>1:
+												
 												unitCpu.moveOnRoute(route,hoSteps[0],1)
 												player.minusPoints(hoSteps[1])
-												
 												
 												unitMove=unitCpu
 											
 											else:
-												unitCpu.ended=true	
+												endThisUnit(unitCpu)
 											pass
 									
 									else:
 										#Нету очков, конец хода для юнита
-										unitCpu.ended=true	
+										endThisUnit(unitCpu)
 								else:
 									#Невозможно посториить маршрут
-									unitCpu.ended=true	
+									
+									endThisUnit(unitCpu)
 						else:
 							
 							#Уже нету юнитов для хода
 							pass
 					else:
+						
+						#===============Юнит передвигается
+						
+						
 						if unitMove.isRunning()==false:
-							unitMove.ended=true
-							unitMove=null
+							#===завершение хода юнита
+							endThisUnit(unitMove)
+							
 							
 					
 					#проверка конца хода		
@@ -148,6 +158,27 @@ func run(delta):
 					
 				pass
 	
+	pass
+	
+#Завершить ход юнитом
+func endThisUnit(unitCpu):
+	var units:Units=game.map.units
+	checkAttack(unitCpu,units)
+	unitCpu.ended=true
+	unitMove=null
+	pass
+	
+	
+#Провекра атаки
+func checkAttack(unit,units):
+	if unit!=null && unit.isRunning()==false:
+		#======Проверка таки
+		if unit.name=="worm":
+			var unitsPl=units.getUnitsOtherPlayer(player,1)
+			if unitsPl!=null && unitsPl.size()>0:
+				#Идем к этому юниту
+				var unitPlayer=unitsPl[0]
+				unit.attackToUnit(unitPlayer)
 	pass
 
 func _init(game).(game):

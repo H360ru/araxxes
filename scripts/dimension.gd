@@ -2,10 +2,8 @@ class_name Dimension
 extends Object
 
 
-#===================Для размеров согласно поиткам
+#===================Для размеров согласно плиткам
 
-
-var aspect=1.316872427983539;
 
 var sizeTileX=1920
 var sizeTileY=1458
