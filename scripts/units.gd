@@ -153,8 +153,6 @@ func onUnitMoveFinished(unit):
 		var idU=unitsMove.find(unit)
 		if idU!=-1:
 			unitsMove.remove(idU)
-			
-	print("unit finished: "+unit.name)
 	
 	
 	game.map.manMap.clearSelect()

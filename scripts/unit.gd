@@ -265,7 +265,7 @@ func moveOnRoute(route,limitStep,offsetBack):
 				
 		self.route=route
 		 
-		print("set points "+pointsMap.size() as String)
+		
 		self.uMove.setMovePoints(pointsMap)
 	pass
 

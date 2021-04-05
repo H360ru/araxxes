@@ -116,9 +116,7 @@ func run(delta):
 										var hoSteps=unitCpu.getStepsByPoint(player.points)
 										if hoSteps!=null && hoSteps[0]>0:
 											if route.tiles.size()>1:
-												#передвигаемсяprint("fewfwefg 4")
 												unitCpu.moveOnRoute(route,hoSteps[0],1)
-												#unitCpu.moveToTile(tileTo,-1)
 												player.minusPoints(hoSteps[1])
 												
 												

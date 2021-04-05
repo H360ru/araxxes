@@ -18,7 +18,7 @@ func run(delta):
 		thisSpeed+=speedUp*delta*scale
 		thisSpeed=min(thisSpeed,maxSpeed*scale*delta)
 	else:
-		thisSpeed-=speedDown*delta*scale*(1*scale)
+		thisSpeed-=speedDown*delta*scale*(0.06*scale)
 		thisSpeed=max(0,thisSpeed)
 	pass
 

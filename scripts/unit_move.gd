@@ -24,7 +24,8 @@ var movePoints:Array=[];
 #Точка на которую двигаться
 var thisPoint=0;
 
-var speed:SpeedM=SpeedM.new(60,2,2,0)
+#60,2,2
+var speed:SpeedM=SpeedM.new(15,2,2,0)
 
 #Установились ли на точку, что бы потом по линии
 var setToPoint=false
@@ -77,7 +78,7 @@ func move(delta):
 			
 			#========Вращение
 			
-			direction=direction.rotated((rotTo/10)*speed.scale)
+			direction=direction.rotated(((rotTo/10)*speed.scale)*(speed.maxSpeed)/60.0)
 			
 			#======Следт точка
 			
