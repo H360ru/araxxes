@@ -27,8 +27,8 @@ var limit:Rect2
 #направлться ли не цель, если нажать передвижения камеры, то на цель двигаться не будет
 var moveToTarget=true
 
-var zoomMax=Vector2(40,40)
-var zoomMin=Vector2(8,8)
+var zoomMax=Vector2(70,70)
+var zoomMin=Vector2(2,2)
 var zoomTarget
 
 
