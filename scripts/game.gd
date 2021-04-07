@@ -176,6 +176,11 @@ func onButtonClick(button,name):
 #Вызывается для каждого нода в начале
 func checkNode(node):
 	
+	var theme=load("res://themes/ornate-theme/ornate-theme.tres")
+	if node is Label || node is Button:
+		node.theme=theme
+		pass
+	
 	butt.checkButton(node)
 	
 	map.checkNodes(node)
@@ -276,6 +281,7 @@ func run(delta):
 	#===========Проверка смены размера вюпорта
 	var vps=node.get_viewport().size
 	if lastSizeViewport!=vps:
+		lastSizeViewport=vps
 		onChangeViewportSize()
 	
 	

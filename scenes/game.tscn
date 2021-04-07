@@ -1,46 +1,25 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/map.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/root.gd" type="Script" id=2]
 [ext_resource path="res://scenes/menu_unit.tscn" type="PackedScene" id=3]
-[ext_resource path="res://fonts/Ubuntu-Th.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://themes/ornate-theme/pixelplay.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://scenes/menu.tscn" type="PackedScene" id=5]
-[ext_resource path="res://fonts/Ubuntu-M.ttf" type="DynamicFontData" id=6]
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("Viewport")
 
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.219608, 0.537255, 0.776471, 0.87451 )
+[sub_resource type="DynamicFont" id=2]
+size = 25
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 25
+font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=3]
-font_data = ExtResource( 4 )
-
-[sub_resource type="StyleBoxFlat" id=4]
-content_margin_left = 10.0
-content_margin_right = 10.0
-content_margin_top = 10.0
-content_margin_bottom = 10.0
-bg_color = Color( 0.454902, 0.196078, 0.196078, 1 )
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="DynamicFont" id=5]
-font_data = ExtResource( 4 )
-
-[sub_resource type="StyleBoxFlat" id=6]
-bg_color = Color( 0.741176, 0.211765, 0.211765, 0.682353 )
-border_color = Color( 0, 0, 0, 1 )
-
-[sub_resource type="DynamicFont" id=7]
-size = 35
-font_data = ExtResource( 4 )
-
-[sub_resource type="DynamicFont" id=8]
 size = 50
-font_data = ExtResource( 6 )
+font_data = ExtResource( 4 )
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 2 )
@@ -63,13 +42,11 @@ __meta__ = {
 [node name="ui_unit_menu" parent="." instance=ExtResource( 3 )]
 
 [node name="notic" type="Label" parent="."]
-margin_left = 11.0
-margin_top = 63.0
-margin_right = 314.0
-margin_bottom = 104.0
-custom_styles/normal = SubResource( 2 )
-custom_fonts/font = SubResource( 3 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
+margin_left = 17.3496
+margin_top = 97.9228
+margin_right = 617.35
+margin_bottom = 168.923
+custom_fonts/font = SubResource( 2 )
 text = "Кликните по юниту, 
 для движегния камеры используйте wasd, для выхода - esc"
 __meta__ = {
@@ -77,34 +54,31 @@ __meta__ = {
 }
 
 [node name="button_toharv" type="Button" parent="."]
-margin_left = 25.0
-margin_top = 122.0
-margin_right = 140.0
-margin_bottom = 161.0
-custom_styles/normal = SubResource( 4 )
-custom_fonts/font = SubResource( 5 )
+margin_left = 34.5244
+margin_top = 241.055
+margin_right = 173.524
+margin_bottom = 281.055
+custom_fonts/font = SubResource( 4 )
 text = "на харвестра"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="button_toworm" type="Button" parent="."]
-margin_left = 26.0
-margin_top = 178.0
-margin_right = 141.0
-margin_bottom = 217.0
-custom_styles/normal = SubResource( 4 )
-custom_fonts/font = SubResource( 5 )
+margin_left = 35.5244
+margin_top = 297.055
+margin_right = 150.524
+margin_bottom = 337.055
+custom_fonts/font = SubResource( 4 )
 text = "на червя"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="label_howturn" type="Label" parent="."]
-margin_right = 40.0
-margin_bottom = 14.0
-custom_styles/normal = SubResource( 6 )
-custom_fonts/font = SubResource( 7 )
+margin_right = 149.0
+margin_bottom = 40.0
+custom_fonts/font = SubResource( 3 )
 text = "кто ходит"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -115,9 +89,7 @@ visible = false
 margin_left = 306.0
 margin_top = 293.0
 margin_right = 735.0
-margin_bottom = 334.0
-custom_styles/normal = SubResource( 2 )
-custom_fonts/font = SubResource( 8 )
+margin_bottom = 350.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "окнец игры"
 __meta__ = {
