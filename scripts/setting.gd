@@ -2,6 +2,7 @@ class_name Setting
 extends Base
 
 
+
 var key_left=KEY_A;
 var key_up=KEY_W;
 var key_right=KEY_D;

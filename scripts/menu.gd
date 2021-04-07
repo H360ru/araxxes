@@ -2,19 +2,32 @@ class_name Menu
 extends Base
 
 var node
-var option_speed;
 var texrect
 
-#Включено ли меню
-var settedmenu=false
+#Установлены ли настройки
+var settingSets=false
 
 var isOpen=true
 
+var menuSetting:MenuSetting
+
 func onChangeViewportSize():
 	
-	texrect.rect_size=node.get_viewport().size
+	checkSize()
+	if menuSetting!=null:
+		menuSetting.onChangeViewportSize()
+		
+	
+	pass
 	
 	
+func checkSize():
+	var size=node.get_viewport().size
+	texrect.rect_size=size
+	
+	var labSite=game.labs.getByName("site")
+	if labSite!=null:
+		labSite.rect_position=size-labSite.rect_size
 	pass
 	
 func open():
@@ -27,7 +40,10 @@ func close():
 	isOpen=false
 	pass
 	
-func setOption():
+#Установить настройки	
+func setSetting():
+	
+	
 	
 	var but=game.butt.getByName("new_game")
 	if but!=null:
@@ -39,16 +55,18 @@ func setOption():
 	if but!=null:
 		but.visible=false
 		
-	if option_speed!=null:
-		option_speed.visible=true
-		
-		
-	settedmenu=true
+	
+	menuSetting.open()
+	
+	settingSets=true
 		
 	pass
 	
 
-	
+func onButtonClick(button,name):
+	if menuSetting!=null:
+		menuSetting.onButtonClick(button,name)
+
 func setMenu():
 	
 	
@@ -61,17 +79,18 @@ func setMenu():
 	but=game.butt.getByName("exit")
 	if but!=null:
 		but.visible=true
-		
-	if option_speed!=null:
-		option_speed.visible=true
 	
 	
-	settedmenu=false
+	menuSetting.close()
+	
+	settingSets=false
 	
 	pass
 
 
 func run(delta):
+	if menuSetting!=null:
+		menuSetting.run(delta)
 	pass
 	
 	
@@ -83,26 +102,16 @@ func input(e):
 	pass
 
 
-func onItemSelectedSpeed(index):
-	game.setting.speed=1+index
-	pass
 
 func _init(game,node).(game):
 	
 	
 	self.node=node
-	option_speed=node.get_node("option_speed")
-	
-	option_speed.connect("item_selected",self,"onItemSelectedSpeed")
-	
-	option_speed.add_item("speed x1")
-	option_speed.add_item("speed x2")
-	option_speed.add_item("speed x3")
-	option_speed.add_item("speed x4")
-	option_speed.add_item("speed x5")
-	option_speed.add_item("speed x6")
 	
 	texrect=node.get_node("TextureRect")
+	
+	menuSetting=MenuSetting.new(game,self,node.get_node("setting"))
+	
 	pass
 	
 	

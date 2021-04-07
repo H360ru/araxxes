@@ -1,16 +1,28 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://scenes/map.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/root.gd" type="Script" id=2]
 [ext_resource path="res://scenes/menu_unit.tscn" type="PackedScene" id=3]
 [ext_resource path="res://themes/ornate-theme/pixelplay.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://scenes/menu.tscn" type="PackedScene" id=5]
+[ext_resource path="res://themes/ornate-theme/ornate-theme.tres" type="Theme" id=7]
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("Viewport")
 
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.27451, 0.556863, 0.690196, 0.188235 )
+expand_margin_left = 20.0
+expand_margin_right = 20.0
+expand_margin_top = 20.0
+expand_margin_bottom = 20.0
+
 [sub_resource type="DynamicFont" id=2]
 size = 25
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 20
 font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=4]
@@ -18,6 +30,10 @@ size = 25
 font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=3]
+size = 25
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=7]
 size = 50
 font_data = ExtResource( 4 )
 
@@ -41,14 +57,27 @@ __meta__ = {
 
 [node name="ui_unit_menu" parent="." instance=ExtResource( 3 )]
 
-[node name="notic" type="Label" parent="."]
-margin_left = 17.3496
-margin_top = 97.9228
-margin_right = 617.35
-margin_bottom = 168.923
+[node name="label_notic" type="Label" parent="."]
+margin_left = 242.732
+margin_top = 1006.87
+margin_right = 842.732
+margin_bottom = 1077.87
+custom_styles/normal = SubResource( 6 )
 custom_fonts/font = SubResource( 2 )
 text = "Кликните по юниту, 
 для движегния камеры используйте wasd, для выхода - esc"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button_closeNotic" type="Button" parent="label_notic"]
+margin_left = 612.0
+margin_top = 11.0
+margin_right = 691.0
+margin_bottom = 52.0
+theme = ExtResource( 7 )
+custom_fonts/font = SubResource( 5 )
+text = "Закрыть"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -75,7 +104,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="label_points" type="Label" parent="."]
+margin_right = 182.0
+margin_bottom = 67.0
+custom_fonts/font = SubResource( 3 )
+text = "кто ходит"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="label_howturn" type="Label" parent="."]
+margin_right = 149.0
+margin_bottom = 40.0
+custom_fonts/font = SubResource( 3 )
+text = "кто ходит"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label_spice" type="Label" parent="."]
 margin_right = 149.0
 margin_bottom = 40.0
 custom_fonts/font = SubResource( 3 )
@@ -90,7 +137,8 @@ margin_left = 306.0
 margin_top = 293.0
 margin_right = 735.0
 margin_bottom = 350.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
+theme = ExtResource( 7 )
+custom_fonts/font = SubResource( 7 )
 text = "окнец игры"
 __meta__ = {
 "_edit_use_anchors_": false

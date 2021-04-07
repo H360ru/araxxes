@@ -6,6 +6,14 @@ signal onLabelClick(label,name)
 var labels:Array=[]
 
 
+#Вернуть по имени
+func getByName(name):
+	for b in labels:
+		if b!=null:
+			if b.name.find("label_"+name)==0:
+				return b
+	pass
+
 #Установит текст в метку по имени
 func setText(name,text):
 	for lab in labels:

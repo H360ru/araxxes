@@ -30,6 +30,7 @@ var labs:Labels
 
 var menu:Menu;
 
+
 #0 - харвестром, 1 - червяком
 var whoToPlay=0
 
@@ -67,6 +68,8 @@ func _init(game,node).(game):
 	map=MapGame.new(self,node.get_node("Viewport/map"))
 	
 	menu=Menu.new(self,node.get_node("main_menu"))
+	
+	
 	
 	labelGameOvet=node.get_node("gameover")
 	
@@ -126,12 +129,12 @@ func onQueueChangePlayer(newPlayer):
 
 #Обновить строку игрока
 func refreshPlayerLabel(player):
-	var strset="Ходит "+player.name as String+", Очков: "+player.points as String
 	
+	labs.setText("points","Очков: "+player.points as String)
+	labs.setText("howturn","Ходит: "+player.name as String)
+	labs.setText("spice","Спайса: "+player.spices as String)
 	
-	strset+=", спайса: "+player.spices as String
-	
-	labs.setText("howturn",strset)
+	checkSizeUpLabels()
 		
 
 func onLabelClick(label,name):
@@ -148,7 +151,7 @@ func onButtonClick(button,name):
 	if name=="newgame":
 		pass
 	if name=="setting":
-		menu.setMenu()
+		menu.setSetting()
 		pass
 		
 		
@@ -162,13 +165,21 @@ func onButtonClick(button,name):
 		newGame()
 		menu.close()
 		
+	if name=="closeNotic":
+		var labelN=labs.getByName("notic")
+		labelN.visible=false
+		
 		
 	if name=="exit":
 		node.get_tree().set_auto_accept_quit(false)
 		node.get_tree().quit()
 		
 		
+		
 		pass	
+		
+	if menu!=null:
+		menu.onButtonClick(button,name)
 		
 		
 	pass	
@@ -271,8 +282,71 @@ func onChangeViewportSize():
 		
 	if menu!=null:
 		menu.onChangeViewportSize()	
+		
+	checkUIGame()
 	pass
 
+
+#Проверить елементы ui игры
+func checkUIGame():
+	
+	var size=node.get_viewport().size
+	var offsetScreen=size.x/20
+	
+	#=====Кнопки
+	
+	var but=butt.getByName("toharv")
+	if but!=null:
+		but.rect_position.x=size.x/20
+		but.rect_position.y=size.y-(but.rect_size.y+(offsetScreen))
+	
+	but=butt.getByName("toworm")
+	if but!=null:
+		but.rect_position.x=size.x-(but.rect_size.x+(offsetScreen))
+		but.rect_position.y=size.y-(but.rect_size.y+(offsetScreen))	
+		
+	#=====метки
+	checkSizeUpLabels()
+		
+	pass
+	
+	
+func checkSizeUpLabels():
+	
+	var size=node.get_viewport().size
+	var offsetScreen=size.x/20
+	
+	var label=labs.getByName("points")
+	if label!=null:
+		label.rect_position.x=offsetScreen
+		label.rect_position.y=offsetScreen
+		
+	label=labs.getByName("howturn")
+	if label!=null:
+		label.rect_position.x=size.x/2-(label.rect_size.x/2)
+		label.rect_position.y=offsetScreen	
+		
+	label=labs.getByName("spice")
+	if label!=null:
+		label.rect_position.x=size.x-(label.rect_size.x+offsetScreen)
+		label.rect_position.y=offsetScreen	
+	
+	label=labs.getByName("notic")
+	if label!=null:
+		label.rect_position=size/2-(label.rect_size/2)
+		var but=butt.getByName("closeNotic")
+		if but!=null:
+			but.rect_position.x=label.rect_size.x
+		
+func checkNotic():
+	
+	var size=node.get_viewport().size
+	var label=labs.getByName("notic")
+	if label!=null:
+		label.rect_position=size/2-(label.rect_size/2)
+		
+		
+	pass	
 
 func run(delta):
 	
@@ -324,7 +398,7 @@ func input(e):
 	if e is InputEventKey:
 		if e.pressed && e.scancode==KEY_ESCAPE:
 			if menu.isOpen:
-				if menu.settedmenu:
+				if menu.settingSets:
 					menu.setMenu()
 				else:
 					menu.close()

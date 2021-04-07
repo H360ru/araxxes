@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://textures/bg_menu.jpg" type="Texture" id=1]
 [ext_resource path="res://themes/ornate-theme/pixelplay.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://themes/ornate-theme/ornate-theme.tres" type="Theme" id=3]
+[ext_resource path="res://scenes/setting.tscn" type="PackedScene" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 25
@@ -71,14 +72,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="option_speed" type="OptionButton" parent="."]
+[node name="setting" parent="." instance=ExtResource( 4 )]
 visible = false
-margin_left = 677.408
-margin_top = 448.306
-margin_right = 706.408
-margin_bottom = 494.306
+
+[node name="label_site" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
 theme = ExtResource( 3 )
-custom_fonts/font = SubResource( 1 )
+text = "https://example.com"
 __meta__ = {
 "_edit_use_anchors_": false
 }
