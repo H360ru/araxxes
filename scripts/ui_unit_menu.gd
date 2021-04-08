@@ -85,6 +85,8 @@ func checkIconsMenuByUnit(unit):
 	if unit.isRunning():
 		enableByName(UI.NAME_TILE_END,false)
 		enableByName(UI.NAME_TILE_MOVE,false)
+		enableByName(UI.NAME_TILE_BACK,false)
+		
 	else:
 		enableByName(UI.NAME_TILE_END,true)
 		enableByName(UI.NAME_TILE_MOVE,true)

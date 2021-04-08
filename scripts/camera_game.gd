@@ -31,7 +31,30 @@ var zoomMax=Vector2(70,70)
 var zoomMin=Vector2(2,2)
 var zoomTarget
 
+#Зум при начале зуммирования пальцами
+var zooStartTouch
 
+#позиция камеры при начале перемещения
+var cameraStartMoveTouch
+#Последняя позиция камеры установлена в ручную
+var lastPosCamSetHand
+
+#Сейчас перемещение ли вручную
+var isMovingHand=false
+#Можно ли перемещать камеруц пальцем
+var canMoveCameraTouch=true
+#Позиция клика мыши по нажатии
+var clickMousePos
+#Последний веткор перемещения каемры свайпом или мышей
+var lastVecHand
+
+
+#Установить камеру на кооррдинаты
+func setPosCam(pos):
+	nodeCamera2d.transform.origin=pos
+	
+	checkLimit()
+	
 #Вернуть позицую камеры
 func getPosCam():
 	return nodeCamera2d.transform.origin
@@ -63,7 +86,7 @@ func run(delta):
 		moveToTarget=false
 	
 	
-	if moveToTarget:
+	if moveToTarget && isMovingHand==false:
 		#=====================проверка смены цел для камеры
 		if nodeTarget!=null:
 			
@@ -81,6 +104,30 @@ func run(delta):
 				pass
 		
 	#==============Ограничения для камеры
+	checkLimit()
+		
+	#================Зуммирование
+	
+	if zoomTarget!=null:
+		nodeCamera2d.zoom+=(zoomTarget-nodeCamera2d.zoom)/10
+		
+		
+	#=============
+	
+	if game.multyTouch.touchs.size()==0:
+		canMoveCameraTouch=true
+		isMovingHand=false
+		#Остаточное передвижение
+		if game.multyTouch.timeTouch!=null && game.multyTouch.timeTouch>100:
+			if lastVecHand!=null:
+				lastVecHand*=0.9
+				setPosCam(getPosCam()+lastVecHand)
+	else:
+		lastVecHand=null
+		
+	pass
+	
+func checkLimit():
 	if limit!=null:
 		var checkRect=limit
 		checkRect.position+=getCameraSize()/2
@@ -95,16 +142,10 @@ func run(delta):
 		posc.y=max(posc.y,checkRect.position.y)
 		
 		nodeCamera2d.transform.origin=posc
-		
-	#================Зуммирование
-	
-	if zoomTarget!=null:
-		nodeCamera2d.zoom+=(zoomTarget-nodeCamera2d.zoom)/10
-		
 	pass
 	
 	
-#Вернуть координаті с экрана на карте
+#Вернуть координаты с экрана на карте
 func getCooInMap(cooScreen:Vector2):
 	if cooScreen!=null:
 		var sizeC2=getCameraSize()/2
@@ -117,20 +158,87 @@ func setTarget(node):
 	moveToTarget=true
 	
 	
+
+func onMultyTouchStart():
+	if game.multyTouch.isMult:
+		zooStartTouch=nodeCamera2d.zoom
 	
+	pass
+	
+	
+func onMultyTouchFinish(removed):
+	
+	if game.multyTouch.touchs.size()==0:
+		if removed:
+			if cameraStartMoveTouch!=null && lastPosCamSetHand!=null:
+				setPosCam(lastPosCamSetHand)
+				
+			isMovingHand=false
+			cameraStartMoveTouch=null
+			#moveToTarget=false
+	
+	
+		
+	pass
+	
+func onMultyTouchRun():
+	
+	if game.multyTouch.isMult:
+		
+		canMoveCameraTouch=false
+		#=======Зуммирование камеры
+		var coeff=game.multyTouch.getCoeffDistTouch()
+		zoomTarget=zooStartTouch*coeff
+		checkZoomMInMax()
+		
+	else:
+		#======передвижение камеры
+		
+		if game.multyTouch.touchs.size()==1:
+			if canMoveCameraTouch:
+				
+				moveToTarget=false
+				isMovingHand=true
+				if cameraStartMoveTouch==null:
+					cameraStartMoveTouch=getPosCam()
+					
+				var tou:Touch=game.multyTouch.touchs[0]
+				var vecMove=tou.thisT-tou.startT
+				vecMove*=nodeCamera2d.zoom
+				
+				var newPos=cameraStartMoveTouch-vecMove
+				if lastPosCamSetHand!=null:
+					lastVecHand=newPos-lastPosCamSetHand
+					
+				lastPosCamSetHand=newPos
+				setPosCam(lastPosCamSetHand)
+		else:
+			
+			canMoveCameraTouch=true	
+		
+	
+	pass
+	
+
+#Установкить зум
+#percent 0 - 1
+func setZoom(percent):
+	zoomTarget=zoomMin+((zoomMax-zoomMin)*percent)
 	pass
 
 func addZoom():
 	zoomTarget=nodeCamera2d.zoom+Vector2(3,3)
-	zoomTarget.x=min(zoomMax.x,zoomTarget.x)
-	zoomTarget.y=min(zoomMax.y,zoomTarget.y)
+	checkZoomMInMax()
 	pass
 	
 func removeZoom():
 	zoomTarget=nodeCamera2d.zoom-Vector2(3,3)
+	checkZoomMInMax()
+	pass
+	
+func checkZoomMInMax():
 	zoomTarget.x=max(zoomMin.x,zoomTarget.x)
 	zoomTarget.y=max(zoomMin.y,zoomTarget.y)
-	pass
 
 func getCameraSize():
 	var vps=nodeCamera2d.get_viewport().size;
@@ -139,19 +247,26 @@ func getCameraSize():
 
 func input(e):
 	if e is InputEventMouseButton:
-		if e.button_index==BUTTON_LEFT && e.pressed:
-			var mouseClick=game.map.checkEventPosition(e)
+		if e.button_index==BUTTON_LEFT:
+			if e.pressed:
+				clickMousePos=game.map.checkEventPosition(e)
+				
+			if !e.pressed:
+				var mouseClick=game.map.checkEventPosition(e)
+				if clickMousePos!=null && mouseClick!=null:
+					if (clickMousePos-mouseClick).length()<3:
+					
+						var vps=nodeCamera2d.get_viewport().size;
+						
+						var vecToPointScreen=mouseClick-(vps/2)
+						vecToPointScreen*=nodeCamera2d.zoom
+						
+						var clickInMap:Vector2=nodeCamera2d.transform.origin+vecToPointScreen
+						
+						emit_signal("onCameraGameClickMap",clickInMap)
+				
+						return false
 			
-			
-			var vps=nodeCamera2d.get_viewport().size;
-			
-			var vecToPointScreen=mouseClick-(vps/2)
-			vecToPointScreen*=nodeCamera2d.zoom
-			
-			var clickInMap:Vector2=nodeCamera2d.transform.origin+vecToPointScreen
-			
-			emit_signal("onCameraGameClickMap",clickInMap)
-			return false
 		if e.button_index==BUTTON_WHEEL_DOWN && e.pressed:
 			addZoom()
 			pass

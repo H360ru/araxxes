@@ -29,6 +29,8 @@ var unitsNode;
 var cpu:CPU;
 
 
+
+
 func _init(game,node).(game):
 	self.node=node
 	
@@ -95,6 +97,10 @@ func initMap():
 	
 	
 	cameraGame.setTarget(harv.node)
+	
+	#==========
+	
+	game.labelGameOvet.visible=false
 	
 	
 	pass	
@@ -178,6 +184,25 @@ func addUnit(tileid,name,forPlayer):
 	
 	pass
 	
+
+func onMultyTouchStart():
+	if cameraGame!=null:
+		cameraGame.onMultyTouchStart()
+	
+	pass
+func onMultyTouchFinish(removed):
+	if cameraGame!=null:
+		cameraGame.onMultyTouchFinish(removed)
+	pass
+func onMultyTouchRun():
+	if cameraGame!=null:
+		cameraGame.onMultyTouchRun()
+	
+	
+	
+	
+	pass
+	
 #проверка всех нодов	
 func checkNodes(node):
 	if units!=null:
@@ -214,27 +239,28 @@ func run(delta):
 
 
 func checkEventPosition(e):
-	if e is InputEventMouse || e is InputEventMouseButton || e is InputEventMouseMotion:
-		var addX=0
-		var addY=0
-		if OS.window_fullscreen:
-			addX=OS.window_position.x
-			addY=OS.window_position.y
+	
+	var addX=0
+	var addY=0
+	if OS.window_fullscreen:
+		addX=OS.window_position.x
+		addY=OS.window_position.y
+	
+	var x=0
+	var y=0
+	
+	if e is InputEventMouse || e is InputEventMouseButton || e is InputEventMouseMotion || e is InputEventScreenTouch || e is InputEventScreenDrag:
 		
-		var x=e.position.x+addX;#когда не корректо включается полноекранный режим
-		var y=e.position.y+addY;
+		x=e.position.x+addX;#когда не корректо включается полноекранный режим
+		y=e.position.y+addY;
 		
-		return Vector2(x,y)
-   
+	
+	return Vector2(x,y)
 
 func input(e):
 	
 	
-	if e is InputEventKey:
-		if e.pressed && e.scancode==KEY_V:
-			pass
-		
-		
+	
 	if e is InputEventMouseButton:
 		if e.button_index==BUTTON_LEFT && e.pressed:
 			lastMouseClick=checkEventPosition(e)

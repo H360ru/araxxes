@@ -33,10 +33,11 @@ func input(e):
 		if e.button_index==BUTTON_LEFT && e.pressed:
 			var pos2d=game.map.checkEventPosition(e)
 			for lab in labels:
-				if lab.get_global_rect().has_point(pos2d):
-					var name=lab.name.split("_")[1]
-					emit_signal("onLabelClick",lab,name)
-					return false
+				if lab.visible:
+					if lab.get_global_rect().has_point(pos2d):
+						var name=lab.name.split("_")[1]
+						emit_signal("onLabelClick",lab,name)
+						return false
 	return true
 	
 	pass	

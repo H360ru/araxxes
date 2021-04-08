@@ -36,6 +36,11 @@ var whoToPlay=0
 
 var labelGameOvet
 
+#Провреено ли было меню ui
+var checkedUi=false;
+
+var multyTouch:MultyTouch
+
 
 func _init(game,node).(game):
 	game=self
@@ -47,6 +52,7 @@ func _init(game,node).(game):
 	
 	joy=Joystick.new(self)
 	
+	multyTouch=MultyTouch.new(self)
 	
 	queue=Queue.new(self)
 	queue.connect("onQueueEndTour",self,"onQueueEndTour")
@@ -66,6 +72,10 @@ func _init(game,node).(game):
 	labs.connect("onLabelClick",self,"onLabelClick")
 	
 	map=MapGame.new(self,node.get_node("Viewport/map"))
+	#Подключение мультитач событий
+	multyTouch.connect("onMultyTouchStart",map,"onMultyTouchStart")
+	multyTouch.connect("onMultyTouchFinish",map,"onMultyTouchFinish")
+	multyTouch.connect("onMultyTouchRun",map,"onMultyTouchRun")
 	
 	menu=Menu.new(self,node.get_node("main_menu"))
 	
@@ -134,49 +144,34 @@ func refreshPlayerLabel(player):
 	labs.setText("howturn","Ходит: "+player.name as String)
 	labs.setText("spice","Спайса: "+player.spices as String)
 	
-	checkSizeUpLabels()
+	checkSizeUI()
 		
 
 func onLabelClick(label,name):
+	
+	if name.find("site")==0:
+		OS.shell_open("https://example.com")
+	
 	pass	
 
 func onButtonClick(button,name):
 	
-	if name=="toharv":
-		
-		map.cameraToHarvestr()
-	if name=="toworm":
-		map.cameraToWorm()
-		
-	if name=="newgame":
-		pass
-	if name=="setting":
-		menu.setSetting()
-		pass
-		
-		
-	if name=="newgameharw":
-		whoToPlay=0
-	if name=="newgameworm":
-		whoToPlay=1
-		
-	if name=="newgameharw" || name=="newgameworm":
-		#Новая игра
-		newGame()
-		menu.close()
-		
-	if name=="closeNotic":
-		var labelN=labs.getByName("notic")
-		labelN.visible=false
-		
-		
-	if name=="exit":
-		node.get_tree().set_auto_accept_quit(false)
-		node.get_tree().quit()
-		
-		
-		
-		pass	
+	
+	#================Игра
+	if menu.isOpen==false:
+		if name=="toharv":
+			map.cameraToHarvestr()
+		if name=="toworm":
+			map.cameraToWorm()
+		if name=="closeNotic":
+			var labelN=labs.getByName("notic")
+			labelN.visible=false
+		if name=="tomenu":
+			menu.open()
+			menu.setMenuGame()
+			pass
+	#==================меню
+	
 		
 	if menu!=null:
 		menu.onButtonClick(button,name)
@@ -240,10 +235,11 @@ func onUiUnitMenuClick(ui:UiUnitMenu,tile):
 			
 			
 		if tile.name==UI.NAME_TILE_BACK:
-			if ui.unit.states.issetSave():
-				ui.unit.backState()
-			ui.close()	
-			map.manMap.clearSelect()
+			if ui.unit.isRunning()==false:
+				if ui.unit.states.issetSave():
+					ui.unit.backState()
+				ui.close()	
+				map.manMap.clearSelect()
 		
 		if tile.name==UI.NAME_TILE_SAFE:
 			if unit.isSafeSet():
@@ -290,60 +286,134 @@ func onChangeViewportSize():
 #Проверить елементы ui игры
 func checkUIGame():
 	
+	
 	var size=node.get_viewport().size
 	var offsetScreen=size.x/20
 	
 	#=====Кнопки
 	
-	var but=butt.getByName("toharv")
-	if but!=null:
-		but.rect_position.x=size.x/20
-		but.rect_position.y=size.y-(but.rect_size.y+(offsetScreen))
 	
-	but=butt.getByName("toworm")
-	if but!=null:
-		but.rect_position.x=size.x-(but.rect_size.x+(offsetScreen))
-		but.rect_position.y=size.y-(but.rect_size.y+(offsetScreen))	
 		
 	#=====метки
-	checkSizeUpLabels()
+	checkSizeUI()
 		
+	checkedUi=true	
 	pass
+
+
+
+func checkSizeUI():
 	
-	
-func checkSizeUpLabels():
 	
 	var size=node.get_viewport().size
 	var offsetScreen=size.x/20
 	
-	var label=labs.getByName("points")
-	if label!=null:
-		label.rect_position.x=offsetScreen
-		label.rect_position.y=offsetScreen
-		
-	label=labs.getByName("howturn")
-	if label!=null:
-		label.rect_position.x=size.x/2-(label.rect_size.x/2)
-		label.rect_position.y=offsetScreen	
-		
-	label=labs.getByName("spice")
-	if label!=null:
-		label.rect_position.x=size.x-(label.rect_size.x+offsetScreen)
-		label.rect_position.y=offsetScreen	
 	
-	label=labs.getByName("notic")
+	var labelPoints=labs.getByName("points")
+	var labelTurn=labs.getByName("howturn")
+	var labelSpice=labs.getByName("spice")
+	var buttHarw=butt.getByName("toharv")
+	var buttWorm=butt.getByName("toworm")
+	
+	var buttmenu=butt.getByName("tomenu")
+	var offsetScreenY=buttmenu.rect_size.y*1.1
+	
+	
+	setFontSize(labelPoints,30)
+	setFontSize(labelTurn,30)
+	setFontSize(labelSpice,30)
+	setFontSize(buttHarw,30)
+	setFontSize(buttWorm,30)
+	
+	var c=0
+	while true:
+	
+		var rectP=getRectControl(labelPoints)
+		var rectT=getRectControl(labelTurn)
+		var rectS=getRectControl(labelSpice)
+		var rectH=getRectControl(buttHarw)
+		var rectW=getRectControl(buttWorm)	
+		
+		
+		if labelPoints!=null:
+			labelPoints.rect_position.x=offsetScreen
+			labelPoints.rect_position.y=offsetScreenY
+			
+			
+		if labelTurn!=null:
+			labelTurn.rect_position.x=size.x/2-(rectT.size.x/2)
+			labelTurn.rect_position.y=offsetScreenY	
+			
+		
+		if labelSpice!=null:
+			labelSpice.rect_position.x=size.x-(rectS.size.x+offsetScreen)
+			labelSpice.rect_position.y=offsetScreenY	
+			
+			
+		
+		if buttHarw!=null:
+			buttHarw.rect_position.x=size.x/20
+			buttHarw.rect_position.y=size.y-(buttHarw.rect_size.y+(offsetScreen))
+		
+		
+		if buttWorm!=null:
+			buttWorm.rect_position.x=size.x-(buttWorm.rect_size.x+(offsetScreen))
+			buttWorm.rect_position.y=size.y-(buttWorm.rect_size.y+(offsetScreen))	
+			
+			
+		#====Провекра перекрытия
+		
+		if rectP.intersects(rectT) || rectT.intersects(rectS):
+			#Уменьшить размер шрифта
+			minusFontSize(labelPoints)
+			minusFontSize(labelTurn)
+			minusFontSize(labelSpice)
+			
+			
+			
+		if rectH.intersects(rectW):
+			minusFontSize(buttHarw)
+			minusFontSize(buttWorm)
+			
+			
+			
+		else:
+			break
+			
+		c+=1
+		if c>1000:
+			break
+	
+#	
+	checkNotic()
+	
+	
+	buttmenu.rect_position.x=size.x-buttmenu.rect_size.x
+	
+
+
+func getRectControl(label):
 	if label!=null:
-		label.rect_position=size/2-(label.rect_size/2)
-		var but=butt.getByName("closeNotic")
-		if but!=null:
-			but.rect_position.x=label.rect_size.x
+		var size=setLabelSizeString(label)
+		var rect
+		if size!=null:
+			rect=Rect2(label.rect_position,size)
+		return rect
+	pass	
 		
 func checkNotic():
 	
 	var size=node.get_viewport().size
 	var label=labs.getByName("notic")
 	if label!=null:
+		
+		
+		label.rect_size.x=size.x*0.6
+		label.update()
 		label.rect_position=size/2-(label.rect_size/2)
+		var but=butt.getByName("closeNotic")
+		if but!=null:
+			but.rect_position.x=label.rect_size.x
 		
 		
 	pass	
@@ -368,9 +438,13 @@ func run(delta):
 	if menu!=null:
 		menu.run(delta)
 	
+
 	
 
 func input(e):
+	
+	
+	
 	
 	if joy!=null:
 		joy.input(e)
@@ -378,34 +452,84 @@ func input(e):
 	
 	var nextInput=true
 	
-	#===============
+	
+	#===============UI
 	if menu!=null:
 		nextInput=menu.input(e)
 	
 	if butt!=null && nextInput:
 		nextInput=butt.input(e)
 	
+	if labs!=null && nextInput:
+		nextInput=labs.input(e)
+	
 	if unUnitMenu!=null && nextInput:
 		nextInput=unUnitMenu.input(e)	
 	
 	
 	#================
+	if multyTouch!=null && nextInput:
+		nextInput=multyTouch.input(e)
+	
+	#================карта
 	if map!=null && nextInput:
-		nextInput=map.input(e)
-		
+		if multyTouch.isMult==false:
+			nextInput=map.input(e)
 	
 	
+	#=================KEY_ESCAPE
 	if e is InputEventKey:
 		if e.pressed && e.scancode==KEY_ESCAPE:
 			if menu.isOpen:
-				if menu.settingSets:
-					menu.setMenu()
+				if menu.thisMenu!=null && menu.thisMenu!=menu.menuGame:
+					var isBack=menu.back()
+					if isBack==false:
+						#назад не вышло
+						if menu.thisMenu==menu.menuGame:
+							menu.close()
 				else:
 					menu.close()
 			else:
 				menu.open()
+				menu.setMenuGame()
 				
 				
 			pass
+	
 		
 	pass
+	
+
+func debug(text):
+	labs.getByName("debug").text=text
+	pass
+func debugA(text):
+	labs.getByName("debug").text+="\r\n"+text
+	pass
+
+#Вернуть размер строки в метке
+func setLabelSizeString(node):
+	var font:Font=node.get("custom_fonts/font");
+	if font!=null:
+		return font.get_string_size(node.text)
+			
+func setFontSize(node,size):
+	var font:Font=node.get("custom_fonts/font");
+	if font!=null:
+		font.size=size
+		node.set("custom_fonts/font",font);	
+
+func minusFontSize(node):
+	var font:Font=node.get("custom_fonts/font");
+	if font!=null && font.size>0:
+		font.size-=1
+		node.set("custom_fonts/font",font);	
+	
+func setTextColor(node,color):
+	var font=node.get("custom_fonts/font");
+	
+	if color!=null:
+		font.outline_color=color
+		node.set("custom_fonts/font",font);
+	
+	

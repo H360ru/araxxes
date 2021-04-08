@@ -74,10 +74,30 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/menu.gd"
 }, {
+"base": "MenuInMenu",
+"class": "MenuGame",
+"language": "GDScript",
+"path": "res://scripts/menu_game.gd"
+}, {
 "base": "Base",
+"class": "MenuInMenu",
+"language": "GDScript",
+"path": "res://scripts/menu_in_menu.gd"
+}, {
+"base": "MenuInMenu",
+"class": "MenuMain",
+"language": "GDScript",
+"path": "res://scripts/menu_main.gd"
+}, {
+"base": "MenuInMenu",
 "class": "MenuSetting",
 "language": "GDScript",
 "path": "res://scripts/menu_setting.gd"
+}, {
+"base": "Base",
+"class": "MultyTouch",
+"language": "GDScript",
+"path": "res://scripts/multytouch.gd"
 }, {
 "base": "Base",
 "class": "Navigator",
@@ -135,6 +155,11 @@ _global_script_classes=[ {
 "path": "res://scripts/tile_blocks.gd"
 }, {
 "base": "Object",
+"class": "Touch",
+"language": "GDScript",
+"path": "res://scripts/touch.gd"
+}, {
+"base": "Object",
 "class": "UI",
 "language": "GDScript",
 "path": "res://scripts/ui.gd"
@@ -188,7 +213,11 @@ _global_script_class_icons={
 "ManagerMap": "",
 "MapGame": "",
 "Menu": "",
+"MenuGame": "",
+"MenuInMenu": "",
+"MenuMain": "",
 "MenuSetting": "",
+"MultyTouch": "",
 "Navigator": "",
 "Player": "",
 "Players": "",
@@ -200,6 +229,7 @@ _global_script_class_icons={
 "Tile": "",
 "TileBlock": "",
 "TileBlocks": "",
+"Touch": "",
 "UI": "",
 "UiTile": "",
 "UiUnitMenu": "",
@@ -212,7 +242,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Araxes"
+config/name="Araxxes"
 run/main_scene="res://scenes/game.tscn"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://icon.png"
@@ -225,20 +255,27 @@ enable_audio_input=true
 
 window/size/width=1020
 window/size/height=700
-window/stretch/mode="2d"
 window/stretch/aspect="keep"
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [rendering]
 
+quality/driver/driver_name="GLES2"
 quality/driver/fallback_to_gles2=true
 quality/intended_usage/framebuffer_allocation=0
 quality/intended_usage/framebuffer_allocation.mobile=0
 quality/2d/use_pixel_snap=true
-quality/filters/anisotropic_filter_level=1
-quality/subsurface_scattering/quality=2
+vram_compression/import_s3tc=false
+vram_compression/import_etc=true
+vram_compression/import_etc2=false
 quality/filters/msaa=1
 environment/default_environment="res://default_env.tres"
 quality/dynamic_fonts/use_oversampling=false
+quality/filters/anisotropic_filter_level=1
+quality/subsurface_scattering/quality=2
 2d/snapping/use_gpu_pixel_snap=true
 2d/options/ninepatch_mode=0
 quality/spatial_partitioning/use_bvh=false

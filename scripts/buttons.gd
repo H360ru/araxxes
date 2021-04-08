@@ -6,6 +6,11 @@ signal onButtonClick(button,name)
 var buttons:Array=[]
 
 
+func visibleByName(name,visible):
+	var b=getByName(name)
+	if b!=null:
+		b.visible=visible
+
 #Вернуть кнопку оп имени
 func getByName(name):
 	for b in buttons:
@@ -25,6 +30,16 @@ func checkButton(node):
 
 
 func input(e):
+	
+	
+	if e is InputEventScreenTouch || e is InputEventScreenDrag:
+		var pos2d=game.map.checkEventPosition(e)
+		for bun in buttons:
+			if bun!=null:
+				var rect=bun.get_global_rect()
+				if rect!=null:
+					if rect.has_point(pos2d):
+						return false
 	
 	if e is InputEventMouseButton:
 		if e.button_index==BUTTON_LEFT && e.pressed:

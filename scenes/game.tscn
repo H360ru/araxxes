@@ -10,26 +10,26 @@
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("Viewport")
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.27451, 0.556863, 0.690196, 0.188235 )
 expand_margin_left = 20.0
 expand_margin_right = 20.0
 expand_margin_top = 20.0
 expand_margin_bottom = 20.0
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=3]
 size = 25
-font_data = ExtResource( 4 )
-
-[sub_resource type="DynamicFont" id=5]
-size = 20
 font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=4]
+size = 20
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=5]
 size = 25
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=6]
 size = 25
 font_data = ExtResource( 4 )
 
@@ -62,10 +62,11 @@ margin_left = 242.732
 margin_top = 1006.87
 margin_right = 842.732
 margin_bottom = 1077.87
-custom_styles/normal = SubResource( 6 )
-custom_fonts/font = SubResource( 2 )
+custom_styles/normal = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 text = "Кликните по юниту, 
 для движегния камеры используйте wasd, для выхода - esc"
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -76,7 +77,7 @@ margin_top = 11.0
 margin_right = 691.0
 margin_bottom = 52.0
 theme = ExtResource( 7 )
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 4 )
 text = "Закрыть"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -87,7 +88,7 @@ margin_left = 34.5244
 margin_top = 241.055
 margin_right = 173.524
 margin_bottom = 281.055
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 text = "на харвестра"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -98,8 +99,17 @@ margin_left = 35.5244
 margin_top = 297.055
 margin_right = 150.524
 margin_bottom = 337.055
-custom_fonts/font = SubResource( 4 )
-text = "на червя"
+custom_fonts/font = SubResource( 5 )
+text = "на вормашину"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button_tomenu" type="Button" parent="."]
+margin_right = 115.0
+margin_bottom = 40.0
+custom_fonts/font = SubResource( 5 )
+text = "Меню"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -107,7 +117,8 @@ __meta__ = {
 [node name="label_points" type="Label" parent="."]
 margin_right = 182.0
 margin_bottom = 67.0
-custom_fonts/font = SubResource( 3 )
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 6 )
 text = "кто ходит"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -116,7 +127,7 @@ __meta__ = {
 [node name="label_howturn" type="Label" parent="."]
 margin_right = 149.0
 margin_bottom = 40.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 6 )
 text = "кто ходит"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -125,7 +136,7 @@ __meta__ = {
 [node name="label_spice" type="Label" parent="."]
 margin_right = 149.0
 margin_bottom = 40.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 6 )
 text = "кто ходит"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -145,3 +156,10 @@ __meta__ = {
 }
 
 [node name="main_menu" parent="." instance=ExtResource( 5 )]
+
+[node name="label_debug" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

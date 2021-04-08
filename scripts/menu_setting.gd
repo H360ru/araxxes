@@ -1,8 +1,7 @@
 class_name MenuSetting
-extends Base
+extends MenuInMenu
 
-#Нод сцены меню
-var node
+
 #выбор скорости
 var option_speed:OptionButton
 #Фон
@@ -12,17 +11,16 @@ var alpha=0
 var box
 #Кнопка назад
 var button_settingback
-#Главное меню
-var menu;
 
+
+var setSize=false
 
 
 func onButtonClick(button,name):
+	
 	if isOpen():
-		if button==button_settingback:
-			menu.setMenu()
-			
-			pass
+		if name=="tomenu":
+			menu.back()
 		pass
 	pass
 
@@ -30,6 +28,7 @@ func onChangeViewportSize():
 	checkSize()
 
 func checkSize():
+	
 	var size=node.get_viewport().size
 	bg.rect_size=size
 	
@@ -37,21 +36,22 @@ func checkSize():
 	
 	button_settingback.rect_position.x=size.x-(button_settingback.rect_size.x*1.2)
 	button_settingback.rect_position.y=button_settingback.rect_size.y*0.2
+		
+	setSize=true
 	
 #Открыто ли меню
 func isOpen():
 	return node.visible
 
 func open():
-	node.visible=true
-	#node.modulate.a=alpha
+	.open()
 	
 	option_speed.select(game.setting.speed-1)
 	
 	pass
 	
 func close():
-	node.visible=false
+	.close()
 	pass
 	
 	
@@ -68,9 +68,8 @@ func onItemSelectedSpeed(index):
 	game.setting.speed=1+index
 	pass
 
-func _init(game,menu,node).(game):
-	self.node=node
-	self.menu=menu
+func _init(game,menu,node).(game,menu,node):
+	
 	
 	option_speed=node.find_node("OptionSpeed")
 	
