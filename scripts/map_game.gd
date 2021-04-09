@@ -215,6 +215,9 @@ func checkNodes(node):
 func onChangeViewportSize():
 	.onChangeViewportSize()
 	
+	if cameraGame!=null:
+		cameraGame.onChangeViewportSize()
+	
 	pass
 
 func run(delta):

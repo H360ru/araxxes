@@ -47,7 +47,10 @@ var canMoveCameraTouch=true
 var clickMousePos
 #Последний веткор перемещения каемры свайпом или мышей
 var lastVecHand
-
+#Для проверки чегото раз в сек
+var chec1s=0
+#Юнит для которого проверять зум
+var unitCheckZoom
 
 #Установить камеру на кооррдинаты
 func setPosCam(pos):
@@ -109,7 +112,7 @@ func run(delta):
 	#================Зуммирование
 	
 	if zoomTarget!=null:
-		nodeCamera2d.zoom+=(zoomTarget-nodeCamera2d.zoom)/10
+		nodeCamera2d.zoom+=(zoomTarget-nodeCamera2d.zoom)/10.0
 		
 		
 	#=============
@@ -124,6 +127,17 @@ func run(delta):
 				setPosCam(getPosCam()+lastVecHand)
 	else:
 		lastVecHand=null
+		
+	#========Что то делать раз в сек. 
+	if OS.get_system_time_msecs()/1000%2==chec1s:	
+		chec1s+=1
+		chec1s%=2
+		
+		unitCheckZoom=game.map.units.getUnitByMinDist(getPosCam())
+		
+		checkZoomMInMax()
+		
+		
 		
 	pass
 	
@@ -156,7 +170,7 @@ func setTarget(node):
 	self.nodeTarget=node
 	timeStartChangeTarget=OS.get_system_time_msecs();
 	moveToTarget=true
-	
+	unitCheckZoom=null
 	
 
 func onMultyTouchStart():
@@ -235,10 +249,49 @@ func removeZoom():
 	zoomTarget=nodeCamera2d.zoom-Vector2(3,3)
 	checkZoomMInMax()
 	pass
+
+
+func onChangeViewportSize():
+	checkZoomMInMax()
+	pass
 	
+	
+
 func checkZoomMInMax():
-	zoomTarget.x=max(zoomMin.x,zoomTarget.x)
-	zoomTarget.y=max(zoomMin.y,zoomTarget.y)
+	
+	
+	#=======корректирвака зума по юниту
+	
+	var minZoom=zoomMin
+	var unit
+	if unitCheckZoom!=null:
+		unit=unitCheckZoom
+	else:
+		unit=game.map.units.getUnitByNode(nodeTarget)
+		
+		
+	if unit!=null:
+		var camSize=nodeCamera2d.get_viewport().size
+		
+		if camSize.x>camSize.y:
+			#Горизонтальная ориентация
+			minZoom.y=(unit.node.get_rect().size.y*unit.node.transform.get_scale().y)/(camSize.y)
+			minZoom.x=minZoom.y
+			
+
+		if camSize.x<camSize.y:
+			#Веритикальная ориентация
+			minZoom.x=(unit.node.get_rect().size.x*unit.node.transform.get_scale().x)/(camSize.x)
+			minZoom.y=minZoom.x
+			
+		zoomMin=minZoom
+		pass
+	
+	if zoomTarget!=null:
+		zoomTarget.x=max(zoomMin.x,zoomTarget.x)
+		zoomTarget.y=max(zoomMin.y,zoomTarget.y)
+	
+	
 
 func getCameraSize():
 	var vps=nodeCamera2d.get_viewport().size;

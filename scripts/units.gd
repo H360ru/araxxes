@@ -14,7 +14,27 @@ var unitsMove:Array=[]
 var arrUnits:Array=[]
 
 
+#Вернуть юнит по минимальной дистанции от камеры
+func getUnitByMinDist(posPix):
+	if posPix is Vector2:
+		var minDist=99999999
+		var unitRet
+		for u in arrUnits:
+			if u!=null:
+				var dist=(posPix-u.getCooUnitInMap()).length()
+				if dist<minDist:
+					minDist=dist
+					unitRet=u
+		return unitRet			
+	pass
 
+#Вернуть юнит по ноду
+func getUnitByNode(node):
+	if node!=null:
+		for u in arrUnits:
+			if u!=null:
+				if u.node==node:
+					return u
 
 #Вернуть юниты а плитке
 func getUnitsInTile(vec2int):
