@@ -236,7 +236,8 @@ func checkPosition():
 	
 func checkSize():
 	
-	sizeTile=node.get_viewport().size.x/25.0;
+	var size=node.get_viewport().size
+	sizeTile=sqrt((size.x*size.x)+(size.y*size.y))/30;
 	
 	
 	for tile in tiles:

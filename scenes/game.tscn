@@ -50,6 +50,7 @@ render_target_v_flip = true
 margin_right = 1000.0
 margin_bottom = 500.0
 texture = SubResource( 1 )
+expand = true
 stretch_mode = 5
 __meta__ = {
 "_edit_use_anchors_": false
