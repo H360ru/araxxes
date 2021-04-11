@@ -58,10 +58,10 @@ __meta__ = {
 }
 
 [node name="button_settingback" type="Button" parent="."]
-margin_left = 904.704
-margin_top = 17.9594
-margin_right = 970.704
-margin_bottom = 65.9594
+margin_left = 859.806
+margin_top = 16.8369
+margin_right = 925.806
+margin_bottom = 64.8369
 theme = ExtResource( 2 )
 custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )

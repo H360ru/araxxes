@@ -150,7 +150,7 @@ func run(delta):
 	
 	
 	node.modulate.a=alpha*openCoeff
-	node.rect_scale=Vector2(1,1)*openCoeff
+	node.rect_scale=Vector2(1.0,1.0)*openCoeff
 	
 	if abs(openCoeff)<0.01 && abs(openCoeffSeTime)>0.01:
 		timeColse=OS.get_system_time_msecs()

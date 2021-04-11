@@ -19,7 +19,7 @@ var setSize=false
 func onButtonClick(button,name):
 	
 	if isOpen():
-		if name=="tomenu":
+		if name=="settingback":
 			menu.back()
 		pass
 	pass

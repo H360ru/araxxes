@@ -327,26 +327,13 @@ func input(e):
 			if e.pressed:
 				clickMousePos=game.map.checkEventPosition(e)
 				
-			if !e.pressed:
+			if e.pressed:
 				var mouseClick=game.map.checkEventPosition(e)
 				if clickMousePos!=null && mouseClick!=null:
 					if (clickMousePos-mouseClick).length()<10:
-					
+						
 						var vps=nodeCamera2d.get_viewport().size;
 						
-#						var vecToPointScreen=mouseClick-(vps/2)
-#						vecToPointScreen*=nodeCamera2d.zoom
-#
-#						var clickInMap:Vector2=nodeCamera2d.transform.origin+vecToPointScreen
-#
-						#======
-					
-#						var vecToClick=clickMousePos-(game.map_view.rect_position+(game.map_view.rect_size/2))
-#
-#						var scaleCam=vecToClick/(game.map_view.rect_size/2)
-#						print(scaleCam)
-#						var clickInMap=nodeCamera2d.transform.origin+(((vps/2)*nodeCamera2d.zoom)*scaleCam)
-#
 						var clickInMap=getPosMapFromDisplay(clickMousePos)
 						
 						emit_signal("onCameraGameClickMap",clickInMap)
