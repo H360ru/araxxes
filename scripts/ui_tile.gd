@@ -29,7 +29,8 @@ var lastSize
 var points
 #тмаленький текст под основным
 var smallText
-
+#Чем больше тем медленнее открывает
+var coeffOpenSpeed=2.0
 
 func setPoints(points):
 	self.points.text=points
@@ -144,9 +145,9 @@ func close():
 func run(delta):
 	
 	if open:
-		openCoeff+=(1.0-openCoeff)/3.0
+		openCoeff+=(1.0-openCoeff)/coeffOpenSpeed
 	else:
-		openCoeff+=(0.0-openCoeff)/3.0
+		openCoeff+=(0.0-openCoeff)/coeffOpenSpeed
 	
 	
 	node.modulate.a=alpha*openCoeff

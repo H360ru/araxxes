@@ -22,7 +22,7 @@ var startTile:Vector2=Vector2(-1,0)
 
 var timeChangeVisible=0
 #За скольок открывать всё меню
-var timeOpened=200
+var timeOpened=1
 #Открывается ли меню
 var open=false
 
@@ -164,7 +164,6 @@ func run(delta):
 		
 	
 	setPositionTiles()
-	
 	
 	
 	#открытие закрытие меню
