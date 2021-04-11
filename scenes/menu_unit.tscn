@@ -1,13 +1,35 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://textures/ui/tile.png" type="Texture" id=1]
 [ext_resource path="res://textures/ui/attack.png" type="Texture" id=2]
+[ext_resource path="res://fonts/Ubuntu-B.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://themes/ornate-theme/ornate-theme.tres" type="Theme" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 100
+corner_radius_top_right = 100
+corner_radius_bottom_right = 100
+corner_radius_bottom_left = 100
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 100
+corner_radius_top_right = 100
+corner_radius_bottom_right = 100
+corner_radius_bottom_left = 100
+corner_detail = 20
 
 [node name="Node2D" type="Node2D"]
 
 [node name="tile0" type="TextureRect" parent="."]
-margin_right = 50.0
-margin_bottom = 50.0
+margin_left = 60.6496
+margin_top = 23.1895
+margin_right = 110.65
+margin_bottom = 73.1895
 rect_pivot_offset = Vector2( 25, 25 )
 texture = ExtResource( 1 )
 expand = true
@@ -17,13 +39,47 @@ __meta__ = {
 }
 
 [node name="icon" type="TextureRect" parent="tile0"]
-margin_right = 50.0
-margin_bottom = 50.0
 rect_scale = Vector2( 0.7, 0.7 )
 rect_pivot_offset = Vector2( 25, 25 )
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="tile0"]
+margin_left = 57.6014
+margin_top = 0.420448
+margin_right = 97.6014
+margin_bottom = 21.4204
+theme = ExtResource( 4 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "text"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="points" type="Label" parent="tile0"]
+anchor_left = 10.0
+anchor_right = 10.0
+margin_left = -393.913
+margin_top = -1.06043
+margin_right = -362.913
+margin_bottom = 19.9396
+size_flags_vertical = 1
+theme = ExtResource( 4 )
+custom_styles/normal = SubResource( 3 )
+custom_fonts/font = SubResource( 1 )
+text = "12324"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="tile1" type="TextureRect" parent="."]
 margin_left = 289.0
@@ -39,12 +95,41 @@ __meta__ = {
 }
 
 [node name="icon" type="TextureRect" parent="tile1"]
-margin_right = 100.0
-margin_bottom = 100.0
-rect_scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="tile1"]
+margin_left = -231.399
+margin_top = -81.5796
+margin_right = -191.399
+margin_bottom = -60.5796
+theme = ExtResource( 4 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "text"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="points" type="Label" parent="tile1"]
+margin_left = -166.65
+margin_top = -66.4434
+margin_right = -166.65
+margin_bottom = -45.4434
+theme = ExtResource( 4 )
+custom_styles/normal = SubResource( 4 )
+custom_fonts/font = SubResource( 1 )
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="tile2" type="TextureRect" parent="."]
 margin_left = 289.0
@@ -60,12 +145,38 @@ __meta__ = {
 }
 
 [node name="icon" type="TextureRect" parent="tile2"]
-margin_right = 100.0
-margin_bottom = 100.0
-rect_scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
+
+[node name="text" type="Label" parent="tile2"]
+margin_left = -231.399
+margin_top = -81.5796
+margin_right = -191.399
+margin_bottom = -60.5796
+theme = ExtResource( 4 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "text"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="points" type="Label" parent="tile2"]
+margin_left = -166.65
+margin_top = -66.4434
+margin_right = -166.65
+margin_bottom = -45.4434
+theme = ExtResource( 4 )
+custom_styles/normal = SubResource( 4 )
+custom_fonts/font = SubResource( 1 )
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="tile3" type="TextureRect" parent="."]
 margin_left = 289.0
@@ -81,12 +192,38 @@ __meta__ = {
 }
 
 [node name="icon" type="TextureRect" parent="tile3"]
-margin_right = 100.0
-margin_bottom = 100.0
-rect_scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
+
+[node name="text" type="Label" parent="tile3"]
+margin_left = -231.399
+margin_top = -81.5796
+margin_right = -191.399
+margin_bottom = -60.5796
+theme = ExtResource( 4 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "text"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="points" type="Label" parent="tile3"]
+margin_left = -166.65
+margin_top = -66.4434
+margin_right = -166.65
+margin_bottom = -45.4434
+theme = ExtResource( 4 )
+custom_styles/normal = SubResource( 4 )
+custom_fonts/font = SubResource( 1 )
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="tile4" type="TextureRect" parent="."]
 margin_left = 289.0
@@ -102,12 +239,41 @@ __meta__ = {
 }
 
 [node name="icon" type="TextureRect" parent="tile4"]
-margin_right = 100.0
-margin_bottom = 100.0
-rect_scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="tile4"]
+margin_left = -231.399
+margin_top = -81.5796
+margin_right = -191.399
+margin_bottom = -60.5796
+theme = ExtResource( 4 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "text"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="points" type="Label" parent="tile4"]
+margin_left = -166.65
+margin_top = -66.4434
+margin_right = -166.65
+margin_bottom = -45.4434
+theme = ExtResource( 4 )
+custom_styles/normal = SubResource( 4 )
+custom_fonts/font = SubResource( 1 )
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="tile5" type="TextureRect" parent="."]
 margin_left = 289.0
@@ -123,12 +289,38 @@ __meta__ = {
 }
 
 [node name="icon" type="TextureRect" parent="tile5"]
-margin_right = 100.0
-margin_bottom = 100.0
-rect_scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
+
+[node name="text" type="Label" parent="tile5"]
+margin_left = -231.399
+margin_top = -81.5796
+margin_right = -191.399
+margin_bottom = -60.5796
+theme = ExtResource( 4 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "text"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="points" type="Label" parent="tile5"]
+margin_left = -166.65
+margin_top = -66.4434
+margin_right = -166.65
+margin_bottom = -45.4434
+theme = ExtResource( 4 )
+custom_styles/normal = SubResource( 4 )
+custom_fonts/font = SubResource( 1 )
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="tile6" type="TextureRect" parent="."]
 margin_left = 289.0
@@ -144,10 +336,35 @@ __meta__ = {
 }
 
 [node name="icon" type="TextureRect" parent="tile6"]
-margin_right = 50.0
-margin_bottom = 50.0
-rect_scale = Vector2( 0.7, 0.7 )
-rect_pivot_offset = Vector2( 25, 25 )
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
+
+[node name="text" type="Label" parent="tile6"]
+margin_left = -231.399
+margin_top = -81.5796
+margin_right = -191.399
+margin_bottom = -60.5796
+theme = ExtResource( 4 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "text"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="points" type="Label" parent="tile6"]
+margin_left = -166.65
+margin_top = -66.4434
+margin_right = -166.65
+margin_bottom = -45.4434
+theme = ExtResource( 4 )
+custom_styles/normal = SubResource( 4 )
+custom_fonts/font = SubResource( 1 )
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

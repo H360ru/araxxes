@@ -233,7 +233,8 @@ func getPosInScreen():
 		
 		var rectCam:Rect2=cam.getRectCam()
 		var posUnit=getCooUnitInMap()
-		return cam.nodeCamera2d.get_viewport().size*((posUnit-rectCam.position)/rectCam.size)
+		#return cam.nodeCamera2d.get_viewport().size*((posUnit-rectCam.position)/rectCam.size)
+		return cam.getPosDisplayFromMap(posUnit)
 	
 	
 	pass

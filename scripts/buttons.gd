@@ -23,7 +23,7 @@ func getByName(name):
 
 #Проверить нод на кнопку, и добавить до кнопок
 func checkButton(node):
-	if node.name.find("button")==0 && node is Button:
+	if node.name.find("button")==0 && node is Button || node is TextureButton:
 		
 		buttons.push_back(node)
 	pass

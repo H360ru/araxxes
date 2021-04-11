@@ -18,6 +18,13 @@ func onChangeViewportSize():
 
 
 func checkSize():
+	var size=node.get_viewport().size
+	node.rect_size.y=size.y
+	
+	if size.x<size.y:
+		node.rect_size=size
+	else:
+		node.rect_size.x=size.x/3
 	pass
 	
 #Открыто ли меню

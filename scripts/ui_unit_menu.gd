@@ -51,23 +51,26 @@ func fillmenuByUnit(unit):
 	self.unit=unit
 	
 	#=======заполнение для всех
-	
+	tiles[0].setIcon(UI.NAME_TILE_POINTS)
 	tiles[1].setIcon(UI.NAME_TILE_END)
 	tiles[2].setIcon(UI.NAME_TILE_MOVE)
-	tiles[3].setIcon(UI.NAME_TILE_BACK)
+	tiles[6].setIcon(UI.NAME_TILE_BACK)
+	
 	
 	#============
 	if unit.name=="harvestr":
-		tiles[4].setIcon(UI.NAME_TILE_TAKE)
-		tiles[5].setIcon(UI.NAME_TILE_SAFE)
+		tiles[3].setIcon(UI.NAME_TILE_TAKE)
+		tiles[4].setIcon(UI.NAME_TILE_SAFE)
 		
-	
+		tiles[3].setTile("tile_harv_spice")
+		
 	
 	if unit.name=="worm":
-		tiles[4].setIcon(UI.NAME_TILE_ATTACK)
-		tiles[5].setIcon(UI.NAME_TILE_EMPTY)
+		tiles[3].setIcon(UI.NAME_TILE_ATTACK)
+		tiles[4].setIcon(UI.NAME_TILE_CLOSE)
+		tiles[5].setIcon(UI.NAME_TILE_CLOSE)
 			
-		
+		tiles[3].setTile("tile3")
 		
 	#========================Включение выключение кнопок
 	checkIconsMenuByUnit(unit)
@@ -80,12 +83,21 @@ func fillmenuByUnit(unit):
 func checkIconsMenuByUnit(unit):
 	
 	
+	#==========Тест в конопках и очки
+	
+	setPointsByName(UI.NAME_TILE_POINTS,unit.player.points as String)
+	setPointsByName(UI.NAME_TILE_ATTACK,unit.pointAttack as String)
+	setPointsByName(UI.NAME_TILE_SAFE,unit.pointSafe as String)
+	setPointsByName(UI.NAME_TILE_TAKE,unit.pointSpice as String)
+	setPointsByName(UI.NAME_TILE_MOVE,unit.player.points as String)
+	
 	
 	#===========Когда двигается
 	if unit.isRunning():
 		enableByName(UI.NAME_TILE_END,false)
 		enableByName(UI.NAME_TILE_MOVE,false)
 		enableByName(UI.NAME_TILE_BACK,false)
+		enableByName(UI.NAME_TILE_SAFE,false)
 		
 	else:
 		enableByName(UI.NAME_TILE_END,true)
@@ -106,6 +118,8 @@ func checkIconsMenuByUnit(unit):
 		
 		#=======Атака
 		enableByName(UI.NAME_TILE_ATTACK,unit.player.points>=unit.pointAttack)	
+	
+	enableByName(UI.NAME_TILE_CLOSE,true)	
 	
 	#===========когда выключены все иконки
 	if game.queue.isThisPlayPlayer(unit.player)==false:
@@ -128,11 +142,17 @@ func enableByName(name,enable):
 	pass
 
 
+#Установить текст в место очков
+func setPointsByName(name,points:String):
+	if name!=null && points!=null:
+		for tile in tiles:
+			if tile.name==name:
+				tile.setPoints(points)
+				break
+	pass
+
 func run(delta):
 	
-	
-	
-	checkSize()
 	
 	for tile in tiles:
 		tile.run(delta)
@@ -188,6 +208,7 @@ func run(delta):
 			
 	if unit!=null:
 		pos=unit.getPosInScreen()
+		pos-=Vector2(sizeTile/2,sizeTile/2)
 		pass
 	
 	pass
@@ -213,12 +234,18 @@ func checkPosition():
 	
 	var vs=node.get_viewport().size
 	
-	pos.x=max(sizeTile,pos.x)
-	pos.y=max(sizeTile,pos.y)
+#	pos.x=max(sizeTile,pos.x)
+#	pos.y=max(sizeTile,pos.y)
+#
+#	pos.x=min(vs.x-(sizeTile*2),pos.x)
+#	pos.y=min(vs.y-(sizeTile*2),pos.y)
+#
 	
-	pos.x=min(vs.x-(sizeTile*2),pos.x)
-	pos.y=min(vs.y-(sizeTile*2),pos.y)
+	pos.x=max(game.map_view.rect_position.x+(sizeTile*1),pos.x)
+	pos.y=max(game.map_view.rect_position.y+(sizeTile*1),pos.y)
 	
+	pos.x=min(game.map_view.rect_position.x+game.map_view.rect_size.x-(sizeTile*2),pos.x)
+	pos.y=min(game.map_view.rect_position.y+game.map_view.rect_size.y-(sizeTile*2),pos.y)
 	
 	
 	#========Устнаовка позиции
@@ -236,8 +263,8 @@ func checkPosition():
 	
 func checkSize():
 	
-	var size=node.get_viewport().size
-	sizeTile=sqrt((size.x*size.x)+(size.y*size.y))/30;
+	var size=game.map_view.rect_size
+	sizeTile=sqrt((size.x*size.x)+(size.y*size.y))/10;
 	
 	
 	for tile in tiles:
@@ -290,6 +317,8 @@ func _init(game,node).(game):
 	while true:
 		var tile=UiTile.new(game,node.get_node("tile"+i as String))
 		tile.tileId=i
+		
+		
 		if i>0:
 			tile.setTileTexture(i)
 		tiles.push_back(tile)

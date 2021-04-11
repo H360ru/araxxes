@@ -14,8 +14,8 @@ func onButtonClick(button,name):
 			menu.setMenuMain()
 		pass
 	
-	
 	pass
+
 
 func onChangeViewportSize():
 	checkSize()
@@ -26,6 +26,13 @@ func checkSize():
 	
 	var size=node.get_viewport().size
 	node.rect_size.y=size.y
+	
+	if size.x<size.y:
+		
+		node.rect_position=size/2-(node.rect_size/2)
+	else:
+		node.rect_size.x=size.x/3
+	pass
 	
 #Открыто ли меню
 func isOpen():

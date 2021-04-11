@@ -298,6 +298,29 @@ func getCameraSize():
 	return vps*nodeCamera2d.zoom
 	pass
 
+
+#Вернуть кооринаты с экрана на карте
+func getPosMapFromDisplay(posDisplay):
+	var vps=nodeCamera2d.get_viewport().size;
+	var vecToClick=posDisplay-(game.map_view.rect_position+(game.map_view.rect_size/2))
+	var scaleCam=vecToClick/(game.map_view.rect_size/2)
+	var clickInMap=nodeCamera2d.transform.origin+(((vps/2)*nodeCamera2d.zoom)*scaleCam)
+
+	return clickInMap
+	
+
+#Вернуть позицию с карты на экране
+func getPosDisplayFromMap(posMap):
+	
+	var vps=nodeCamera2d.get_viewport().size;
+	var vecToPos=posMap-nodeCamera2d.transform.origin#(game.map_view.rect_position+(game.map_view.rect_size/2))
+	var vecCam=((vps/2)*nodeCamera2d.zoom)
+	var scale=vecToPos/vecCam
+	var centerView=(game.map_view.rect_position+(game.map_view.rect_size/2))
+	var posDisplay=centerView+((game.map_view.rect_size/2)*scale)
+
+	return posDisplay
+
 func input(e):
 	if e is InputEventMouseButton:
 		if e.button_index==BUTTON_LEFT:
@@ -307,14 +330,24 @@ func input(e):
 			if !e.pressed:
 				var mouseClick=game.map.checkEventPosition(e)
 				if clickMousePos!=null && mouseClick!=null:
-					if (clickMousePos-mouseClick).length()<3:
+					if (clickMousePos-mouseClick).length()<10:
 					
 						var vps=nodeCamera2d.get_viewport().size;
 						
-						var vecToPointScreen=mouseClick-(vps/2)
-						vecToPointScreen*=nodeCamera2d.zoom
-						
-						var clickInMap:Vector2=nodeCamera2d.transform.origin+vecToPointScreen
+#						var vecToPointScreen=mouseClick-(vps/2)
+#						vecToPointScreen*=nodeCamera2d.zoom
+#
+#						var clickInMap:Vector2=nodeCamera2d.transform.origin+vecToPointScreen
+#
+						#======
+					
+#						var vecToClick=clickMousePos-(game.map_view.rect_position+(game.map_view.rect_size/2))
+#
+#						var scaleCam=vecToClick/(game.map_view.rect_size/2)
+#						print(scaleCam)
+#						var clickInMap=nodeCamera2d.transform.origin+(((vps/2)*nodeCamera2d.zoom)*scaleCam)
+#
+						var clickInMap=getPosMapFromDisplay(clickMousePos)
 						
 						emit_signal("onCameraGameClickMap",clickInMap)
 				
