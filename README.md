@@ -2,4 +2,4 @@
 
 Online Turn Based Strategy
 
-https://araxxes.com
+https://araxxes.com/play
