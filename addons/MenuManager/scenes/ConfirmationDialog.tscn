@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://UI/src/theme/gdquest.theme" type="Theme" id=1]
+[ext_resource path="res://addons/MenuManager/scenes/ConfirmationDialog.gd" type="Script" id=2]
+
+[node name="ConfirmationDialog" type="ConfirmationDialog"]
+margin_left = 138.0
+margin_top = 82.0
+margin_right = 338.0
+margin_bottom = 152.0
+theme = ExtResource( 1 )
+window_title = "ui_save_dialog_title"
+dialog_text = "ui_save_dialog"
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

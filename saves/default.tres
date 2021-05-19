@@ -1,0 +1,48 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://scripts_new/Utility/SaveSettings.gd" type="Script" id=1]
+
+
+[resource]
+script = ExtResource( 1 )
+resolution = {
+}
+audio = {
+}
+inputs = {
+"Down": {
+},
+"Jump": {
+0: {
+"EventType": "InputEventKey",
+"scancode": 76
+},
+1: {
+"EventType": "InputEventKey",
+"scancode": 79
+},
+2: {
+"EventType": "InputEventKey",
+"scancode": 72
+}
+},
+"Left": {
+},
+"Right": {
+},
+"Up": {
+}
+}
+settings = {
+"b": "ti kuda polez",
+"brightness": 255.0,
+"cursor": "res://addons/MouseManager/cursor_node/Cursor3.tscn",
+"cursor_size": 1.0,
+"cursor_texture": "res://Assets/cursor_45.png",
+"fullscreen": false,
+"resolution": Vector2( 1024, 600 ),
+"sound_volume": 0.0,
+"ui_tint": Color( 0, 0, 0, 1 ),
+"window_size": Vector2( 1024, 600 )
+}
+language = "ru"

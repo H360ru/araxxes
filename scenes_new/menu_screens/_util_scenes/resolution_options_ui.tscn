@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripts_new/resolution_options.gd" type="Script" id=1]
+
+[node name="ResolutionsOptions" type="OptionButton"]
+margin_top = 29.0
+margin_right = 213.0
+margin_bottom = 50.0
+flat = true
+expand_icon = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -1,0 +1,29 @@
+id,en,ru
+ui_play,Play,Играть
+ui_continue,Continue,Продолжить
+ui_settings,Settings,Настройки
+ui_controls,Controls,Управление
+ui_help,Help,Помощь
+ui_exit,Exit,Выход
+ui_exit_to_menu,Exit to menu,Выход в меню
+ui_back,Back,Назад
+ui_default,Default,По умолчанию
+ui_game,Game,Игра
+ui_language,Language,Язык
+ui_cursor,Cursor,Курсор
+ui_cursor_size,Cursor size,Размер курсора
+ui_system_cursor,System cursor,Системный курсор
+ui_game_speed,Game speed,Скорость игры
+ui_disable_cutscenes,Disable cutscenes,Отключить катсцены
+ui_video,Video,Видео
+ui_resolution,Resolution,Разрешение
+ui_brightness,Brightness,Яркость
+ui_fullscreen,Fullscreen,Полный экран
+ui_audio,Audio,Аудио
+ui_sound_volume,Sound volume,Громкость звука
+ui_save,Save,Сохранить
+ui_dont_save,Dont save,Не сохранять
+ui_cancel,Cancel,Отмена
+,,
+ui_save_dialog_title,Settings have been changed,Настройки были изменены
+ui_save_dialog,Save changed game settings?,Сохранить измененные настройки игры?
