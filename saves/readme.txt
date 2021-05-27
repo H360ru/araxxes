@@ -1,0 +1,1 @@
+перенести default и settings в Расположение юзера\AppData\Roaming\Godot\app_userdata\Название проекта\saves

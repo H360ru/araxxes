@@ -1,0 +1,202 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "MarginContainer",
+"class": "ColorPalette",
+"language": "GDScript",
+"path": "res://UI/addons/color_palette/interface/ColorPalette.gd"
+}, {
+"base": "Button",
+"class": "ColorSwatch",
+"language": "GDScript",
+"path": "res://UI/addons/color_palette/interface/color_swatch/ColorSwatch.gd"
+}, {
+"base": "MarginContainer",
+"class": "Docker",
+"language": "GDScript",
+"path": "res://UI/addons/gdquest_docker/interface/Docker.gd"
+}, {
+"base": "Node",
+"class": "FsmState",
+"language": "GDScript",
+"path": "res://addons/jm_game_template/jm_state.gd"
+}, {
+"base": "CanvasLayer",
+"class": "GlobalTest",
+"language": "GDScript",
+"path": "res://scenes_new/global/global.gd"
+}, {
+"base": "Container",
+"class": "HFlowContainer",
+"language": "GDScript",
+"path": "res://addons/h_flow_container/h_flow_container.gd"
+}, {
+"base": "Node",
+"class": "MenuTransition",
+"language": "GDScript",
+"path": "res://addons/MenuManager/controls_loader.gd"
+}, {
+"base": "Node",
+"class": "MouseManager",
+"language": "GDScript",
+"path": "res://addons/MouseManager/mouse_manager.gd"
+}, {
+"base": "Control",
+"class": "Option",
+"language": "GDScript",
+"path": "res://addons/SettingsManager/ui_scripts/universal_settings_node.gd"
+}, {
+"base": "OptionButton",
+"class": "OptionButtonSetting",
+"language": "GDScript",
+"path": "res://addons/SettingsManager/ui_scripts/optionbutton_settings_node.gd"
+}, {
+"base": "Reference",
+"class": "PooledObject2D",
+"language": "GDScript",
+"path": "res://addons/jm_game_template/jm_pooled_object_2D.gd"
+}, {
+"base": "Reference",
+"class": "ResourceAsyncLoader",
+"language": "GDScript",
+"path": "res://scripts_new/Utility/ResourceAsyncLoader.gd"
+}, {
+"base": "Control",
+"class": "RichEditorInterface",
+"language": "GDScript",
+"path": "res://UI/addons/rich_text_editor/interface/RichEditorInterface.gd"
+}, {
+"base": "EditorPlugin",
+"class": "RichTextPlugin",
+"language": "GDScript",
+"path": "res://UI/addons/rich_text_editor/RichTextEditor.gd"
+}, {
+"base": "Resource",
+"class": "SaveSettings",
+"language": "GDScript",
+"path": "res://scripts_new/Utility/SaveSettings.gd"
+}, {
+"base": "Node",
+"class": "SettingsManager",
+"language": "GDScript",
+"path": "res://addons/SettingsManager/settings_manager.gd"
+}, {
+"base": "Node",
+"class": "SoundManager",
+"language": "GDScript",
+"path": "res://addons/SoundManager/sound_manager.gd"
+}, {
+"base": "Reference",
+"class": "SubscriptionList",
+"language": "GDScript",
+"path": "res://addons/jm_game_template/jm_subscription_list.gd"
+}, {
+"base": "Control",
+"class": "ui_screen",
+"language": "GDScript",
+"path": "res://scripts_new/ui_tab_script.gd"
+} ]
+_global_script_class_icons={
+"ColorPalette": "",
+"ColorSwatch": "",
+"Docker": "",
+"FsmState": "",
+"GlobalTest": "",
+"HFlowContainer": "res://addons/h_flow_container/h_flow_container.svg",
+"MenuTransition": "res://Assets/AcceptDialog.svg",
+"MouseManager": "",
+"Option": "",
+"OptionButtonSetting": "",
+"PooledObject2D": "",
+"ResourceAsyncLoader": "",
+"RichEditorInterface": "",
+"RichTextPlugin": "",
+"SaveSettings": "",
+"SettingsManager": "",
+"SoundManager": "",
+"SubscriptionList": "",
+"ui_screen": ""
+}
+
+[application]
+
+config/name="Araxxes"
+run/main_scene="res://scenes_new/Game_test.tscn"
+config/icon="res://icon.png"
+config/auto_accept_quit=false
+
+[autoload]
+
+Global="*res://scenes_new/global/Global.tscn"
+SettingsControls="*res://addons/Autoload/SettingsControls.gd"
+SettingsSaveLoad="*res://addons/Autoload/SettingsSaveLoad.gd"
+Settings="*res://addons/Autoload/Settings.gd"
+Console="*res://addons/quentincaffeino-console/src/Console.tscn"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/MenuManager/plugin.cfg", "res://addons/quentincaffeino-console/plugin.cfg" )
+
+[global]
+
+back=false
+
+[input]
+
+click={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+quentincaffeino_console_toggle={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":96,"unicode":0,"echo":false,"script":null)
+ ]
+}
+Left={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":84,"unicode":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":69,"unicode":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777349,"unicode":0,"echo":false,"script":null)
+ ]
+}
+Right={
+"deadzone": 0.5,
+"events": [  ]
+}
+Up={
+"deadzone": 0.5,
+"events": [  ]
+}
+Down={
+"deadzone": 0.5,
+"events": [  ]
+}
+Jump={
+"deadzone": 0.5,
+"events": [  ]
+}
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[locale]
+
+test="ru"
+fallback="ru"
+translations=PoolStringArray( "res://Lacalization/translation2.en.translation", "res://Lacalization/translation2.ru.translation" )
+locale_filter=[ 0, [ "en", "ru" ] ]
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"

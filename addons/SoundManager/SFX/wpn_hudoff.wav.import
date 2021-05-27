@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/wpn_hudoff.wav-40726a2e97867a52df5474a173f50b68.sample"
+
+[deps]
+
+source_file="res://addons/SoundManager/SFX/wpn_hudoff.wav"
+dest_files=[ "res://.import/wpn_hudoff.wav-40726a2e97867a52df5474a173f50b68.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

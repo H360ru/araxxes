@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://addons/MouseManager/cursor_scripts/cursor.gd" type="Script" id=1]
+[ext_resource path="res://Assets/cursor_45.png" type="Texture" id=2]
+[ext_resource path="res://addons/MouseManager/Shader/DirectionalBlur.shader" type="Shader" id=3]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 3 )
+shader_param/angle_degrees = 0.0
+shader_param/Samples = 64
+shader_param/strength = 0.0
+
+[node name="Cursor" type="Sprite"]
+material = SubResource( 1 )
+position = Vector2( -16.25, -36 )
+scale = Vector2( 0.4, 0.4 )
+z_index = 999
+texture = ExtResource( 2 )
+offset = Vector2( 40.4533, 69.8048 )
+script = ExtResource( 1 )
+
+[node name="Tween" type="Tween" parent="."]

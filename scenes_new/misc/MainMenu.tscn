@@ -1,0 +1,119 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://UI/src/theme/gdquest.theme" type="Theme" id=1]
+[ext_resource path="res://scenes_new/menu_screens/settings/settings.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/MouseManager/cursor_node/Cursor.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes_new/misc/Меню_тест.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/ui_окно.png" type="Texture" id=5]
+
+[node name="MainMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1024.0
+margin_bottom = -600.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_left = 354.0
+margin_top = 147.0
+margin_right = 714.0
+margin_bottom = 512.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 344.0
+margin_bottom = 349.0
+color = Color( 0.203922, 0.203922, 0.203922, 0.862745 )
+
+[node name="NinePatchRect" type="NinePatchRect" parent="MarginContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 344.0
+margin_bottom = 349.0
+texture = ExtResource( 5 )
+patch_margin_left = 17
+patch_margin_top = 17
+patch_margin_right = 17
+patch_margin_bottom = 17
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MenuContainer" type="MarginContainer" parent="." groups=[
+"ui_menu",
+]]
+visible = false
+margin_left = 366.0
+margin_top = 171.0
+margin_right = 705.0
+margin_bottom = 492.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="MenuContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 323.0
+margin_bottom = 305.0
+color = Color( 0.239216, 0.239216, 0.239216, 0.862745 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 323.0
+margin_bottom = 305.0
+
+[node name="Играть" type="Button" parent="MenuContainer/VBoxContainer"]
+margin_right = 307.0
+margin_bottom = 21.0
+text = "ui_play"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Настройки" type="Button" parent="MenuContainer/VBoxContainer"]
+margin_top = 29.0
+margin_right = 307.0
+margin_bottom = 50.0
+text = "ui_settings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Помощь" type="Button" parent="MenuContainer/VBoxContainer"]
+margin_top = 58.0
+margin_right = 307.0
+margin_bottom = 79.0
+text = "Помощь"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Выйти" type="Button" parent="MenuContainer/VBoxContainer"]
+margin_top = 87.0
+margin_right = 307.0
+margin_bottom = 108.0
+text = "ui_exit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TabContainer" parent="." instance=ExtResource( 2 )]
+visible = false
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Cursor" parent="." instance=ExtResource( 3 )]
+position = Vector2( 220.254, 328.65 )
+offset = Vector2( 40.9481, 70.4828 )
+
+[node name="Меню" parent="." instance=ExtResource( 4 )]
