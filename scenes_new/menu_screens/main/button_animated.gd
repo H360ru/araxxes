@@ -32,7 +32,7 @@ func _check_mouse(i: bool):
 		_on__mouse_entered()
 
 func _anim(node: Control, reverse = false):
-	#TODO: смещение стартовой при повторных вызовах во время исполнения
+	#TO_DO: смещение стартовой при повторных вызовах во время исполнения
 #	node.visible = true
 	var duration = 0.2
 	var direction = 25

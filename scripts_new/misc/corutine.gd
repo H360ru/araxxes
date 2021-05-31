@@ -41,11 +41,17 @@ func test_numbers(id = null):
 	test(5, id)
 
 func _ready():
-	thread1 = Thread.new()
-	# Third argument is optional userdata, it can be any variable.
-	thread1.start(self, "test_numbers", thread1.get_id())
-#	print("arr.has ", arr.has(['1','2','3']))
-	test_numbers()
+	var _timer = get_tree().create_timer(2)
+	yield(Global.SOUND.async_play_until_signal('ui_accept', _timer, 'timeout'), 'completed')
+	_timer = get_tree().create_timer(1)
+	Global.SOUND.async_play_until_signal('ui_deny', _timer, 'timeout')
+	print("###################timeout#########################")
+#	thread1 = Thread.new()
+#	# Third argument is optional userdata, it can be any variable.
+#	thread1.start(self, "test_numbers", thread1.get_id())
+##	print("arr.has ", arr.has(['1','2','3']))
+#	test_numbers()
 
 func _exit_tree():
-	thread1.wait_to_finish()
+	if thread1:
+		thread1.wait_to_finish()

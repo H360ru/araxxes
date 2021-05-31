@@ -29,11 +29,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/jm_game_template/jm_state.gd"
 }, {
-"base": "CanvasLayer",
-"class": "GlobalTest",
-"language": "GDScript",
-"path": "res://scenes_new/global/global.gd"
-}, {
 "base": "Container",
 "class": "HFlowContainer",
 "language": "GDScript",
@@ -109,7 +104,6 @@ _global_script_class_icons={
 "ColorSwatch": "",
 "Docker": "",
 "FsmState": "",
-"GlobalTest": "",
 "HFlowContainer": "res://addons/h_flow_container/h_flow_container.svg",
 "MenuTransition": "res://Assets/AcceptDialog.svg",
 "MouseManager": "",
@@ -129,7 +123,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Araxxes"
-run/main_scene="res://scenes_new/Game_test.tscn"
+run/main_scene="res://scenes_new/misc/mult_test.tscn"
 config/icon="res://icon.png"
 config/auto_accept_quit=false
 

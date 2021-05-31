@@ -1,6 +1,6 @@
 extends Control
 
-#TODO: удалить скрипт или зарефакторить
+#TO_DO: удалить скрипт или зарефакторить
 class_name ui_screen
 
 onready var _tween = Global.TWEEN#get_node('Tween')
@@ -30,7 +30,7 @@ func _ui_release_focus():
 		get_parent()._back()
 
 func _anim(node: Control, reverse = false):
-	#TODO: смещение стартовой при повторных вызовах во время исполнения
+	#TO_DO: смещение стартовой при повторных вызовах во время исполнения
 	node.visible = true
 	var duration = 0.3
 	var direction = Vector2(1000, 0)
