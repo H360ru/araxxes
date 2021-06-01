@@ -1,0 +1,211 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://UI/src/theme/gdquest.theme" type="Theme" id=1]
+[ext_resource path="res://scenes/menu_screens/_util_scenes/NinePatchRect.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/menu_screens/_util_scenes/NinePatchRectTop.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/menu_screens/main/button_animated.gd" type="Script" id=4]
+[ext_resource path="res://scenes/menu_screens/main/main_menu.gd" type="Script" id=5]
+[ext_resource path="res://Assets/UI/button_wide_hover.svg" type="Texture" id=6]
+[ext_resource path="res://UI/src/theme/fonts/menu_button_font.tres" type="DynamicFont" id=7]
+[ext_resource path="res://Assets/UI/button_normal.tres" type="StyleBox" id=8]
+[ext_resource path="res://Assets/UI/button_anim_hover.tres" type="StyleBox" id=9]
+
+[node name="MainMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer"]
+margin_left = 374.0
+margin_top = 195.0
+margin_right = 649.0
+margin_bottom = 405.0
+rect_min_size = Vector2( 275, 210 )
+mouse_filter = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SVG" type="NinePatchRect" parent="CenterContainer/MarginContainer"]
+self_modulate = Color( 1.3, 1.3, 1.3, 1 )
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 259.0
+margin_bottom = 194.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 6 )
+patch_margin_left = 29
+patch_margin_top = 18
+patch_margin_right = 29
+patch_margin_bottom = 15
+
+[node name="NinePatchRect" parent="CenterContainer/MarginContainer" instance=ExtResource( 2 )]
+visible = false
+self_modulate = Color( 0.290196, 0.290196, 0.290196, 0.901961 )
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 259.0
+margin_bottom = 194.0
+size_flags_vertical = 3
+
+[node name="NinePatchRect2" parent="CenterContainer/MarginContainer" instance=ExtResource( 3 )]
+visible = false
+self_modulate = Color( 0.4, 0.4, 0.4, 1 )
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 259.0
+margin_bottom = 51.0
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/MarginContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 259.0
+margin_bottom = 194.0
+custom_constants/margin_right = 45
+custom_constants/margin_top = 30
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MarginContainer/MarginContainer"]
+margin_left = 20.0
+margin_top = 30.0
+margin_right = 198.0
+margin_bottom = 148.0
+size_flags_vertical = 3
+custom_constants/separation = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Продолжить" type="Button" parent="CenterContainer/MarginContainer/MarginContainer/VBoxContainer"]
+margin_right = 150.0
+margin_bottom = 21.0
+rect_min_size = Vector2( 150, 0 )
+size_flags_horizontal = 0
+custom_styles/hover = ExtResource( 9 )
+custom_styles/focus = ExtResource( 9 )
+custom_styles/normal = ExtResource( 8 )
+align = 0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CenterContainer/MarginContainer/MarginContainer/VBoxContainer/Продолжить"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 16.0
+margin_top = -10.5
+margin_right = 121.0
+margin_bottom = 10.5
+custom_fonts/font = ExtResource( 7 )
+custom_colors/font_color = Color( 0.933333, 0.933333, 0.933333, 1 )
+text = "ui_play"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Настройки" type="Button" parent="CenterContainer/MarginContainer/MarginContainer/VBoxContainer"]
+margin_top = 27.0
+margin_right = 150.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 150, 0 )
+size_flags_horizontal = 0
+custom_styles/hover = ExtResource( 9 )
+custom_styles/focus = ExtResource( 9 )
+custom_styles/normal = ExtResource( 8 )
+align = 0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CenterContainer/MarginContainer/MarginContainer/VBoxContainer/Настройки"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 16.0
+margin_top = -10.5
+margin_right = 121.0
+margin_bottom = 10.5
+custom_fonts/font = ExtResource( 7 )
+custom_colors/font_color = Color( 0.933333, 0.933333, 0.933333, 1 )
+text = "ui_settings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Помощь" type="Button" parent="CenterContainer/MarginContainer/MarginContainer/VBoxContainer"]
+margin_top = 54.0
+margin_right = 150.0
+margin_bottom = 75.0
+rect_min_size = Vector2( 150, 0 )
+size_flags_horizontal = 0
+custom_styles/hover = ExtResource( 9 )
+custom_styles/focus = ExtResource( 9 )
+custom_styles/normal = ExtResource( 8 )
+align = 0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CenterContainer/MarginContainer/MarginContainer/VBoxContainer/Помощь"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 16.0
+margin_top = -10.5
+margin_right = 121.0
+margin_bottom = 10.5
+custom_fonts/font = ExtResource( 7 )
+custom_colors/font_color = Color( 0.933333, 0.933333, 0.933333, 1 )
+text = "ui_help"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Завершить игру" type="Button" parent="CenterContainer/MarginContainer/MarginContainer/VBoxContainer"]
+margin_top = 81.0
+margin_right = 150.0
+margin_bottom = 102.0
+rect_min_size = Vector2( 150, 0 )
+mouse_filter = 1
+size_flags_horizontal = 0
+custom_styles/hover = ExtResource( 9 )
+custom_styles/focus = ExtResource( 9 )
+custom_styles/normal = ExtResource( 8 )
+align = 0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CenterContainer/MarginContainer/MarginContainer/VBoxContainer/Завершить игру"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 16.0
+margin_top = -10.5
+margin_right = 121.0
+margin_bottom = 10.5
+custom_fonts/font = ExtResource( 7 )
+custom_colors/font_color = Color( 0.933333, 0.933333, 0.933333, 1 )
+text = "ui_exit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="CenterContainer/MarginContainer/MarginContainer/VBoxContainer/Продолжить" to="." method="_on_play"]
+[connection signal="pressed" from="CenterContainer/MarginContainer/MarginContainer/VBoxContainer/Настройки" to="." method="_on_settings"]
+[connection signal="pressed" from="CenterContainer/MarginContainer/MarginContainer/VBoxContainer/Помощь" to="." method="_on_help"]
+[connection signal="pressed" from="CenterContainer/MarginContainer/MarginContainer/VBoxContainer/Завершить игру" to="." method="_on_exit"]

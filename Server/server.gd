@@ -17,9 +17,26 @@ var max_peers = 100
 #	Console.write_line("Server node added")
 #	pass
 
+func create_multiplayer_peer():
+	network = NetworkedMultiplayerENet.new()
+	
+	#TO_DO: доделать реакции на нетворк ивенты
+	network.connect("connection_succeeded", self, "_on_peer_event")
+	network.connect("connection_failed", self, "_on_peer_event")
+	
+	# server side
+	network.connect("peer_connected", self, "_on_client_connected")
+	network.connect("peer_disconnected", self, "_on_client_disconnected")
+	
+	# client side
+	network.connect("server_disconnected", self, "_on_peer_event")
+	pass
+
+func _on_peer_event(id = null):
+	Console.write_line('connection_status: ' + str(network.get_connection_status()))
 
 func create_server():
-	network = NetworkedMultiplayerENet.new()
+	create_multiplayer_peer()
 	
 	var check = network.create_server(port, max_peers)
 	Global.get_tree().set_network_peer(network)
@@ -29,8 +46,6 @@ func create_server():
 		Console.write_line("Server creation error: "+check)
 		return
 	
-	network.connect("peer_connected", self, "_on_client_connected")
-	network.connect("peer_disconnected", self, "_on_client_disconnected")
 
 func _on_client_connected(_user_id):
 	Console.write_line("client_connected")
@@ -46,7 +61,7 @@ remote func _receive_message(_text, _login_name):
 
 
 func create_client():
-	network = NetworkedMultiplayerENet.new()
+	create_multiplayer_peer()
 	
 	var _ip = '127.0.0.1'
 	var _port = 1909
