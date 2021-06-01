@@ -29,11 +29,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/jm_game_template/jm_state.gd"
 }, {
-"base": "CanvasLayer",
-"class": "GlobalTest",
-"language": "GDScript",
-"path": "res://scenes_new/global/global.gd"
-}, {
 "base": "Container",
 "class": "HFlowContainer",
 "language": "GDScript",
@@ -67,7 +62,7 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "ResourceAsyncLoader",
 "language": "GDScript",
-"path": "res://scripts_new/Utility/ResourceAsyncLoader.gd"
+"path": "res://scripts/Utility/ResourceAsyncLoader.gd"
 }, {
 "base": "Control",
 "class": "RichEditorInterface",
@@ -82,7 +77,7 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "SaveSettings",
 "language": "GDScript",
-"path": "res://scripts_new/Utility/SaveSettings.gd"
+"path": "res://scripts/Utility/SaveSettings.gd"
 }, {
 "base": "Node",
 "class": "SettingsManager",
@@ -102,14 +97,13 @@ _global_script_classes=[ {
 "base": "Control",
 "class": "ui_screen",
 "language": "GDScript",
-"path": "res://scripts_new/ui_tab_script.gd"
+"path": "res://scripts/ui_tab_script.gd"
 } ]
 _global_script_class_icons={
 "ColorPalette": "",
 "ColorSwatch": "",
 "Docker": "",
 "FsmState": "",
-"GlobalTest": "",
 "HFlowContainer": "res://addons/h_flow_container/h_flow_container.svg",
 "MenuTransition": "res://Assets/AcceptDialog.svg",
 "MouseManager": "",
@@ -129,13 +123,13 @@ _global_script_class_icons={
 [application]
 
 config/name="Araxxes"
-run/main_scene="res://scenes_new/Game_test.tscn"
+run/main_scene="res://tests/path_follow.tscn"
 config/icon="res://icon.png"
 config/auto_accept_quit=false
 
 [autoload]
 
-Global="*res://scenes_new/global/Global.tscn"
+Global="*res://scenes/global/Global.tscn"
 SettingsControls="*res://addons/Autoload/SettingsControls.gd"
 SettingsSaveLoad="*res://addons/Autoload/SettingsSaveLoad.gd"
 Settings="*res://addons/Autoload/Settings.gd"

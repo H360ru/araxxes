@@ -2,6 +2,9 @@
 # Modified code of Godot-GameTemplate
 # Star original github project: https://github.com/nezvers/Godot-GameTemplate
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# @todo #9 Класс/библиотека отвечающая за загрузку, сохранение файлов
+#  Стоит применить какой-то паттерн, например, дикоратор
+#  чтобы отделить интерфейсы от реализации
 extends Node
 
 #var Save / Load

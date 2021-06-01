@@ -18,7 +18,7 @@ func _ready()->void:
 	#SettingsSaveLoad.save_settings()											#Call this method to trigger Settings saving
 	settings_init()
 
-#TODO: переместить вызов в менеджер настроек
+#TO_DO: переместить вызов в менеджер настроек
 func settings_init():
 	if !SettingsSaveLoad.load_settings():
 		SettingsControls.default_controls()

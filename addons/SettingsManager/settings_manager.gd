@@ -1,5 +1,5 @@
 extends Node
-
+# @todo #9 Класс обработки примененных настроек
 class_name SettingsManager
 
 # GAME SETTINGS
@@ -27,10 +27,12 @@ var sound_volume: float = 0
 #SYSTEM PROPERTY
 # чек пользовательских изменений. Задавать только из вызовов интерфейсов или консольных команд
 # (не при загрузке сейва)
-#TODO: подумать над рефакторингом
+#TO_DO: подумать над рефакторингом
 var changed: bool = false
 
-#TODO: передавать ссылку конфигов инициализации
+#TO_DO: ближе к альфе добавить сейвам версию и грамотный обработчик конфликтов
+
+#TO_DO: передавать ссылку конфигов инициализации
 #func _init(settings_file):
 #	print('property_list:')
 ##	for i in get_property_list():
@@ -40,16 +42,11 @@ var changed: bool = false
 #	#BUG: вызывало дублирование курсора 
 ##	set_settings(get_settings())
 
-
-
-#func set(property, value):
-#	prints('Property set test:', property, value)
-
 # Main setter interface
 func set_value(property, value):
 	prints('Property test:', property, value)
 	
-	#TODO: проверку на существование переменной
+	#TO_DO: проверку на существование переменной
 	set(property, value)
 	
 	#поведение при присваивании
@@ -69,7 +66,7 @@ func set_value(property, value):
 #			resolution = Global.get_viewport().size
 		'local':
 			TranslationServer.set_locale(value)
-		#TODO: удалить текстуру курсора
+		#TO_DO: удалить текстуру курсора
 		'cursor_texture':
 			Global.MOUSE.set_cursor_texture(load(value))
 		'cursor':
@@ -106,6 +103,8 @@ func get_settings() -> Dictionary:
 	for i in get_script().get_script_property_list():
 		settings[i['name']] = get(i['name'])
 	
+	#TO_DO: возможно следует как-то иначе сделать логику постобработки сейва
+	# пока вот такой костыль
 	#!!!ERASE SYSTEM PROPERTYS!!!
 	settings.erase('changed')
 	#!!!

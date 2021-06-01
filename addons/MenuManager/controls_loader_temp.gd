@@ -115,7 +115,6 @@
 ##	to.rect_position = to.pos
 #
 #static func _anim(node: Control, reverse = false):
-#	#TODO: смещение стартовой при повторных вызовах во время исполнения
 #	node.visible = true
 #	var duration = 0.3
 #	var direction = Vector2(1000, 0)

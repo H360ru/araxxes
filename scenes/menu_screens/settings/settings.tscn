@@ -1,0 +1,536 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://Assets/UI/button_hover.tres" type="StyleBox" id=1]
+[ext_resource path="res://Assets/UI/button_normal.tres" type="StyleBox" id=2]
+[ext_resource path="res://UI/src/theme/gdquest.theme" type="Theme" id=3]
+[ext_resource path="res://scripts/languge_option.gd" type="Script" id=4]
+[ext_resource path="res://scenes/menu_screens/settings/SettingsMenu.gd" type="Script" id=5]
+[ext_resource path="res://addons/SettingsManager/ui_scripts/universal_settings_node.gd" type="Script" id=7]
+[ext_resource path="res://scripts/SpinBox_ui.gd" type="Script" id=8]
+[ext_resource path="res://Assets/UI/hex_button_active_ui.png" type="Texture" id=9]
+[ext_resource path="res://Assets/UI/hex_min_ui.png" type="Texture" id=10]
+[ext_resource path="res://Assets/UI/hex_button_ui.png" type="Texture" id=11]
+[ext_resource path="res://scenes/menu_screens/_util_scenes/resolution_options_ui.tscn" type="PackedScene" id=12]
+[ext_resource path="res://scenes/menu_screens/_util_scenes/NinePatchRectTop.tscn" type="PackedScene" id=13]
+[ext_resource path="res://scenes/menu_screens/_util_scenes/cursor_options_ui.tscn" type="PackedScene" id=14]
+[ext_resource path="res://scenes/menu_screens/_util_scenes/NinePatchRect.tscn" type="PackedScene" id=15]
+
+[sub_resource type="StyleBoxTexture" id=1]
+texture = ExtResource( 9 )
+region_rect = Rect2( 0, 0, 15, 17 )
+margin_left = 7.0
+margin_right = 7.0
+modulate_color = Color( 0.752941, 0.752941, 0.752941, 1 )
+
+[sub_resource type="StyleBoxTexture" id=2]
+texture = ExtResource( 11 )
+region_rect = Rect2( 0, 0, 15, 17 )
+margin_left = 7.0
+margin_right = 7.0
+modulate_color = Color( 0.509804, 0.509804, 0.509804, 1 )
+
+[node name="TabContainer" type="MarginContainer" groups=[
+"ui_menu",
+]]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 267.0
+margin_top = 65.0
+margin_right = -268.0
+margin_bottom = -61.0
+focus_mode = 2
+theme = ExtResource( 3 )
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="NinePatchRect" parent="." instance=ExtResource( 15 )]
+self_modulate = Color( 0.290196, 0.290196, 0.290196, 0.901961 )
+margin_top = 0.0
+margin_right = 489.0
+margin_bottom = 474.0
+
+[node name="NinePatchRect2" parent="." instance=ExtResource( 13 )]
+self_modulate = Color( 0.4, 0.4, 0.4, 1 )
+margin_right = 489.0
+
+[node name="Настройки" type="MarginContainer" parent="."]
+margin_right = 489.0
+margin_bottom = 474.0
+mouse_filter = 1
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="GridContainer" parent="Настройки"]
+margin_left = 5.0
+margin_top = 10.0
+margin_right = 479.0
+margin_bottom = 464.0
+custom_constants/vseparation = 6
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer"]
+margin_right = 474.0
+margin_bottom = 21.0
+text = "Settings"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Настройки/VBoxContainer"]
+margin_top = 27.0
+margin_right = 474.0
+margin_bottom = 373.0
+size_flags_horizontal = 3
+custom_constants/separation = 6
+dragger_visibility = 1
+
+[node name="NinePatchRect2" parent="Настройки/VBoxContainer/HSplitContainer" instance=ExtResource( 15 )]
+visible = false
+margin_top = 0.0
+margin_right = 48.0
+margin_bottom = 157.0
+
+[node name="GameSettings" type="MarginContainer" parent="Настройки/VBoxContainer/HSplitContainer"]
+margin_right = 221.0
+margin_bottom = 346.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="NinePatchRect" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings" instance=ExtResource( 15 )]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_top = 0.0
+margin_right = 221.0
+margin_bottom = 346.0
+
+[node name="NinePatchRect2" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings" instance=ExtResource( 13 )]
+margin_right = 221.0
+
+[node name="MarginContainer2" type="MarginContainer" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings"]
+margin_right = 221.0
+margin_bottom = 346.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 211.0
+margin_bottom = 336.0
+rect_clip_content = true
+custom_constants/separation = 9
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer"]
+margin_right = 201.0
+margin_bottom = 21.0
+mouse_filter = 1
+text = "ui_game"
+
+[node name="Язык" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer"]
+margin_top = 30.0
+margin_right = 201.0
+margin_bottom = 51.0
+mouse_filter = 1
+text = "Language"
+
+[node name="OptionButton3" type="OptionButton" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer"]
+margin_top = 60.0
+margin_right = 201.0
+margin_bottom = 81.0
+flat = true
+expand_icon = true
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+setting = "local"
+
+[node name="Game speed" type="HBoxContainer" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer"]
+margin_top = 90.0
+margin_right = 201.0
+margin_bottom = 121.0
+size_flags_stretch_ratio = 8.32
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer/Game speed"]
+margin_top = 5.0
+margin_right = 107.0
+margin_bottom = 26.0
+mouse_filter = 1
+size_flags_horizontal = 3
+text = "Game speed"
+
+[node name="SpinBox" type="SpinBox" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer/Game speed"]
+margin_left = 127.0
+margin_right = 201.0
+margin_bottom = 31.0
+min_value = 1.0
+max_value = 6.0
+value = 1.0
+rounded = true
+align = 1
+suffix = "x"
+script = ExtResource( 8 )
+setting = "game_speed"
+
+[node name="CheckBox" type="CheckBox" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer/Game speed"]
+visible = false
+margin_left = 197.0
+margin_right = 213.0
+margin_bottom = 21.0
+mouse_filter = 1
+script = ExtResource( 7 )
+setting = "fullscreen"
+
+[node name="Cursor" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer"]
+margin_top = 130.0
+margin_right = 201.0
+margin_bottom = 151.0
+mouse_filter = 1
+text = "Cursor"
+
+[node name="OptionButton2" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer" instance=ExtResource( 14 )]
+margin_top = 160.0
+margin_right = 201.0
+margin_bottom = 210.0
+setting = "cursor"
+
+[node name="Cursor2" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer"]
+margin_top = 219.0
+margin_right = 201.0
+margin_bottom = 240.0
+mouse_filter = 1
+text = "Cursor size"
+
+[node name="HSlider" type="HSlider" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer"]
+margin_top = 249.0
+margin_right = 201.0
+margin_bottom = 266.0
+custom_icons/grabber_highlight = ExtResource( 10 )
+custom_icons/grabber = ExtResource( 10 )
+min_value = 0.1
+max_value = 2.0
+step = 0.1
+value = 0.4
+script = ExtResource( 7 )
+setting = "cursor_size"
+
+[node name="Курсор" type="HBoxContainer" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer"]
+visible = false
+margin_top = 275.0
+margin_right = 201.0
+margin_bottom = 296.0
+size_flags_stretch_ratio = 8.32
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer/Курсор"]
+margin_right = 165.0
+margin_bottom = 21.0
+mouse_filter = 1
+size_flags_horizontal = 3
+text = "Системный курсор"
+
+[node name="CheckBox" type="CheckBox" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer/Курсор"]
+margin_left = 185.0
+margin_right = 201.0
+margin_bottom = 21.0
+mouse_filter = 1
+
+[node name="Курсор2" type="HBoxContainer" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer"]
+margin_top = 275.0
+margin_right = 201.0
+margin_bottom = 296.0
+size_flags_stretch_ratio = 8.32
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer/Курсор2"]
+margin_right = 165.0
+margin_bottom = 21.0
+mouse_filter = 1
+size_flags_horizontal = 3
+text = "Системный курсор"
+
+[node name="CheckBox" type="CheckBox" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer/Курсор2"]
+margin_left = 185.0
+margin_right = 201.0
+margin_bottom = 21.0
+mouse_filter = 1
+script = ExtResource( 7 )
+setting = "use_os_cursor"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer"]
+margin_top = 305.0
+margin_right = 201.0
+margin_bottom = 326.0
+size_flags_stretch_ratio = 8.32
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer/HBoxContainer"]
+margin_right = 177.0
+margin_bottom = 21.0
+mouse_filter = 1
+text = "Отключить катсцены"
+
+[node name="CheckBox" type="CheckBox" parent="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer/HBoxContainer"]
+margin_left = 185.0
+margin_right = 201.0
+margin_bottom = 21.0
+mouse_filter = 1
+
+[node name="AudioVideo" type="VBoxContainer" parent="Настройки/VBoxContainer/HSplitContainer"]
+margin_left = 229.0
+margin_right = 474.0
+margin_bottom = 346.0
+
+[node name="VideoSettings" type="MarginContainer" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo"]
+margin_right = 245.0
+margin_bottom = 182.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="NinePatchRect" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings" instance=ExtResource( 15 )]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_top = 0.0
+margin_right = 245.0
+margin_bottom = 182.0
+
+[node name="NinePatchRect2" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings" instance=ExtResource( 13 )]
+self_modulate = Color( 0.2144, 0.67, 0.64722, 1 )
+margin_right = 245.0
+
+[node name="MarginContainer2" type="MarginContainer" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings"]
+margin_right = 245.0
+margin_bottom = 182.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings/MarginContainer2"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 235.0
+margin_bottom = 172.0
+rect_clip_content = true
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings/MarginContainer2/VBoxContainer"]
+margin_right = 225.0
+margin_bottom = 21.0
+mouse_filter = 1
+text = "ui_video"
+
+[node name="Resolution" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings/MarginContainer2/VBoxContainer"]
+margin_top = 29.0
+margin_right = 225.0
+margin_bottom = 50.0
+mouse_filter = 1
+text = "Resolution"
+
+[node name="OptionButton" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings/MarginContainer2/VBoxContainer" instance=ExtResource( 12 )]
+margin_top = 58.0
+margin_right = 225.0
+margin_bottom = 79.0
+setting = "resolution"
+
+[node name="Brightness" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings/MarginContainer2/VBoxContainer"]
+margin_top = 87.0
+margin_right = 225.0
+margin_bottom = 108.0
+mouse_filter = 1
+text = "Brightness"
+
+[node name="BrightnessSlider" type="HSlider" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings/MarginContainer2/VBoxContainer"]
+margin_top = 116.0
+margin_right = 225.0
+margin_bottom = 133.0
+rect_min_size = Vector2( 201, 0 )
+custom_icons/grabber_highlight = ExtResource( 10 )
+custom_icons/grabber = ExtResource( 10 )
+min_value = 55.0
+max_value = 455.0
+value = 255.0
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+setting = "brightness"
+
+[node name="Fullscreen" type="HBoxContainer" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings/MarginContainer2/VBoxContainer"]
+margin_top = 141.0
+margin_right = 225.0
+margin_bottom = 162.0
+size_flags_stretch_ratio = 8.32
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings/MarginContainer2/VBoxContainer/Fullscreen"]
+margin_right = 189.0
+margin_bottom = 21.0
+mouse_filter = 1
+size_flags_horizontal = 3
+text = "Fullscreen"
+
+[node name="CheckBox" type="CheckBox" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/VideoSettings/MarginContainer2/VBoxContainer/Fullscreen"]
+margin_left = 209.0
+margin_right = 225.0
+margin_bottom = 21.0
+mouse_filter = 1
+script = ExtResource( 7 )
+setting = "fullscreen"
+
+[node name="AudioSettings" type="MarginContainer" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo"]
+margin_top = 190.0
+margin_right = 245.0
+margin_bottom = 346.0
+size_flags_vertical = 3
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="NinePatchRect" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/AudioSettings" instance=ExtResource( 15 )]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_top = 0.0
+margin_right = 245.0
+margin_bottom = 156.0
+
+[node name="NinePatchRect3" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/AudioSettings" instance=ExtResource( 13 )]
+self_modulate = Color( 0.28, 1, 0.412, 1 )
+margin_right = 245.0
+
+[node name="MarginContainer2" type="MarginContainer" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/AudioSettings"]
+margin_right = 245.0
+margin_bottom = 156.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/AudioSettings/MarginContainer2"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 235.0
+margin_bottom = 146.0
+rect_clip_content = true
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/AudioSettings/MarginContainer2/VBoxContainer"]
+margin_right = 225.0
+margin_bottom = 21.0
+mouse_filter = 1
+text = "Audio"
+
+[node name="SoundVolume" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/AudioSettings/MarginContainer2/VBoxContainer"]
+margin_top = 29.0
+margin_right = 225.0
+margin_bottom = 50.0
+mouse_filter = 1
+text = "Sound volume"
+
+[node name="SoundVolumeSlider" type="HSlider" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/AudioSettings/MarginContainer2/VBoxContainer"]
+margin_top = 58.0
+margin_right = 225.0
+margin_bottom = 75.0
+custom_icons/grabber_highlight = ExtResource( 10 )
+custom_icons/grabber = ExtResource( 10 )
+min_value = -24.0
+max_value = 24.0
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+setting = "sound_volume"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/AudioSettings/MarginContainer2/VBoxContainer"]
+visible = false
+margin_top = 112.0
+margin_right = 454.0
+margin_bottom = 133.0
+size_flags_stretch_ratio = 8.32
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/AudioSettings/MarginContainer2/VBoxContainer/HBoxContainer"]
+margin_right = 418.0
+margin_bottom = 21.0
+mouse_filter = 1
+size_flags_horizontal = 3
+text = "Полный экран"
+
+[node name="AudioCheckBox" type="CheckBox" parent="Настройки/VBoxContainer/HSplitContainer/AudioVideo/AudioSettings/MarginContainer2/VBoxContainer/HBoxContainer"]
+margin_left = 438.0
+margin_right = 454.0
+margin_bottom = 21.0
+mouse_filter = 1
+script = ExtResource( 7 )
+setting = "fullscreen"
+
+[node name="Default" type="Button" parent="Настройки/VBoxContainer"]
+margin_top = 379.0
+margin_right = 474.0
+margin_bottom = 400.0
+custom_styles/hover = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
+text = "default"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Управление" type="Button" parent="Настройки/VBoxContainer"]
+margin_top = 406.0
+margin_right = 474.0
+margin_bottom = 427.0
+text = "Управление"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Выйти2" type="Button" parent="Настройки/VBoxContainer"]
+margin_top = 433.0
+margin_right = 474.0
+margin_bottom = 454.0
+custom_styles/hover = ExtResource( 1 )
+custom_styles/focus = ExtResource( 1 )
+custom_styles/normal = ExtResource( 2 )
+text = "Назад"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Играть2" type="Button" parent="."]
+visible = false
+margin_right = 489.0
+margin_bottom = 474.0
+text = "Играть Play"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Настройки2" type="Button" parent="."]
+visible = false
+margin_right = 489.0
+margin_bottom = 474.0
+text = "Настройки"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Помощь2" type="Button" parent="."]
+visible = false
+margin_right = 489.0
+margin_bottom = 474.0
+text = "Помощь"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="."]
+
+[connection signal="toggled" from="Настройки/VBoxContainer/HSplitContainer/GameSettings/MarginContainer2/VBoxContainer/Курсор/CheckBox" to="." method="_on_CheckBox_toggled"]
+[connection signal="pressed" from="Настройки/VBoxContainer/Default" to="." method="_on_Default_pressed"]
