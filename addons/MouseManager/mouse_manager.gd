@@ -16,7 +16,7 @@ func set_visible(value):
 	visible = value
 	toggle_cursor(value)
 
-#TO_DO: упразнить
+#TODO: разобраться в необходимости
 func set_cursor_texture(txt:Resource):
 	var node = get_node_or_null('Cursor')
 	if node:
@@ -25,7 +25,7 @@ func set_cursor_texture(txt:Resource):
 #провести инициализацию настроек
 #func _init():
 
-#TO_DO: переписать интерфейс понятно
+#TODO: переписать понятно
 func change_cursor(path:String = Global.SETTINGS.cursor):
 	if Global.SETTINGS.use_os_cursor:
 		return
@@ -59,7 +59,7 @@ func toggle_cursor(show:bool):
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		else:
 	#		add_child(load(SETTINGS.cursor).instance())
-			#TO_DO: переименовать функции понятно
+			#TODO: переименовать функции понятно
 			change_cursor(Global.SETTINGS.cursor)
 	else:
 		if Global.SETTINGS.use_os_cursor:

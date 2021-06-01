@@ -1,6 +1,5 @@
 extends Node
-# @todo #9 Менеджер звуков
-#  Пока поддерживает только простейшие глобальные звуки (без учета удаленности)
+
 class_name SoundManager
 
 # Declare member variables here. Examples:
@@ -24,14 +23,6 @@ func play(sound_name: String = 'ui_accept'):
 	if !library[sound_name].is_playing():
 		library[sound_name].play()
 		print("SOUND")
-	return library[sound_name]
-
-# нужна ли функция?
-func async_play_until_signal(_sound_name: String, _object: Object, _signal: String):
-	var _sound = play(_sound_name)
-	set_loop_mode(_sound.stream, 1)
-	yield(_object, _signal)
-	_sound.stop()
 
 func load_sounds(init_sounds: Dictionary):
 	prints("Lib test:", init_sounds)
@@ -43,13 +34,4 @@ func create_player(sound_path: String):
 	var player = AudioStreamPlayer.new()
 	add_child(player)
 	player.stream = load(sound_path)
-#	player.stream.loop_mode = 1
-	set_loop_mode(player.stream, 0)
-#	print(player.stream)
 	return player
-
-func set_loop_mode(_stream: AudioStream, _mode: int):
-	if _stream is AudioStreamOGGVorbis:
-		_stream.loop = bool(_mode)
-	else:
-		_stream.loop_mode = _mode

@@ -1,30 +1,24 @@
 extends CanvasLayer
-# @todo #9 Глобальный класс отвечающий за
-#  инициализацию всех модулей, обработку системных событий
-#  согласно предустановленным конфигам системы
-#  и аргументам командной строки
 
-#class_name Global
+class_name GlobalTest
 
+# Declare member variables here. Examples:
 onready var environment = get_node("WorldEnvironment").get_environment()
 onready var TWEEN = get_node("Tween")
 var SETTINGS = SettingsManager.new()
-onready var SOUND = SoundManager.new()
+onready var SOUND = SoundManager.new()#$AudioStreamPlayer
 onready var MOUSE = MouseManager.new()
 
 func _init():
 	print("GLOBAL INIT")
+	print(SETTINGS)
 #	initialisation()
-
-func _ready():
-	MOUSE.toggle_cursor(true)
 	
-	add_child(SOUND)
-
-	#TO_DO: загрузка инициализирующих настроек до\взамен загрузки основного профиля
+#	connect()
+	#TODO: загрузка инициализирующих настроек до\взамен загрузки основного профиля
 
 #Обработчик системных/служебных нотификаций (согласно конфигам ос)
-#TO_DO: NOTIFICATION_CRASH
+#TODO: NOTIFICATION_CRASH
 func _notification(what: int):
 	if what == NOTIFICATION_WM_QUIT_REQUEST:
 		#ProjectSettings.set_setting("application/config/auto_accept_quit", false)
@@ -39,6 +33,8 @@ func _notification(what: int):
 func initialisation(cmdline_args = null):
 	print("Cmdline args: ", OS.get_cmdline_args())
 	system_check()
+	
+	
 
 func system_check():
 	var feature_arr = ["Android", "HTML5", "JavaScript", "OSX", "iOS", "UWP", "Windows", "X11",\
@@ -59,7 +55,15 @@ func system_check():
 #	if OS.screen_orientation == OS.SCREEN_ORIENTATION_LANDSCAPE:
 #	get_screen_orientation()
 
-#TO_DO: сделать понятнее интерфейс
+# Called when the node enters the scene tree for the first time.
+func _ready():
+#	print('OS.is_userfs_persistent: ', OS.is_userfs_persistent())
+
+	MOUSE.toggle_cursor(true)
+	
+	add_child(SOUND)
+
+#TODO: сделать понятнее интерфейс
 func get_screen_orientation() -> float:
 #	if OS.screen_orientation%2 == 0:
 #		print("Альбомная ориентация")

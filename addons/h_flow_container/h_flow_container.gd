@@ -7,10 +7,10 @@ class_name HFlowContainer, "./h_flow_container.svg"
 # using their minimum size, and will then continue on the next row.
 # Does not use SIZE_EXPAND flags of children.
 
-# TO_DO: half-respect vertical SIZE_EXPAND flags by expanding the child to match
+# TODO: half-respect vertical SIZE_EXPAND flags by expanding the child to match
 #       the tallest child in that row?
-# TO_DO: Respect scaled children?
-# TO_DO: Can we find a way to intuitively use a child's horizontal SIZE_EXPAND
+# TODO: Respect scaled children?
+# TODO: Can we find a way to intuitively use a child's horizontal SIZE_EXPAND
 #       flag?
 
 export var horizontal_margin: float = 5
@@ -54,7 +54,7 @@ func _notification(what):
 			# We are either smaller or larger than we thought we would
 			# be, last time we menitioned it.
 			# Have our parent re-evaluate our size.
-			# TO_DO: Maybe find a better way instead of briefly 
+			# TODO: Maybe find a better way instead of briefly 
 			#       exceeding our reported minimum size.
 			rect_min_size = Vector2(0, 20000)
 			rect_min_size = Vector2(0, 0)

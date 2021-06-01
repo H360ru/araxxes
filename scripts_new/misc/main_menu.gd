@@ -30,7 +30,7 @@
 #	_anim_test()
 #
 #func _anim(node: Control):
-#	#TO_DO: смещение стартовой при повторных вызовах во время исполнения
+#	#TODO: смещение стартовой при повторных вызовах во время исполнения
 #	node.visible = true
 #	var duration = 0.3
 ##	var pos = node.rect_position

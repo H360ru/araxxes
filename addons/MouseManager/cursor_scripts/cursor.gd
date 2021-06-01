@@ -20,14 +20,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-#	position = get_global_mouse_position()
-#	_shader.set_shader_param("strength", (prev_pos - position).length()/60)
-#	_shader.set_shader_param("angle_degrees", rad2deg((prev_pos - position).angle()))
-#	prev_pos = position
-#	if get_tree().is_connected()
-	update()
-
-func update():
 	position = get_global_mouse_position()
 	_shader.set_shader_param("strength", (prev_pos - position).length()/60)
 	_shader.set_shader_param("angle_degrees", rad2deg((prev_pos - position).angle()))

@@ -1,4 +1,4 @@
-# TO_DO Дополнительные команды для консоли
+
 extends Reference
 
 
@@ -19,17 +19,10 @@ func _init(console):
 		.set_description('Outputs usage instructions.')\
 		.add_argument('command', TYPE_STRING)\
 		.add_argument('node', TYPE_STRING)\
-		.add_argument('arg', TYPE_STRING)\
+		.add_argument('arg', TYPE_ARRAY)\
 		.register()
 	
 	self._console.add_command('input', self, 'input')\
-		.register()
-	
-	self._console.add_command('chat', self, '_chat')\
-		.add_argument('login_name', TYPE_STRING)\
-		.register()
-	
-	self._console.add_command('server_chat', self, '_server_chat')\
 		.register()
 	
 	self._console.add_command('screen_orientation', self, '_screen_orientation')\
@@ -52,7 +45,7 @@ func _help_test(command_name = null):
 		self._console.write_line(\
 			"Ну чо, привет: "+Global.SETTINGS.b)
 
-#TO_DO:
+#TODO:
 func input():
 #	SettingsSaveLoad.save_settings_config(SettingsControls.get_input_data())
 #	print(SettingsControls.get_input_data())
@@ -67,62 +60,6 @@ func input():
 					print('## ', OS.get_scancode_string(k))
 				else:
 					print('## ', k)#, ': ', actions[i][k])
-
-func _server_chat():
-	var server = load('res://Server/Server.tscn').instance()
-	Global.get_tree().get_root().add_child(server)
-#	yield(server, "ready")
-	server.create_server()
-
-func _chat(_login_name):
-	var server = load('res://Server/Server.tscn').instance()
-	server.login_name = _login_name
-#	server.server_mode = 0
-	Global.get_tree().get_root().add_child(server)
-#	yield(server, "ready")
-	server.create_client()
-	
-#	var network = NetworkedMultiplayerENet.new()
-#	var ip = '127.0.0.1'
-#	var port = 1909
-#	var check = network.create_client(ip, port)
-#	Global.get_tree().set_network_peer(network)
-#	if check == OK:
-#		self._console.write_line("Welcome to chat!")
-#	else:
-#		self._console.write_line("Connection error: "+ check)
-#		return
-	var _exit = true
-	var prefix = '!'
-	_console.Line.disconnect('text_entered', _console.Line, 'execute')
-#	self._console.Line.connect('text_entered', self, "_chat_message")
-	while _exit:
-		yield(self._console.Line,'text_entered')
-		if self._console.Line.text.begins_with(prefix):
-			if _console.Line.text == '!exit':
-				_console.Line.clear()
-				_exit = false
-			else:
-				_console.Line.clear()
-				self._console.write_line('Unknown chat command')
-		else:
-			_chat_message(self._console.Line.text)
-#		var text_buff = self._console.Line.text
-#		_console.clear()
-#		self._console.write_line("chat: "+ text_buff)
-#	self._console.Line.disconnect('text_entered', self, "_chat_message")
-	_console.Line.connect('text_entered', _console.Line, 'execute')
-	self._console.write_line('Exited chat app')
-
-func _chat_message(_text):
-	_console.Line.clear()
-	Global.get_tree().get_root().get_node("Server")._push_message(_text)
-
-#func _push_message(_text):
-#	Global.rpc_id(1, '_receive_message', _text)
-#
-#remote func _print_message(_text):
-#	self._console.write_line("chat: "+ _text)
 
 func _try_call(command_name = null, node = null, arg = ['тест1', 'тест2']):
 	if command_name:
