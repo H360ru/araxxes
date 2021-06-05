@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/vehicle_select2.wav-da117d0e3b475e23581bd4b053f50aab.sample"
+
+[deps]
+
+source_file="res://addons/SoundManager/SFX/vehicle_select2.wav"
+dest_files=[ "res://.import/vehicle_select2.wav-da117d0e3b475e23581bd4b053f50aab.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=true
+compress/mode=0

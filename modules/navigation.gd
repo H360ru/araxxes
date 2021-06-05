@@ -1,5 +1,5 @@
 extends Node
 
-# @todo #9 Библиотека AStar навигации по hex grid
+# TODO: #23 Библиотека AStar навигации по hex grid
 
 

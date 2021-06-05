@@ -30,7 +30,7 @@ func _ui_release_focus():
 		get_parent()._back()
 
 func _anim(node: Control, reverse = false):
-	#TO_DO: смещение стартовой при повторных вызовах во время исполнения
+	#смещение стартовой при повторных вызовах во время исполнения
 	node.visible = true
 	var duration = 0.3
 	var direction = Vector2(1000, 0)

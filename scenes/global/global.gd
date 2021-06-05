@@ -1,5 +1,5 @@
 extends CanvasLayer
-# @todo #9 Глобальный класс отвечающий за
+#TODO: #12 Глобальный класс отвечающий за
 #  инициализацию всех модулей, обработку системных событий
 #  согласно предустановленным конфигам системы
 #  и аргументам командной строки
@@ -21,20 +21,25 @@ func _ready():
 	
 	add_child(SOUND)
 
-	#TO_DO: загрузка инициализирующих настроек до\взамен загрузки основного профиля
+	#TODO: #31 загрузка инициализирующих настроек до\взамен загрузки основного профиля
 
 #Обработчик системных/служебных нотификаций (согласно конфигам ос)
-#TO_DO: NOTIFICATION_CRASH
+#TODO: #32 NOTIFICATION_CRASH
 func _notification(what: int):
-	if what == NOTIFICATION_WM_QUIT_REQUEST:
-		#ProjectSettings.set_setting("application/config/auto_accept_quit", false)
-		#get_tree().set_auto_accept_quit(false)
-#		print('Сохранить изменения???????????????????????????????????????????????')
-#		OS.request_attention()
-#		OS.alert('Сохранить изменения?', "Выход из игры")
-		get_tree().quit()
-		#dump_settings_to_tmp()
-#		yield()
+	match what:
+		NOTIFICATION_WM_QUIT_REQUEST:
+			#ProjectSettings.set_setting("application/config/auto_accept_quit", false)
+			#get_tree().set_auto_accept_quit(false)
+	#		print('Сохранить изменения???????????????????????????????????????????????')
+	#		OS.request_attention()
+	#		OS.alert('Сохранить изменения?', "Выход из игры")
+			get_tree().quit()
+			#dump_settings_to_tmp()
+	#		yield()
+		NOTIFICATION_WM_FOCUS_IN:
+			SOUND.set_volume(0)
+		NOTIFICATION_WM_FOCUS_OUT:
+			SOUND.set_volume(-400)
 
 func initialisation(cmdline_args = null):
 	print("Cmdline args: ", OS.get_cmdline_args())
@@ -59,7 +64,7 @@ func system_check():
 #	if OS.screen_orientation == OS.SCREEN_ORIENTATION_LANDSCAPE:
 #	get_screen_orientation()
 
-#TO_DO: сделать понятнее интерфейс
+#TODO: #30 сделать понятнее интерфейс
 func get_screen_orientation() -> float:
 #	if OS.screen_orientation%2 == 0:
 #		print("Альбомная ориентация")

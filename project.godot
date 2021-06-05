@@ -94,6 +94,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/jm_game_template/jm_subscription_list.gd"
 }, {
+"base": "Object",
+"class": "Tweening",
+"language": "GDScript",
+"path": "res://tests/Tween manager/Tweening.gd"
+}, {
 "base": "Control",
 "class": "ui_screen",
 "language": "GDScript",
@@ -117,6 +122,7 @@ _global_script_class_icons={
 "SettingsManager": "",
 "SoundManager": "",
 "SubscriptionList": "",
+"Tweening": "",
 "ui_screen": ""
 }
 
@@ -142,6 +148,19 @@ enabled=PoolStringArray( "res://addons/MenuManager/plugin.cfg", "res://addons/qu
 [global]
 
 back=false
+
+[importer_defaults]
+
+wav={
+"compress/mode": 0,
+"edit/loop": true,
+"edit/normalize": false,
+"edit/trim": false,
+"force/8_bit": false,
+"force/max_rate": false,
+"force/max_rate_hz": 44100,
+"force/mono": false
+}
 
 [input]
 

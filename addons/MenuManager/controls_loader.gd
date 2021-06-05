@@ -1,5 +1,5 @@
 extends Node
-# @todo #9 Мой аддон логики меню, который буду распространять фриварным опенсорсом
+# TODO: #17 Мой аддон логики меню, который буду распространять фриварным опенсорсом
 #  Все таски в этой ветке предполагаются мне (@alex7850),
 #  но можете предложить свое участие
 class_name MenuTransition, "res://Assets/AcceptDialog.svg"
@@ -129,8 +129,8 @@ func _to_child_name(name:String):
 #	ui_origin_node.visible = false
 	self.visible = false#self.ui_screen_visible = false
 
-#TO_DO: доделать
-func _go_to(path):
+#TODO: #28 доделать
+func go_to(path):
 	pass
 
 func _transition(from: Node, to: Node):
@@ -151,7 +151,7 @@ static func _anim(node: Control, reverse = false):
 		Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	Global.TWEEN.start()
 
-#TO_DO: рефакторить, непонятен интерфейс (не бинды а принимает на вход сигналы)
+#TODO: #29 рефакторить, непонятен интерфейс (не бинды а принимает на вход сигналы)
 # добавить возврат результата
 func wait_popup_for(call_method: String, signal_binds: Array = [], mode: int = 0):
 	var check = yield(wait_popup_answer(), 'completed')

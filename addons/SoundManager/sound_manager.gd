@@ -1,5 +1,5 @@
 extends Node
-# @todo #9 Менеджер звуков
+# TODO: #15 Менеджер звуков
 #  Пока поддерживает только простейшие глобальные звуки (без учета удаленности)
 class_name SoundManager
 
@@ -9,6 +9,7 @@ var init_sounds = {
 	"ui_accept": "res://addons/SoundManager/SFX/wpn_select.wav",
 	"ui_deny": "res://addons/SoundManager/SFX/wpn_denyselect.wav",
 	"ui_set": "res://addons/SoundManager/SFX/wpn_hudoff.wav",
+	"vehicle": "res://addons/SoundManager/SFX/vehicle_select2.wav",
 }
 
 var library = {}
@@ -31,7 +32,24 @@ func async_play_until_signal(_sound_name: String, _object: Object, _signal: Stri
 	var _sound = play(_sound_name)
 	set_loop_mode(_sound.stream, 1)
 	yield(_object, _signal)
+	
+	var _duration = 0.2
+#	Global.TWEEN.interpolate_property(_sound, "volume_db",
+#		_sound.volume_db, _sound.volume_db - 24, duration,
+#		Tween.TRANS_LINEAR, Tween.EASE_OUT)
+#	Global.TWEEN.start()
+	
+	#HACK: ну вы поняли лол
+#	while true:
+#		var yield_check = yield(Global.TWEEN, 'tween_completed')
+#		if yield_check[0] == _sound:
+#			break
+	
+	var _tw = Tweening.tween_to(_sound, "volume_db", _sound.volume_db - 24, _duration)
+	yield(_tw, 'finished')
+	
 	_sound.stop()
+	_sound.volume_db = 0
 
 func load_sounds(init_sounds: Dictionary):
 	prints("Lib test:", init_sounds)
