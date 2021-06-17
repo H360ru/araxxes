@@ -5,6 +5,7 @@ extends Sprite
 var selected: bool = false setget set_selected
 var anim_state: Tweening.Tweener
 onready var TILE = get_node('../TileMap')
+onready var SOUND = load("G:/Projects/Araxxes/tests/sound_test/SoundManager.gd").new()
 
 func set_selected(value):
 	selected = value
@@ -13,6 +14,9 @@ func set_selected(value):
 func _init():
 	set_network_master(1, true)
 
+func _ready():
+	Global.add_child(SOUND)
+
 signal move_started()
 signal move_finished()
 
@@ -20,12 +24,19 @@ func _input(event):#input(event):
 	if event is InputEventMouseButton:
 		if Input.is_action_just_pressed("click") and selected:
 			rpc('go_to', get_global_mouse_position())
+			get_tree().multiplayer.send_bytes(var2bytes('packet_test'), 1)
 			print(TILE.get_cellv(TILE.world_to_map(get_global_mouse_position())))
 
 remotesync func go_to(_point: Vector2):
+	
 	Console.write_line("id: " + str(get_tree().get_rpc_sender_id()))
 #	Console.write_line("go to point: " + str(_point))
 	async_go_to_path(_point)
+
+# puppet func go_to(_point: Vector2):
+# Console.write_line("id: " + str(get_tree().get_rpc_sender_id()))
+# #	Console.write_line("go to point: " + str(_point))
+# async_go_to_path(_point)
 
 # стоит ли внедрять префикс async?
 # TO_DO: выделить подметоды
@@ -58,8 +69,8 @@ func async_go_to_path(_point: Vector2):
 	var _tw = Tweening.tween_to(follow, "unit_offset", 1, duration)
 	anim_state = _tw
 	
-	Global.SOUND.async_play_until_signal('vehicle', self, 'move_finished')
-	
+	# Global.SOUND.async_play_until_signal('vehicle', self, 'move_finished')
+	SOUND.async_play_until_signal('vehicle', self,'move_finished')
 	yield(_tw, 'finished')
 	
 	var pos = global_position

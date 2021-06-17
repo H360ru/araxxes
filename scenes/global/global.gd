@@ -14,7 +14,7 @@ onready var MOUSE = MouseManager.new()
 
 func _init():
 	print("GLOBAL INIT")
-#	initialisation()
+	initialisation()
 
 func _ready():
 	MOUSE.toggle_cursor(true)
@@ -43,7 +43,7 @@ func _notification(what: int):
 
 func initialisation(cmdline_args = null):
 	print("Cmdline args: ", OS.get_cmdline_args())
-	system_check()
+	# system_check()
 
 func system_check():
 	var feature_arr = ["Android", "HTML5", "JavaScript", "OSX", "iOS", "UWP", "Windows", "X11",\

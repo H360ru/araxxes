@@ -1,0 +1,27 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "client1",
+            "type": "shell",
+            "command": "c:/Users/BBC/AppData/Roaming/hourglass/versions/3.3-rc6/godot.exe",
+            "args": [ "${input:param1}", "copy3", "--file", "${fileBasename}" ],
+        },
+        {
+            "label": "client2",
+            "type": "shell",
+            "command": "c:/Users/BBC/AppData/Roaming/hourglass/versions/3.3-rc6/godot.exe",
+            "args": [ "${input:param1}", "copy3", "--file", "${fileBasename}" ],
+        }
+    ],
+    "inputs": [
+        {
+            "id": "param1",
+            "description": "Param1:",
+            "default": "Hello",
+            "type": "promptString"
+        },
+    ]
+}

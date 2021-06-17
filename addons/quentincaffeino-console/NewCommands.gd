@@ -90,7 +90,7 @@ func _server_chat():
 					_exit = false
 				'!players':
 					_console.Line.clear()
-					_console.write_line(str(server.get_meta('players')))
+					_console.write_line(str(server.get_meta('lobby').players))
 				_:
 					_console.Line.clear()
 					self._console.write_line('Unknown chat command')
@@ -112,7 +112,7 @@ func _chat(_login_name):
 	#	yield(server, "ready")
 	# TODO: проверить соединение
 		server.create_client()
-	server.login_name = _login_name
+	#server.login_name = _login_name
 	
 	var _exit = true
 	var prefix = '!'
@@ -139,6 +139,10 @@ func _chat(_login_name):
 func _chat_message(_text):
 	_console.Line.clear()
 	Global.get_tree().get_root().get_node("Server")._push_message(_text)
+	var _test = Lobby.new()
+	_test.start_conditions = 777
+	Global.get_tree().multiplayer.send_bytes(var2bytes(inst2dict(_test)), 0)
+	
 
 
 func _try_call(command_name = null, node = null, arg = ['тест1', 'тест2']):
