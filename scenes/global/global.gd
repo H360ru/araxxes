@@ -76,3 +76,6 @@ func get_screen_orientation() -> float:
 #func _exit_tree():
 #	SettingsSaveLoad.save_settings()
 
+func is_html():
+	return OS.has_feature("HTML5")
+

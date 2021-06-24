@@ -7,7 +7,7 @@ onready var _client = ClientData.new(OS.get_cmdline_args()[0] if OS.get_cmdline_
 'admin_password')#.new('admin', 'admin_password')
 var server_mode = 1
 
-var network: NetworkedMultiplayerENet
+var network: NetworkedMultiplayerPeer
 var port = 1919
 var max_peers = 100
 
@@ -48,7 +48,14 @@ class ClientData:
 # TODO: #39 добавить поддержку WebRTCMultiplayer для браузера
 # вместо NetworkedMultiplayerENet
 func create_multiplayer_peer(_mode = 0):
-	network = NetworkedMultiplayerENet.new()
+	if Global.is_html():
+		network = WebSocketClient.new();
+		Console.write_line('html: '+str(network))
+		network.connect("connection_established", self, "_on_connection_established")
+		network.connect("connection_error", self, "_on_connection_error")
+		network.connect("connection_closed", self, "_on_connection_closed")
+	else:
+		network = WebSocketServer.new()# NetworkedMultiplayerENet.new()
 	
 	#TODO: #26 доделать реакции на нетворк ивенты
 	# warning-ignore:return_value_discarded
@@ -70,6 +77,15 @@ func create_multiplayer_peer(_mode = 0):
 			network.connect("server_disconnected", self, "_on_peer_event")
 	pass
 
+func _on_connection_established( protocol: String ):
+	Console.write_line('webconnection_established '+protocol)
+	
+func _on_connection_error():
+	Console.write_line('webconnection_error')
+
+func _on_connection_closed( was_clean_close: bool ):
+	Console.write_line('webconnection_closed '+str(was_clean_close))
+
 func _on_packet(_one, _two):
 	# if dict2inst(_two) is Lobby:
 	#if _one is
@@ -84,7 +100,7 @@ func create_server(_cli: bool = true):
 	create_multiplayer_peer(1)
 	#network.allow_object_decoding = true
 	
-	var check = network.create_server(port, max_peers)
+	var check = network.listen( port, PoolStringArray(), true)#network.create_server(port, max_peers)
 	Global.get_tree().set_network_peer(network)
 	if check == OK:
 		set_meta('lobby', Lobby.new())
@@ -145,19 +161,43 @@ func _disconnect_client(_user_id):
 
 
 func create_client(_cli: bool = true):
+	# var url = "ws://127.0.0.1:" + str(PORT) # You use "ws://" at the beginning of the address for WebSocket connections
+
+	# var error = client.connect_to_url(url, PoolStringArray(), true);
+
 	create_multiplayer_peer()
 	#network.allow_object_decoding = true
 	
 	var _ip = '127.0.0.1'
 	var _port = port # 1909
-	var check = network.create_client(_ip, _port)
+	var check # = network.create_client(_ip, _port)
+
+	if Global.is_html():
+		var _socket_adress = "ws://"+_ip+":"+str(port)
+		check = network.connect_to_url(_socket_adress, PoolStringArray(), true);
+		# web_poll()
+	else:
+		check = network.create_client(_ip, _port)
+	
 	Global.get_tree().set_network_peer(network)
 	if check == OK:
 		Console.write_line("Welcome to chat!")
 	else:
 		Console.write_line("Connection error: "+ check)
 		return
-	
+
+func _process(delta):
+	if network:
+		network.poll()
+		# if Global.is_html():
+		# else:
+		# 	network.listen( port, PoolStringArray(), true)
+
+
+func web_poll():
+	while true:
+		network.poll()
+		yield(get_tree(), "idle_frame")
 
 func _push_message(_text):
 	rpc_id(1, '_receive_message', _text)#, login_name)
