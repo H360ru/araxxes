@@ -23,5 +23,7 @@ func settings_init():
 	if !SettingsSaveLoad.load_settings():
 		SettingsControls.default_controls()
 		SettingsSaveLoad.load_settings_default()
+		# TODO: добавить вызов диалога
+		SettingsSaveLoad.save_settings()
 		print("DEFAULT CONTROLS")
 		return "default_controls"

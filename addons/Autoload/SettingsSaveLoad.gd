@@ -54,6 +54,9 @@ func load_settings_resource(_CONFIG_DIR = CONFIG_DIR, _CONFIG_FILE_NAME = CONFIG
 	
 	print("Start Load_settings_resource")
 	var new_load:Resource = ResourceLoader.load(_CONFIG_DIR + _CONFIG_FILE_NAME + _CONFIG_EXTENSION, 'Resource', true)
+	if !new_load:
+		return false
+
 #	SettingsResolution.set_resolution_data(new_load.resolution)
 #	SettingsAudio.set_audio_data(new_load.audio)
 	SettingsControls.set_input_data(new_load.inputs)
