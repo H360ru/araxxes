@@ -30,7 +30,9 @@ func _ready():
 
 
 func connect_signals(connect_to : Node) -> void:
+# warning-ignore:return_value_discarded
 	self.connect("finished", self, "_on_self_finished")
+# warning-ignore:return_value_discarded
 	self.connect("finished_playing", connect_to, "_on_sound_finished");
 
 
@@ -39,8 +41,8 @@ func set_properties(volume_db : float = 0.0, pitch_scale : float = 1.0) -> void:
 	self.set_pitch_scale(pitch_scale);
 
 
-func set_sound_name(sound_name : String) -> void:
-	self.sound_name = sound_name;
+func set_sound_name(_sound_name : String) -> void:
+	self.sound_name = _sound_name;
 
 
 func set_sound_type(type : String) -> void:
