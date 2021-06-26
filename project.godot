@@ -34,6 +34,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/camera_game.gd"
 }, {
+"base": "MarginContainer",
+"class": "ColorPalette",
+"language": "GDScript",
+"path": "res://UI/addons/color_palette/interface/ColorPalette.gd"
+}, {
+"base": "Button",
+"class": "ColorSwatch",
+"language": "GDScript",
+"path": "res://UI/addons/color_palette/interface/color_swatch/ColorSwatch.gd"
+}, {
 "base": "Object",
 "class": "Command",
 "language": "GDScript",
@@ -44,10 +54,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/dimension.gd"
 }, {
+"base": "MarginContainer",
+"class": "Docker",
+"language": "GDScript",
+"path": "res://UI/addons/gdquest_docker/interface/Docker.gd"
+}, {
 "base": "Base",
 "class": "Game",
 "language": "GDScript",
 "path": "res://scripts/game.gd"
+}, {
+"base": "CanvasLayer",
+"class": "GlobalTest",
+"language": "GDScript",
+"path": "res://scenes_new/global/global.gd"
 }, {
 "base": "Base",
 "class": "Joystick",
@@ -94,6 +114,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/menu_setting.gd"
 }, {
+"base": "Node",
+"class": "MenuTransition",
+"language": "GDScript",
+"path": "res://addons/MenuManager/controls_loader.gd"
+}, {
+"base": "Node",
+"class": "MouseManager",
+"language": "GDScript",
+"path": "res://addons/MouseManager/mouse_manager.gd"
+}, {
 "base": "Base",
 "class": "MultyTouch",
 "language": "GDScript",
@@ -103,6 +133,16 @@ _global_script_classes=[ {
 "class": "Navigator",
 "language": "GDScript",
 "path": "res://scripts/navigator.gd"
+}, {
+"base": "Control",
+"class": "Option",
+"language": "GDScript",
+"path": "res://addons/SettingsManager/ui_scripts/universal_settings_node.gd"
+}, {
+"base": "OptionButton",
+"class": "OptionButtonSetting",
+"language": "GDScript",
+"path": "res://addons/SettingsManager/ui_scripts/optionbutton_settings_node.gd"
 }, {
 "base": "Base",
 "class": "Player",
@@ -119,6 +159,21 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/queue.gd"
 }, {
+"base": "Reference",
+"class": "ResourceAsyncLoader",
+"language": "GDScript",
+"path": "res://scripts_new/Utility/ResourceAsyncLoader.gd"
+}, {
+"base": "Control",
+"class": "RichEditorInterface",
+"language": "GDScript",
+"path": "res://UI/addons/rich_text_editor/interface/RichEditorInterface.gd"
+}, {
+"base": "EditorPlugin",
+"class": "RichTextPlugin",
+"language": "GDScript",
+"path": "res://UI/addons/rich_text_editor/RichTextEditor.gd"
+}, {
 "base": "Object",
 "class": "Route",
 "language": "GDScript",
@@ -129,10 +184,25 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/route_tile.gd"
 }, {
+"base": "Resource",
+"class": "SaveSettings",
+"language": "GDScript",
+"path": "res://scripts_new/Utility/SaveSettings.gd"
+}, {
 "base": "Base",
 "class": "Setting",
 "language": "GDScript",
 "path": "res://scripts/setting.gd"
+}, {
+"base": "Node",
+"class": "SettingsManager",
+"language": "GDScript",
+"path": "res://addons/SettingsManager/settings_manager.gd"
+}, {
+"base": "Node",
+"class": "SoundManager",
+"language": "GDScript",
+"path": "res://addons/SoundManager/sound_manager.gd"
 }, {
 "base": "Object",
 "class": "SpeedM",
@@ -198,6 +268,11 @@ _global_script_classes=[ {
 "class": "Units",
 "language": "GDScript",
 "path": "res://scripts/units.gd"
+}, {
+"base": "Control",
+"class": "ui_screen",
+"language": "GDScript",
+"path": "res://scripts_new/ui_tab_script.gd"
 } ]
 _global_script_class_icons={
 "ArrayRect": "",
@@ -205,9 +280,13 @@ _global_script_class_icons={
 "Buttons": "",
 "CPU": "",
 "CameraGame": "",
+"ColorPalette": "",
+"ColorSwatch": "",
 "Command": "",
 "Dimension": "",
+"Docker": "",
 "Game": "",
+"GlobalTest": "",
 "Joystick": "",
 "Labels": "",
 "ManagerMap": "",
@@ -217,14 +296,24 @@ _global_script_class_icons={
 "MenuInMenu": "",
 "MenuMain": "",
 "MenuSetting": "",
+"MenuTransition": "res://Assets/AcceptDialog.svg",
+"MouseManager": "",
 "MultyTouch": "",
 "Navigator": "",
+"Option": "",
+"OptionButtonSetting": "",
 "Player": "",
 "Players": "",
 "Queue": "",
+"ResourceAsyncLoader": "",
+"RichEditorInterface": "",
+"RichTextPlugin": "",
 "Route": "",
 "RouteTile": "",
+"SaveSettings": "",
 "Setting": "",
+"SettingsManager": "",
+"SoundManager": "",
 "SpeedM": "",
 "Tile": "",
 "TileBlock": "",
@@ -237,7 +326,8 @@ _global_script_class_icons={
 "UnitMove": "",
 "UnitSatate": "",
 "UnitStates": "",
-"Units": ""
+"Units": "",
+"ui_screen": ""
 }
 
 [application]
@@ -251,15 +341,36 @@ config/icon="res://icon.png"
 
 enable_audio_input=true
 
+[autoload]
+
+Kostil="*res://scripts_new/kostil.gd"
+Global="*res://scenes_new/global/Global.tscn"
+SettingsControls="*res://addons/Autoload/SettingsControls.gd"
+SettingsSaveLoad="*res://addons/Autoload/SettingsSaveLoad.gd"
+Settings="*res://addons/Autoload/Settings.gd"
+
 [display]
 
 window/size/width=1020
 window/size/height=700
 window/stretch/aspect="keep"
 
+[input]
+
+click={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[locale]
+
+translations=PoolStringArray( "res://Lacalization/translation2.en.translation", "res://Lacalization/translation2.ru.translation" )
+locale_filter=[ 0, [ "en", "ru" ] ]
 
 [rendering]
 
@@ -267,16 +378,16 @@ quality/driver/driver_name="GLES2"
 quality/driver/fallback_to_gles2=true
 quality/intended_usage/framebuffer_allocation=0
 quality/intended_usage/framebuffer_allocation.mobile=0
-quality/2d/use_pixel_snap=true
+2d/snapping/use_gpu_pixel_snap=true
 vram_compression/import_s3tc=false
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
-quality/filters/msaa=1
-environment/default_environment="res://default_env.tres"
-quality/dynamic_fonts/use_oversampling=false
 quality/filters/anisotropic_filter_level=1
-quality/subsurface_scattering/quality=2
-2d/snapping/use_gpu_pixel_snap=true
 2d/options/ninepatch_mode=0
 quality/spatial_partitioning/use_bvh=false
+quality/filters/msaa=1
 quality/filters/use_fxaa=true
+environment/default_environment="res://default_env.tres"
+quality/dynamic_fonts/use_oversampling=false
+quality/2d/use_pixel_snap=true
+quality/subsurface_scattering/quality=2

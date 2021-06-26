@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://scenes/map.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/root.gd" type="Script" id=2]
@@ -7,6 +7,9 @@
 [ext_resource path="res://scenes/menu.tscn" type="PackedScene" id=5]
 [ext_resource path="res://textures/ui/to_menu.png" type="Texture" id=6]
 [ext_resource path="res://themes/ornate-theme/ornate-theme.tres" type="Theme" id=7]
+[ext_resource path="res://scenes_new/MainMenuTree.tscn" type="PackedScene" id=8]
+[ext_resource path="res://textures/bg_menu.jpg" type="Texture" id=9]
+[ext_resource path="res://scenes_new/site_label.gd" type="Script" id=10]
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("Viewport")
@@ -164,10 +167,41 @@ __meta__ = {
 }
 
 [node name="main_menu" parent="." instance=ExtResource( 5 )]
+visible = false
 
 [node name="label_debug" type="Label" parent="."]
 margin_right = 40.0
 margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Background" type="TextureRect" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 9 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Меню" parent="CanvasLayer" instance=ExtResource( 8 )]
+
+[node name="SiteLabel" type="Label" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -70.0
+margin_top = -34.0
+margin_right = -27.0
+margin_bottom = -20.0
+grow_horizontal = 0
+mouse_filter = 1
+text = "To site"
+script = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

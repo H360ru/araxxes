@@ -49,6 +49,7 @@ var colorRectDown
 
 func _init(game,node).(game):
 	game=self
+	Kostil.GAME = self
 	self.node=node
 	
 	
@@ -180,6 +181,8 @@ func onButtonClick(button,name):
 		if name=="tomenu":
 			menu.open()
 			menu.setMenuGame()
+			# print('MENU!!!!')
+			Kostil.open_menu()
 			pass
 	#==================меню
 	

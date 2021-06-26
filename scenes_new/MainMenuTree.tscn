@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes_new/menu_screens/main/main_menu.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes_new/menu_screens/settings/settings_screen.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://scenes_new/menu_screens/controls/Controls.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes_new/menu_screens/main/main_menu_centred.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes_new/menu_screens/help/help_menu.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes_new/IngameMenuTree.tscn" type="PackedScene" id=8]
 
 [node name="Меню" type="Node" groups=[
 "ui",
@@ -34,3 +35,5 @@ main_control_node = ExtResource( 5 )
 ]]
 script = ExtResource( 3 )
 main_control_node = ExtResource( 7 )
+
+[node name="ИнгеймМеню" parent="." instance=ExtResource( 8 )]

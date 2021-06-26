@@ -281,7 +281,7 @@ margin_right = 121.0
 margin_bottom = 10.5
 custom_fonts/font = ExtResource( 9 )
 custom_colors/font_color = Color( 0.933333, 0.933333, 0.933333, 1 )
-text = "Выйти"
+text = "Выйти в меню"
 __meta__ = {
 "_edit_use_anchors_": false
 }

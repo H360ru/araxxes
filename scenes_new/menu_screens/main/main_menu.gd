@@ -16,7 +16,9 @@ extends ui_screen
 ##	_exit_button.connect("button_down", self, '_on_exit')
 
 func _on_play():
-	pass
+	Kostil.GAME.newGame()
+	Kostil.background_visible(false)
+	get_parent().visible = false
 
 func _on_settings():
 	get_parent()._to_child_ind(0)
@@ -28,3 +30,4 @@ func _on_help():
 #HACK: сделать через нормальный метод глобала
 func _on_exit():
 	get_tree().quit()
+#	get_parent().visible = false

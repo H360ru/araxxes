@@ -22,7 +22,7 @@ func set_visible(value):
 		load_control()
 	else:
 		unload_control()
-	if ui_origin_node:
+	if is_instance_valid(ui_origin_node):
 		ui_origin_node.visible = value
 
 func _init():
@@ -133,7 +133,8 @@ func _go_to(path):
 
 func _transition(from: Node, to: Node):
 	_anim(to)
-	_anim(from, true)
+	if from:
+		_anim(from, true)
 
 static func _anim(node: Control, reverse = false):
 	node.visible = true
