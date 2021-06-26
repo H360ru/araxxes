@@ -70,6 +70,8 @@ func get_screen_orientation() -> float:
 #	else:
 #		print('Портретная ориентация')
 	var s = get_viewport().size
+	if s.y == 0:
+		print("ZERO DIVISION!!!!")
 	return (s.x / s.y)
 
 #func _exit_tree():

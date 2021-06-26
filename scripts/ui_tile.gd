@@ -79,7 +79,8 @@ func checkFontColorPoints():
 #Установить иконку name - имя иконки в каталоге testures/ui/
 func setIcon(name):
 	self.name=name
-	icon.texture=load("res://textures/ui/"+name+".png")
+	if name != UI.NAME_TILE_POINTS:
+		icon.texture=load("res://textures/ui/"+name+".png")
 	
 	
 	if name==UI.NAME_TILE_EMPTY:
@@ -188,6 +189,7 @@ func setNodeAfterPosY(node,posY,startFontSize,maxSize):
 		node.rect_position=(lastSize/2)-(node.rect_size/2)
 		node.rect_position.y=posY
 
+# TODO BUG: вызывает лагспайк на 8.5ms 3 вызова
 func setSize(size:Vector2):
 	
 	lastSize=size

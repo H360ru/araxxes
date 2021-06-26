@@ -532,7 +532,7 @@ func debugA(text):
 	labs.getByName("debug").text+="\r\n"+text
 	pass
 
-
+# TODO BUG: 93!!! вызова minusFontSize
 #Установить максимальный размер контролу с текстом. кнопки метки и тд.
 func setMaxSize(node,startSizeFont,maxSize:Vector2):
 	if node!=null:
@@ -576,6 +576,7 @@ func getFontSize(node):
 	if font!=null:
 		return font.size
 
+# TODO BUG: вызывает лагспайк на 6.8ms 93!!! вызова
 func minusFontSize(node):
 	var font:Font=node.get("custom_fonts/font");
 	if font!=null && font.size>0:

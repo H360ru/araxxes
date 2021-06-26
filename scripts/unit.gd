@@ -74,7 +74,15 @@ var attackLen=1;
 #координаты плитки при сотановке юнита. Она получается при остановке 1 раз vec2int
 var stopTile
 
+#КОСТЫЛИ###########################################################################
 
+var _movement_sound: String = 'vehicle'
+
+func _on_move_start(_unit_move):
+	# Kostil.SOUND.play_bgm(_movement_sound)
+	Kostil.SOUND.async_play_until_signal(_movement_sound, uMove, 'onUnitMoveStop')
+
+###################################################################################
 
 #9попробовать атаковать юнита
 func attackToUnit(unit):
@@ -321,6 +329,7 @@ func moveOnRoute(route,limitStep,offsetBack):
 		 
 		
 		self.uMove.setMovePoints(pointsMap)
+		# Kostil.SOUND.play_bgm('ui_accept')
 	pass
 
 
@@ -420,5 +429,5 @@ func _init(game,node,name).(game):
 		uMove.speed.maxSpeed=10
 		uMove.speed.speedDown=1
 		
-		
+	uMove.connect('onUnitMoveStart', self, '_on_move_start')
 	pass

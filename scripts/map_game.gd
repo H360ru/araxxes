@@ -118,6 +118,7 @@ func setInRandomPos(unit):
 func randomPosMap():
 	return Vector2(3+((randf()*(manMap.mapWidth-6)) as int),3+((randf()*(manMap.mapHeight-6)) as int))
 
+# TODO BUG: открытие меню вызывает лагспайки в нескольких функциях
 #Открыть меню для юнита
 func openMenuForUnit(unit:Unit):
 	if unit!=null:
@@ -147,6 +148,7 @@ func onClickUnit(units,unit,sceenPos):
 				
 				manMap.clearSelect()
 				openMenuForUnit(unit)
+				Kostil.SOUND.play_bgm('ui_accept')
 				
 				
 			
