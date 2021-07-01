@@ -14,6 +14,9 @@ func _ready():
 	scale = Vector2(Global.SETTINGS.cursor_size,Global.SETTINGS.cursor_size)
 	#HACK: потом сделать инициализацию по нормальному
 	if OS.get_current_video_driver() == OS.VIDEO_DRIVER_GLES2:
+		var _err = "###!!!           dont use shader version with GLES2 mode           !!!###"
+		printerr(_err)
+		print_debug(_err)
 		set_script(load("res://addons/MouseManager/cursor_scripts/cursor_no_shader.gd"))
 		return #продумать условия выхода, были баги с выполнением старого скрипта
 		#уже после замены новым
