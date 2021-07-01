@@ -5,7 +5,7 @@ extends Sprite
 var selected: bool = false setget set_selected
 var anim_state: Tweening.Tweener
 onready var TILE = get_node('../TileMap')
-onready var SOUND = load("G:/Projects/Araxxes/tests/sound_test/SoundManager.gd").new()
+onready var SOUND = load("res://tests/sound_test/SoundManager.gd").new()
 
 func set_selected(value):
 	selected = value
