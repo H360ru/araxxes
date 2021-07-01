@@ -1,6 +1,7 @@
 extends Node
 
 class_name MouseManager
+# HACK POOP не воспринимать код серьезно, все под рефакторинг
 
 # переменная "очереди" для хранения ссылки на последнюю исполняемую функцию
 # после передачи в yield следующей хранить ее уже не требуется и его можно перезаписать
@@ -10,6 +11,9 @@ var func_queue: GDScriptFunctionState
 
 # Для доступа к курсору
 var cursor_instance: Node2D
+
+#HACK POOP
+var GLES2: bool
 
 var visible: bool = true setget set_visible
 func set_visible(value):
@@ -23,7 +27,8 @@ func set_cursor_texture(txt:Resource):
 		node.texture = txt
 
 #провести инициализацию настроек
-#func _init():
+func _init():
+	GLES2 = bool(OS.get_current_video_driver() == OS.VIDEO_DRIVER_GLES2)
 
 #TODO: переписать понятно
 func change_cursor(path:String = Global.SETTINGS.cursor):
@@ -44,7 +49,14 @@ func change_cursor(path:String = Global.SETTINGS.cursor):
 			c.queue_free()
 			yield(c, "tree_exited")
 #			print(func_queue)
-	var node = load(path)
+	var node #= load('res://addons/MouseManager/cursor_node/Cursor3NoShader.tscn')#load(path)
+	var _cursor_node_path = 'res://addons/MouseManager/cursor_node/'
+	var _no_shader_path = 'no_shader/'
+	if GLES2:#if Global.is_html():
+		node = load(_cursor_node_path+_no_shader_path+ path.trim_prefix(_cursor_node_path))
+	else:
+		node = load(path)
+	
 	if node:
 		Global.add_child(node.instance())
 	else:
