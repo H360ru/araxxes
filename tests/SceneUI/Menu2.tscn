@@ -1,0 +1,88 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+signal setting1_pressed
+signal setting2_pressed
+signal setting3_pressed
+signal setting4_pressed
+
+
+func _on_Play_button_down():
+	emit_signal(\"setting1_pressed\")
+
+
+func _on_Settings_button_down():
+	emit_signal(\"setting2_pressed\")
+
+
+func _on_Help_button_down():
+	emit_signal(\"setting3_pressed\")
+
+
+func _on_Exit_button_down():
+	emit_signal(\"setting4_pressed\")
+"
+
+[node name="Menu1" type="Control"]
+margin_right = 136.0
+margin_bottom = 151.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -25.5
+margin_top = 10.0
+margin_right = 25.5
+margin_bottom = 14.0
+text = "Settings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -65.0
+margin_top = -101.0
+margin_right = 65.0
+custom_constants/separation = 7
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Play" type="Button" parent="VBoxContainer"]
+margin_right = 130.0
+margin_bottom = 20.0
+text = "Setting1"
+
+[node name="Settings" type="Button" parent="VBoxContainer"]
+margin_top = 27.0
+margin_right = 130.0
+margin_bottom = 47.0
+text = "Setting2"
+
+[node name="Help" type="Button" parent="VBoxContainer"]
+margin_top = 54.0
+margin_right = 130.0
+margin_bottom = 74.0
+text = "Setting3"
+
+[node name="Exit" type="Button" parent="VBoxContainer"]
+margin_top = 81.0
+margin_right = 130.0
+margin_bottom = 101.0
+text = "Setting4"
+
+[connection signal="button_down" from="VBoxContainer/Play" to="." method="_on_Play_button_down"]
+[connection signal="button_down" from="VBoxContainer/Settings" to="." method="_on_Settings_button_down"]
+[connection signal="button_down" from="VBoxContainer/Help" to="." method="_on_Help_button_down"]
+[connection signal="button_down" from="VBoxContainer/Exit" to="." method="_on_Exit_button_down"]

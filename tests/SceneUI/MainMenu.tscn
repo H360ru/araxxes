@@ -1,0 +1,77 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://tests/SceneUI/Menu1.tscn" type="PackedScene" id=1]
+[ext_resource path="res://tests/SceneUI/Menu2.tscn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+export var speed = 10000 # pixels per second
+
+onready var tween = $Tween
+onready var main = $Menu1
+onready var settings = $Menu2
+
+var is_main = true # Переменная обозначает, сейчас основное меню целевое или нет
+
+func _on_Menu1_settings_pressed():
+	if is_main:
+		var frontier = get_tree().root.size.x
+		var dist = abs(frontier-main.rect_position.x)
+		tween.interpolate_property(main, \"rect_position:x\", main.rect_position.x, frontier, dist/speed)
+		if not tween.is_active():
+			tween.start()
+		is_main = false
+
+
+func _on_Menu2_setting4_pressed():
+	if not is_main:
+		var frontier = get_tree().root.size.x
+		var dist = abs(frontier-settings.rect_position.x)
+		tween.interpolate_property(settings, \"rect_position:x\", settings.rect_position.x, frontier, dist/speed)
+		if not tween.is_active():
+			tween.start()
+		is_main = true
+	
+func _on_Tween_tween_completed(object, key):
+	if not is_main and object == main:
+		var frontier = get_tree().root.size.x
+		var dist = abs(frontier)
+		tween.interpolate_property(settings, \"rect_position:x\", frontier, 0, dist/speed)
+		if not tween.is_active():
+			tween.start()
+		main.hide()
+		settings.show()
+	elif is_main and object == settings:
+		var frontier = get_tree().root.size.x
+		var dist = abs(frontier)
+		tween.interpolate_property(main, \"rect_position:x\", frontier, 0, dist/speed)
+		if not tween.is_active():
+			tween.start()
+		settings.hide()
+		main.show()
+
+
+
+"
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Menu1" parent="." instance=ExtResource( 1 )]
+rect_scale = Vector2( 3, 3 )
+
+[node name="Menu2" parent="." instance=ExtResource( 2 )]
+visible = false
+rect_scale = Vector2( 3, 3 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[connection signal="settings_pressed" from="Menu1" to="." method="_on_Menu1_settings_pressed"]
+[connection signal="setting4_pressed" from="Menu2" to="." method="_on_Menu2_setting4_pressed"]
+[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
