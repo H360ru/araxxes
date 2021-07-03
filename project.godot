@@ -64,12 +64,12 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/SoundManager/sound_manager.gd"
 }, {
-"base": "Node",
+"base": "Reference",
 "class": "SoundManagerModule",
 "language": "GDScript",
 "path": "res://tests/sound_test/SoundManager_config.gd"
 }, {
-"base": "Object",
+"base": "Reference",
 "class": "Tweening",
 "language": "GDScript",
 "path": "res://tests/Tween manager/Tweening.gd"
