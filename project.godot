@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "TileMap",
+"class": "HexGrid",
+"language": "GDScript",
+"path": "res://modules/hex_grid.gd"
+}, {
 "base": "Node",
 "class": "Lobby",
 "language": "GDScript",
@@ -64,12 +69,12 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/SoundManager/sound_manager.gd"
 }, {
-"base": "Reference",
+"base": "Node",
 "class": "SoundManagerModule",
 "language": "GDScript",
 "path": "res://tests/sound_test/SoundManager_config.gd"
 }, {
-"base": "Reference",
+"base": "Object",
 "class": "Tweening",
 "language": "GDScript",
 "path": "res://tests/Tween manager/Tweening.gd"
@@ -80,6 +85,7 @@ _global_script_classes=[ {
 "path": "res://scripts/ui_tab_script.gd"
 } ]
 _global_script_class_icons={
+"HexGrid": "",
 "Lobby": "",
 "MenuTransition": "res://Assets/AcceptDialog.svg",
 "MouseManager": "",
