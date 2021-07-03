@@ -355,11 +355,11 @@ enable_audio_input=true
 
 [autoload]
 
+Kostil="*res://scripts_new/kostil.gd"
 Global="*res://scenes_new/global/Global.tscn"
 SettingsControls="*res://addons/Autoload/SettingsControls.gd"
 SettingsSaveLoad="*res://addons/Autoload/SettingsSaveLoad.gd"
 Settings="*res://addons/Autoload/Settings.gd"
-Kostil="*res://scripts_new/kostil.gd"
 
 [display]
 
@@ -397,7 +397,6 @@ vram_compression/import_etc2=false
 quality/filters/anisotropic_filter_level=1
 2d/options/ninepatch_mode=0
 quality/spatial_partitioning/use_bvh=false
-quality/filters/msaa=1
 quality/filters/use_fxaa=true
 environment/default_environment="res://default_env.tres"
 quality/dynamic_fonts/use_oversampling=false

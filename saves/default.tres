@@ -2,7 +2,6 @@
 
 [ext_resource path="res://scripts_new/Utility/SaveSettings.gd" type="Script" id=1]
 
-
 [resource]
 script = ExtResource( 1 )
 resolution = {
@@ -36,13 +35,17 @@ inputs = {
 settings = {
 "b": "ti kuda polez",
 "brightness": 255.0,
+"contrast": 0.0,
 "cursor": "res://addons/MouseManager/cursor_node/Cursor3.tscn",
 "cursor_size": 1.0,
 "cursor_texture": "res://Assets/cursor_45.png",
 "fullscreen": false,
+"game_speed": 6,
+"local": "ru",
 "resolution": Vector2( 1024, 600 ),
 "sound_volume": 0.0,
 "ui_tint": Color( 0, 0, 0, 1 ),
+"use_os_cursor": false,
 "window_size": Vector2( 1024, 600 )
 }
 language = "ru"

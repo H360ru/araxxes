@@ -54,6 +54,8 @@ func _init(game,node).(game):
 	
 	
 	setting=Setting.new(self)
+	setting.speed = Global.SETTINGS.game_speed
+
 	players=Players.new(self)
 	
 	joy=Joystick.new(self)
@@ -70,7 +72,7 @@ func _init(game,node).(game):
 	colorRectUp=node.get_node("ColorRect_up")
 	colorRectDown=node.get_node("ColorRect_down")
 	
-	
+	# TODO BUG: виновник торжества
 	unUnitMenu=UiUnitMenu.new(self,node.get_node("ui_unit_menu"))
 	
 	unUnitMenu.connect("onUiUnitMenuClick",self,"onUiUnitMenuClick")
@@ -98,6 +100,8 @@ func _init(game,node).(game):
 	
 	#=============
 	
+	# бесполезно, непредсказуемый код
+	#  Kostil.get_tree().get_root().connect('size_changed', self, 'onChangeViewportSize')
 	
 	pass 
 	
@@ -283,6 +287,7 @@ func onUiUnitMenuClick(ui:UiUnitMenu,tile):
 func onChangeViewportSize():
 	
 	var vps=node.get_viewport()
+
 	if map!=null:
 		
 		#map_view.rect_position+=Vector2(200,200)
@@ -450,7 +455,7 @@ func run(delta):
 	#===========Проверка смены размера вюпорта
 	var vps=node.get_viewport().size
 	if lastSizeViewport!=vps:
-		lastSizeViewport=vps
+		lastSizeViewport = vps
 		onChangeViewportSize()
 	
 	
@@ -535,30 +540,93 @@ func debugA(text):
 # TODO BUG: 93!!! вызова minusFontSize
 #Установить максимальный размер контролу с текстом. кнопки метки и тд.
 func setMaxSize(node,startSizeFont,maxSize:Vector2):
-	if node!=null:
+	set_max_size_new(node,startSizeFont, maxSize)
+#	if node!=null && node.text != '':
+##		print('setMaxSize CALL!!!')
+##		if node.text == '':
+##			print('NULL NODE TEXT!!!')
+#		var c=0
+#		setFontSize(node,startSizeFont)
+#		var back=false
+#		while true:
+#			var thisSize=getLabelSizeString(node)
+#			if back==false:
+#				if thisSize.x>maxSize.x || thisSize.y>maxSize.y:
+#					minusFontSize(node)
+#				else:
+#					back=true
+#			else:
+#
+#				if thisSize.x<maxSize.x && thisSize.y<maxSize.y:
+#					plusFontSize(node)
+#				else:
+#					minusFontSize(node)
+#					break
+#			c+=1
+#			if c>startSizeFont*2:
+#				break
+#			pass
+#	pass
+
+# POOP: 
+# наговнокодил дихотомический поиск вместо линейного
+
+func set_max_size_new(node,startSizeFont: int, maxSize:Vector2):
+#	prints('FONT', node.get("custom_fonts/font").font_data.font_path)
+#	return
+	if node!=null && node.text != '':
+		var _font: Font = node.get("custom_fonts/font");
+#		if _font == null: return
+		var _txt: String = node.text
+		
+		var _font_size: int = startSizeFont*2
+		_font.size = startSizeFont*2
+		if maxSize.x > Kostil.get_string_size(_txt, startSizeFont*2, node).x:
+			node.get("custom_fonts/font").size = startSizeFont-15
+#			node.set("custom_fonts/font", _font)
+			return
+		
+		_font_size = startSizeFont
+		while maxSize.x < Kostil.get_string_size(_txt, _font_size, node).x:
+			_font_size /= 2
+			if _font_size < 1:
+				_font_size = 1
+				break
+		startSizeFont = _font_size
+		
+		var endSizeFont: int
+		while maxSize.x > Kostil.get_string_size(_txt, _font_size, node).x:
+			_font_size *= 2
+		endSizeFont = _font_size
+		
+		var midpoint: int# = floor((endSizeFont + startSizeFont)/2)
+		
+		
+		_font_size = startSizeFont
+		var back = false
+		
 		var c=0
-		setFontSize(node,startSizeFont)
-		var back=false
 		while true:
-			var thisSize=getLabelSizeString(node)
-			if back==false:
-				if thisSize.x>maxSize.x || thisSize.y>maxSize.y:
-					minusFontSize(node)
-				else:
-					back=true
-			else:
-				
-				if thisSize.x<maxSize.x && thisSize.y<maxSize.y:
-					plusFontSize(node)
-				else:
-					minusFontSize(node)
-					break
+			midpoint = floor((endSizeFont + startSizeFont)/2)
+			
+			_font_size = midpoint
+			var thisSize = Kostil.get_string_size(_txt, midpoint, node)
+			
+			if thisSize.x>maxSize.x || thisSize.y>maxSize.y:
+				endSizeFont = midpoint
+			elif thisSize.x<maxSize.x && thisSize.y<maxSize.y:
+				startSizeFont = midpoint
 			c+=1
-			if c>startSizeFont*2:
+			if (endSizeFont - startSizeFont) < 2:#c>startSizeFont*2:
 				break
 			pass
+#		node.set("custom_fonts/font", _font)
+		node.get("custom_fonts/font").size = _font_size
+		prints('!!!set_max_size!!!', c, startSizeFont, endSizeFont, _font_size, node)
 	pass
 
+
+# TODO BUG подозрительном много вызовов 151!
 #Вернуть размер строки в метке
 func getLabelSizeString(node):
 	var font:Font=node.get("custom_fonts/font");
@@ -578,6 +646,7 @@ func getFontSize(node):
 
 # TODO BUG: вызывает лагспайк на 6.8ms 93!!! вызова
 func minusFontSize(node):
+	prints(node, 'getFontSize CALL!!!')
 	var font:Font=node.get("custom_fonts/font");
 	if font!=null && font.size>0:
 		font.size-=1

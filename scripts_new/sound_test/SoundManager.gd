@@ -83,6 +83,7 @@ func async_play_until_signal(_sound_name: String, _object: Object, _signal: Stri
 #		if yield_check[0] == _sound:
 #			break
 	
+	#TODO: проверить на null ошибки корутины
 	var _tw = Tweening.tween_to(_sound, "volume_db", _sound.volume_db - 24, _duration)
 	yield(_tw, 'finished')
 	

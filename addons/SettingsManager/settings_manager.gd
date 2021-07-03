@@ -83,6 +83,9 @@ func set_value(property, value):
 			Global.MOUSE.func_queue = Global.MOUSE.change_cursor()
 		'sound_volume':
 			Global.SOUND.set_volume(value)
+		'game_speed':
+			if Kostil.GAME:
+				Kostil.GAME.setting.speed = value
 		'changed':
 			pass
 		_:

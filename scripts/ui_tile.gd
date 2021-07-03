@@ -80,7 +80,7 @@ func checkFontColorPoints():
 func setIcon(name):
 	self.name=name
 	if name != UI.NAME_TILE_POINTS:
-		icon.texture=load("res://textures/ui/"+name+".png")
+		icon.texture=Kostil.icon_dictionary[name]#load("res://textures/ui/"+name+".png")
 	
 	
 	if name==UI.NAME_TILE_EMPTY:
@@ -177,7 +177,7 @@ func setTileTexture(id):
 func setMinSize(node):
 	node.rect_min_size=node.rect_size
 
-
+# TODO BUG: лакспайк на 13.6 ms 6 вызовов
 #разместить текстовый нод посредине плитки по ширине, и после posY, с максимальнім размером maxSize
 func setNodeAfterPosY(node,posY,startFontSize,maxSize):
 	
@@ -275,6 +275,8 @@ func setSize(size:Vector2):
 		
 		var fs=game.getFontSize(text)
 		setNodeAfterPosY(smallText,size.y/2+maxSizetext.y,fs,maxSizetext/2)	
+		#HACK:
+#		return #<===
 		pass
 		
 	#==============Очки
