@@ -5,8 +5,5 @@
 extends Resource
 class_name SaveSettings
 
-export(Dictionary) 	var resolution: Dictionary
-export(Dictionary)	var audio: 		Dictionary
 export(Dictionary)	var inputs: 	Dictionary
 export(Dictionary)	var settings: 	Dictionary
-export(String)		var language: 	String

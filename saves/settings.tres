@@ -48,4 +48,3 @@ settings = {
 "use_os_cursor": false,
 "window_size": Vector2( 1024, 600 )
 }
-language = "ru"

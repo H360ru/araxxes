@@ -15,9 +15,6 @@ export(bool) var keep_in_memory = false
 var ui_origin_node: Control
 var ui_parent
 
-# deprecated
-var ui_screen_visible: bool #setget set_visible
-
 func set_visible(value):
 	visible = value
 	if value:
@@ -84,22 +81,17 @@ func group_children(group = 'ui'):
 	return arr
 
 func _back():
-#	print(ui_parent.name)
 	print(name, ' _back to')
 	if ui_parent:
 		Global.SOUND.play('ui_deny')
 		
 		print(ui_parent.name)
-#		visible = false
-		ui_parent.visible = true#ui_parent.ui_screen_visible = true
-#		ui_parent.ui_origin_node.visible = true
-#		_anim(ui_parent.ui_origin_node)
+		ui_parent.visible = true
 		_transition(ui_origin_node, ui_parent.ui_origin_node)
 		yield(Global.TWEEN,"tween_completed")
 		
 		
-#		ui_origin_node.visible = false
-		self.visible = false#self.ui_screen_visible = false
+		self.visible = false
 	else:
 		print('Корень меню ', name)
 
@@ -107,32 +99,25 @@ func _to_child_ind(index:int):
 	Global.SOUND.play()
 	
 	get_child(index).visible = true
-#	get_child(index).ui_screen_visible = true
-#	get_child(index).ui_origin_node.visible = true
-#	_anim(get_child(index).ui_origin_node)
-#	_anim(ui_origin_node, true)
 	_transition(ui_origin_node, get_child(index).ui_origin_node)
 	yield(Global.TWEEN,"tween_completed")
 	
-#	ui_origin_node.visible = false
-	self.visible = false#self.ui_screen_visible = false
+	self.visible = false
 
 func _to_child_name(name:String):
 	Global.SOUND.play()
 	
 	get_node(name).visible = true
-#	get_node(name).ui_screen_visible = true
-#	get_node(name).ui_origin_node.visible = true
 	_transition(ui_origin_node, get_node(name).ui_origin_node)
 	yield(Global.TWEEN,"tween_completed")
-	
-#	ui_origin_node.visible = false
-	self.visible = false#self.ui_screen_visible = false
+
+	self.visible = false
 
 #TODO: #28 доделать
 func go_to(path):
 	pass
 
+#TODO #44: 
 func _transition(from: Node, to: Node):
 	_anim(to)
 	_anim(from, true)

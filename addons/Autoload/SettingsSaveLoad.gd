@@ -6,7 +6,7 @@
 #  Стоит применить какой-то паттерн, например, дикоратор
 #  чтобы отделить интерфейсы от реализации
 extends Node
-
+#TODO: #46 Рефакторинг интерфейсов
 #var Save / Load
 const CONFIG_DIR: = "user://saves/"#"res://saves/" #"user://saves/"
 const CONFIG_FILE_NAME: = "settings"
@@ -30,12 +30,8 @@ func load_settings_default()->bool:
 # Resource VARIATION - new version
 func save_settings_resource()->void:
 	var new_save: 			= SaveSettings.new()
-#	new_save.resolution 	= SettingsResolution.get_resolution_data()
-#	new_save.audio			= SettingsAudio.get_audio_data()
 	new_save.inputs 		= SettingsControls.get_input_data()
 	SettingsControls.changed = false # UI UTIL PROPETRY
-#	new_save.language		= SettingsLanguage.get_language_data()
-#	new_save.language		= Global.SETTINGS.local
 	new_save.settings		= Global.SETTINGS.get_settings()
 	Global.SETTINGS.changed = false # UI UTIL PROPETRY
 	
@@ -57,12 +53,8 @@ func load_settings_resource(_CONFIG_DIR = CONFIG_DIR, _CONFIG_FILE_NAME = CONFIG
 	if !new_load:
 		return false
 
-#	SettingsResolution.set_resolution_data(new_load.resolution)
-#	SettingsAudio.set_audio_data(new_load.audio)
 	SettingsControls.set_input_data(new_load.inputs)
 	SettingsControls.changed = false # UI UTIL PROPETRY
-#	SettingsLanguage.set_language(new_load.language)
-#	Global.SETTINGS.set_value('local', new_load.language)
 	Global.SETTINGS.set_settings(new_load.settings)
 	Global.SETTINGS.changed = false # UI UTIL PROPETRY
 	print("Load_settings_resource")
@@ -138,17 +130,11 @@ func load_settings_JSON()->bool:
 func get_save_data_JSON()->Dictionary:
 	var savedata: = {
 		inputs = SettingsControls.get_input_data(),
-#		resolution = SettingsResolution.get_resolution_data(),
-#		audio = SettingsAudio.get_audio_data(),
-#		language = {locale = SettingsLanguage.get_language_data()}
 		}
 	return savedata
 
 func set_save_data_JSON(save_data:Dictionary)->void:
 	SettingsControls.set_input_data(save_data.inputs)
-#	SettingsResolution.set_resolution_data(save_data.resolution)
-#	SettingsAudio.set_audio_data(save_data.audio)
-#	SettingsLanguage.set_language(save_data.language.locale)
 
 
 
