@@ -19,7 +19,7 @@ func build_navigator(obsts_ids:Array=[]): # obsts_ids - массив с инде
 	# Необходимо начать с валидной ячейки
 	var valid_map = false
 	for i in get_used_cells():
-		if _is_cell_valid(i):
+		if _is_cell_valid(i) and not get_cellv(i) in obsts_ids:
 			start = i
 			valid_map = true
 			break
@@ -47,7 +47,7 @@ func build_navigator(obsts_ids:Array=[]): # obsts_ids - массив с инде
 func find_path(point1, point2):
 	var id1 = _calculate_tile_id(point1)
 	var id2 = _calculate_tile_id(point2)
-	if navigator.has_point(id1) and navigator.has_point(id2):
+	if _is_cell_valid(point1) and _is_cell_valid(point2) and navigator.has_point(id1) and navigator.has_point(id2):
 		return navigator.get_point_path(id1, id2)
 	else:
 		return []
@@ -59,7 +59,7 @@ func get_cell_center_global(cell):
 	return to_global(get_cell_center_local(cell))
 	
 # tile - клетка с тайлом
-func get_tile_neighbors(tile_pos:Vector2, unavailable_ids:Array=[]): # unavailable_ids - неугодные тайлы, которые избегаем
+func get_tile_neighbors(tile_pos:Vector2, unavailable_ids:Array=[]): # unavailable_ids - неугодные тайлы, которых избегаем
 	var res:Array = []
 	var cell_id
 	for i in get_cell_neighbors(tile_pos):
