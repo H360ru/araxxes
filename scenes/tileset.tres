@@ -7,7 +7,7 @@
 [resource]
 0/name = "0.png 0"
 0/texture = ExtResource( 1 )
-0/tex_offset = Vector2( 0, 0 )
+0/tex_offset = Vector2( 0, -500 )
 0/modulate = Color( 1, 1, 1, 1 )
 0/region = Rect2( 0, 0, 1920, 1472 )
 0/tile_mode = 0
@@ -18,7 +18,7 @@
 0/shape_one_way = false
 0/shape_one_way_margin = 0.0
 0/shapes = [  ]
-0/z_index = 0
+0/z_index = 1
 1/name = "0.png 1"
 1/texture = ExtResource( 2 )
 1/tex_offset = Vector2( 0, 0 )
