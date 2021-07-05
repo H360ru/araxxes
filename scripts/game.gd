@@ -247,8 +247,8 @@ func onUiUnitMenuClick(ui:UiUnitMenu,tile):
 			map.units.checkEndTurnByPlayer(ui.unit.player)
 			
 		if tile.name==UI.NAME_TILE_MOVE:
-			
-			unit.saveSave()
+			# перенесен в moveToTile
+			#unit.saveSave()
 			
 			#ui.unit.canMove=true
 			ui.unit.selecTilesForMove()
@@ -269,7 +269,7 @@ func onUiUnitMenuClick(ui:UiUnitMenu,tile):
 		
 		if tile.name==UI.NAME_TILE_TAKE:
 			
-			unit.saveSave()
+			#unit.saveSave(true)
 			
 			unit.takeSpace()
 			ui.close()

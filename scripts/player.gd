@@ -20,9 +20,13 @@ var points=0
 var name=""
 
 #Скольок собрано спайса
-var spices=0
+var spices=0 setget set_spices
 
-
+func set_spices(value):
+	spices = value
+	if spices >= 5:
+		print('WIN!!!!!!!')
+		Kostil.GAME.labelGameOvet.visible=true
 
 #Отнять баллы
 func minusPoints(pointsMinus):

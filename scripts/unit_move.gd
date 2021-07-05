@@ -9,6 +9,8 @@ signal onUnitMoveStart(unitMove)
 signal onUnitMoveFinished(unitMove)
 #когда юнит останавливается
 signal onUnitMoveStop(unitMove)
+#когда юнит проехал тайл
+#signal onUnitMoveStop(unitMove)
 
 var unit
 #направление юнита
@@ -83,6 +85,18 @@ func move(delta):
 			#======Следт точка
 			
 			if pos.distance_to(poi)<20:
+				# prints('Проехал', game.map.manMap.getCooTile(game.map.di.mToPix(poi)))
+				# prints('Hex center', poi)
+				# prints('lastTileFree', unit.lastTileFree)
+				# prints('getTileUnit', unit.getTileUnit())
+				if unit.name == "harvestr":
+					var _tile = game.map.manMap.getCooTile(game.map.di.mToPix(poi))#unit.getTileUnit()#lastTileFree
+					if game.map.manMap.isTileSpice(_tile.x as int, _tile.y as int):
+						# prints('Spice at',_tile.x,_tile.y)
+						game.map.manMap.setTileSand(_tile.x,_tile.y)
+						unit.player.spices+=1
+						game.refreshPlayerLabel(unit.player)
+
 				if thisPoint<movePoints.size()-1:
 					thisPoint+=1
 				else:

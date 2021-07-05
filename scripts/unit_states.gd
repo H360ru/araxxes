@@ -16,9 +16,9 @@ func clear():
 func issetSave():
 	return states.size()>0
 
-func save():
+func save(_isSpiceColleted = false):
 	var unitState=UnitSatate.new(game,unit)
-	unitState.saveState()
+	unitState.saveState(_isSpiceColleted)
 	states.push_back(unitState)
 	
 

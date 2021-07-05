@@ -14,9 +14,10 @@ var isSafe
 var spices
 
 var isSaved=false
+var isSpiceCollected=false
 
 #Сохраниеть состояния  сюнита
-func saveState():
+func saveState(_isSpiceCollected=false):
 	
 	points=unit.player.points
 	pos=unit.uMove.pos
@@ -26,7 +27,7 @@ func saveState():
 	
 	isSaved=true
 	
-	
+	isSpiceCollected = _isSpiceCollected
 	pass
 	
 #Устанвоить состояние юнита
@@ -37,6 +38,9 @@ func loadState():
 		unit.uMove.direction=direction
 		unit.isSafe=isSafe
 		unit.player.spices=spices
+
+		if isSpiceCollected:
+			returnSpice()
 	pass
 	
 
@@ -44,3 +48,8 @@ func _init(game,unit).(game):
 	self.unit=unit
 	pass
 
+
+func returnSpice():
+	# var tile=unit.getTileUnit()
+	for _tile in isSpiceCollected:
+		game.map.manMap.tileMapGround.set_cell(_tile.x,_tile.y,Tile.tile_spice)

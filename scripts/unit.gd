@@ -109,6 +109,8 @@ func attackToUnit(unit):
 func onUnitStop():
 	stopTile=getTileUnit()
 	game.map.manMap.blockTile(self)
+	# if name == "harvestr" && isTakeSpace():
+	# 	takeSpace()
 	pass
 
 
@@ -144,8 +146,8 @@ func backState():
 	states.laod()
 	game.refreshPlayerLabel(player)
 	
-func saveSave():
-	states.save()
+func saveSave(_isSpiceColleted = false):
+	states.save(_isSpiceColleted)
 	pass
 
 #Можно ли установить защиту, если уже установлена, то вернет что нельзя
@@ -301,6 +303,8 @@ func moveToTile(vec2d,limitsStep):
 		var cooPam=getUnitTileCenter()
 		var route:Route=self.navigator.buildRoute(cooPam,vec2d,true,limitsStep,false,self);
 		moveOnRoute(route,limitsStep,0)
+
+		saveSave(route.getSpiceTiles())
 		pass
 	pass
 

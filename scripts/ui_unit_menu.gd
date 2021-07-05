@@ -113,6 +113,7 @@ func checkIconsMenuByUnit(unit):
 		var settileTak=false
 		if unit.isTakeSpace():
 			settileTak=true
+			#unit.takeSpace()
 		
 		enableByName(UI.NAME_TILE_TAKE,settileTak)	
 		

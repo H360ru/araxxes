@@ -54,6 +54,14 @@ func build(tileStart:RouteTile,tileEnd:RouteTile):
 		return tiles
 	pass
 
-
+#Вернуть тайлы спайса
+func getSpiceTiles():
+	if tiles!=null:
+		var _spice_tiles=[]
+		for tile in tiles:
+			if Kostil.GAME.map.manMap.isTileSpice(tile.x as int,tile.y as int):
+				_spice_tiles.push_front(tile)
+				
+		return _spice_tiles;
 
 
