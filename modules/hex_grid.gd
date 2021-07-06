@@ -1,74 +1,71 @@
 extends TileMap
-# TODO: #22 Класс грида, отвечает за связь с тайлмапом
-#  низкоуровневую работу с уровнем, создание, удаление клеток
-#  (возможно еще перемещение)
 
 class_name HexGrid
 
-export var map_size = Vector2(1024, 1024) # Необходимо для задания id клеткам
-export(int, 0, 100) var border = 10 # Допустимое превышение размера карты, в том числе и в отрицательную область
+export var obstacles_ids = PoolIntArray()
 
 var navigator:AStar2D
+var _navigator_used_rect:Rect2 # Размер тайлмапа при последнем парсинге карты
 
 func _ready():
 	navigator = AStar2D.new()
+	_navigator_used_rect = Rect2()
+	
+	build_navigator()
 
-func build_navigator(obsts_ids:Array=[]): # obsts_ids - массив с индексами тайлов, которые воспринимаются как препядствия
+
+func build_navigator():
+	# Идея парсера отсюда --> https://github.com/progsource/ps_tileastar2d/blob/main/ps_TileAStar2D_TileMapConnector.gd
+	_navigator_used_rect = get_used_rect()
+	
 	navigator.clear()
-	var start = Vector2()
-	# Необходимо начать с валидной ячейки
-	var valid_map = false
-	for i in get_used_cells():
-		if _is_cell_valid(i) and not get_cellv(i) in obsts_ids:
-			start = i
-			valid_map = true
-			break
-	# Валидных нет
-	if not valid_map:
-		printerr("Map must have tiles inside " + str(map_size))
-		return
-	# Проход карты заливкой
-	var queue = [start]
-	var cur
-	var visited = PoolIntArray()
-	navigator.add_point(_calculate_tile_id(start), get_cell_center_local(start))
-	while len(queue) != 0:
-		cur = queue.pop_front()
-		for neigh in get_tile_neighbors(cur, obsts_ids):
-			if _is_cell_valid(neigh): # Если сосед валидный
-				if not (_calculate_tile_id(neigh) in visited):
-					navigator.add_point(_calculate_tile_id(neigh), get_cell_center_local(neigh)) # Его добавляем
-					navigator.connect_points(_calculate_tile_id(cur), _calculate_tile_id(neigh)) # И соединяем с текущей клеткой
-					queue.append(neigh)
-			else:
-				printerr("Point " + str(neigh) + " is out of map borders")
-		visited.append(_calculate_tile_id(cur))
+	
+	var id:int # Переменная, чтобы постоянно не создавать новую
+	
+	# Проходим по всей карте и ставим точки в навигатор на проходимых тайлах
+	for x in range(_navigator_used_rect.position.x, _navigator_used_rect.position.x+_navigator_used_rect.size.x):
+		for y in range(_navigator_used_rect.position.y, _navigator_used_rect.position.y+_navigator_used_rect.size.y):
+			id = get_cell(x, y)
+			if id != INVALID_CELL and not id in obstacles_ids:
+				navigator.add_point(_calc_cell_id(x, y), get_cell_center_local(Vector2(x, y)))
+	
+	# Повторный проход, соединяем соседей
+	for x in range(_navigator_used_rect.position.x, _navigator_used_rect.position.x+_navigator_used_rect.size.x):
+		for y in range(_navigator_used_rect.position.y, _navigator_used_rect.position.y+_navigator_used_rect.size.y):
+			id = get_cell(x, y)
+			if id == INVALID_CELL or id in obstacles_ids:
+				continue
+			# Функция _get_three_left_top_neighbors возвращает два левых и 
+			# верхнего соседей. Это нужно для избежания повторных соединений, 
+			# ведь соединяем мы в таком случае только с одной стороны
+			for i in _get_three_left_top_neighbors(x, y):
+				id = get_cellv(i)
+				if id != INVALID_CELL and not id in obstacles_ids:
+					navigator.connect_points(_calc_cell_id(x, y), _calc_cell_id(i.x, i.y))
 
+	
 func find_path(point1, point2):
-	var id1 = _calculate_tile_id(point1)
-	var id2 = _calculate_tile_id(point2)
-	if _is_cell_valid(point1) and _is_cell_valid(point2) and navigator.has_point(id1) and navigator.has_point(id2):
-		return navigator.get_point_path(id1, id2)
+	# Если ячейки вне тайлмапа то нет смысла их проверять
+	if not _is_cell_in_map_rect(point1) or not _is_cell_in_map_rect(point2):
+		return []
+	
+	var idx1 = _calc_cell_id_vec(point1)
+	var idx2 = _calc_cell_id_vec(point2)
+	
+	if navigator.has_point(idx1) and navigator.has_point(idx2):
+		return navigator.get_point_path(idx1, idx2)
 	else:
 		return []
+
 
 func get_cell_center_local(cell):
 	return map_to_world(cell)+cell_size/2
 	
+	
 func get_cell_center_global(cell):
 	return to_global(get_cell_center_local(cell))
 	
-# tile - клетка с тайлом
-func get_tile_neighbors(tile_pos:Vector2, unavailable_ids:Array=[]): # unavailable_ids - неугодные тайлы, которых избегаем
-	var res:Array = []
-	var cell_id
-	for i in get_cell_neighbors(tile_pos):
-		cell_id = get_cellv(i)
-		if cell_id != INVALID_CELL and not(cell_id in unavailable_ids):
-			res.append(i)
-	return res
-	
-# cell - просто координата на карте
+
 func get_cell_neighbors(cell):
 	match cell_half_offset:
 		HALF_OFFSET_Y:
@@ -79,6 +76,32 @@ func get_cell_neighbors(cell):
 			printerr("No support")
 			return []
 			
+
+
+func _get_three_left_top_neighbors(x:int, y:int):
+	# Возвращает двух левых и верхнего соседей
+	# Пока работает только для смещений по Y
+	var res:Array
+	var parity:int
+	if cell_half_offset == HALF_OFFSET_NEGATIVE_Y:
+		parity = 1
+	elif cell_half_offset == HALF_OFFSET_Y:
+		parity = -1
+	else:
+		printerr("Соседи для такого смещения недоступны")
+		return []
+		
+	var y_offset = parity*(1 - 2*(int(abs(x))%2))
+	
+	res = [
+		Vector2(x, y-1),
+		Vector2(x-1, y),
+		Vector2(x-1, y+y_offset)
+	]
+	
+	return res
+
+
 func _get_cell_neighs_neg_y(cell):
 	var res
 	res = [
@@ -91,6 +114,7 @@ func _get_cell_neighs_neg_y(cell):
 	]
 	return res
 
+
 func _get_cell_neighs_y(cell):
 	var res
 	res = [
@@ -102,51 +126,23 @@ func _get_cell_neighs_y(cell):
 		cell + Vector2(0, 1)
 	]
 	return res
-
-func _is_cell_valid(cell): # Проверяем лежит ли cell внутри карты
-	return cell.x > -border and cell.x < map_size.x+border and cell.y > -border and cell.y < map_size.y+border
 	
-func _calculate_tile_id(cell) -> int: # Получаем id клетки
-	return int((cell.x+border)*map_size.x + cell.y+border)
 	
-func _get_tile_coord_from_id(id:int) -> Vector2:
-	var res = Vector2()
-	res.x = int(id/map_size.x)-border
-	res.y = id%int(map_size.y)-border
-	return res
+func  _is_cell_in_map_rect(cell):
+	# Находится ли клетка внутри тайлмапа
+	var is_x = (cell.x >= _navigator_used_rect.position.x and 
+		cell.x < _navigator_used_rect.position.x + _navigator_used_rect.size.x)
+	var is_y = (cell.y >= _navigator_used_rect.position.y and
+		cell.y < _navigator_used_rect.position.y + _navigator_used_rect.size.y)
+		
+	return is_x and is_y
 	
-# TODO: #36 Продумать связь града с игровыми объектами.
-#  Например: Эффект от взрыва может вызывать методы как на тайлы, так и на юнитов
-
-#  Упращенная форма тз в качестве памятки. Предполагает свободную формулировку и обсуждение.
-# SIGNAL
-# tilemapTileChanged (NOT URGENT) Callback when Tiles on a Tilemap have changed.
-
-# TODO: #37 Создать основные методы
-# ASAP METHODS:
-
-#  GetCellCenterLocal	Get the logical center coordinate of a grid cell in local grid space.
-#  GetCellCenterWorld	Get the logical center coordinate of a grid cell in world space.
-
-#  GetTileFlags	Gets the TileFlags of the Tile at the given position (id?).
-#  GetCellNeighbours Retrieves an array of tiles
-
-
-# NOT URGENT METHODS:
-
-#  GetTilesShape	Retrieves an array of tiles with the given cell bounds. 
-#  ShapeFill	Does a box fill with the given ONE tile on the tile map. Starts from given coordinates and fills the limits from start to end (inclusive).
-
-#  SetTileFlags	Sets the TileFlags ARRAY onto the Tile at the given position.
-#  RemoveTileFlags	Removes TileFlags ARRAY from the Tile at the given position.
-
-#  SetTilesShape	Fills bounds with ARRAY of tiles.
-
-# VERY NOT URGENT METHODS:
-
-# FloodFill	Does a flood fill with the given tile to place. on the tile map starting from the given coordinates.
-
-# SetTilesArray	Sets an array of tiles at the given XY coordinates of the corresponding cells in the tile map.
-
-# SwapTile	Swaps all existing tiles of changeTile to newTile and refreshes all the swapped tiles.
-# ClearAllTiles	Clears all tiles that are placed in the Tilemap. Вроде уже есть в тайлмап void clear ( )
+	
+func _calc_cell_id(x:int, y:int):
+	var x_id_component = x + abs(_navigator_used_rect.position.x)
+	var y_id_component = (y + abs(_navigator_used_rect.position.y))*_navigator_used_rect.size.x
+	return x_id_component + y_id_component
+	
+	
+func _calc_cell_id_vec(point:Vector2):
+	return _calc_cell_id(int(point.x), int(point.y))
