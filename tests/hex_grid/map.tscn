@@ -56,6 +56,9 @@ func _process(delta):
 		set_cellv(world_to_map(get_local_mouse_position()), obstacles_ids[0])
 	if Input.is_action_just_pressed(\"mouse_middle\"):
 		set_cellv(world_to_map(get_local_mouse_position()), INVALID_CELL)
+		
+	if Input.is_action_just_pressed(\"ui_up\"):
+		clear()
 "
 
 [node name="Map" type="Node2D"]

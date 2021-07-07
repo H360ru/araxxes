@@ -14,6 +14,11 @@ export var obstacles_ids:PoolIntArray = PoolIntArray()
 var navigator:AStar2D
 var _navigator_used_rect:Rect2 # Размер тайлмапа при последнем парсинге карты
 
+################################################################################
+# Переопределнные методы -------------------------------------------------------
+################################################################################
+
+
 func _ready():
 	navigator = AStar2D.new()
 	_navigator_used_rect = Rect2()
@@ -65,11 +70,23 @@ func set_cell(x, y, tile_id, flip_x:bool=false, flip_y:bool=false, transpose:boo
 	set_cellv(Vector2(x, y), tile_id, flip_x, flip_y, transpose)
 
 
+func clear() -> void:
+	.clear()
+	reset_navigator()
+
+
+################################################################################
+# Public методы ----------------------------------------------------------------
+################################################################################
+
+func reset_navigator() -> void:
+	navigator.clear()
+
 func build_navigator() -> void:
 	# Идея парсера отсюда --> https://github.com/progsource/ps_tileastar2d/blob/main/ps_TileAStar2D_TileMapConnector.gd
 	_navigator_used_rect = get_used_rect()
 	
-	navigator.clear()
+	reset_navigator()
 	
 	var id:int # Переменная, чтобы постоянно не создавать новую
 	
@@ -133,7 +150,10 @@ func get_cell_neighbors(cell:Vector2) -> Array:
 		_:
 			printerr("No support")
 			return []
-			
+
+################################################################################
+# Local методы -----------------------------------------------------------------
+################################################################################
 
 func _get_three_left_top_neighbors(x:int, y:int) -> Array:
 	# Возвращает двух левых и верхнего соседей
