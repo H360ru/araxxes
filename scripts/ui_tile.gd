@@ -328,7 +328,8 @@ func _init(game,node).(game):
 	
 	refreshThemeAndFont(text)
 	refreshThemeAndFont(points)	
-		
+	
+	#HACK: 
 	setIcon("close")
 	
 	checkFontColorPoints()

@@ -291,6 +291,8 @@ func onChangeViewportSize():
 	if map!=null:
 		
 		#map_view.rect_position+=Vector2(200,200)
+
+		#HACK:
 		map_view.rect_size=vps.size
 		viewportMap.size=vps.size
 		
@@ -416,8 +418,9 @@ func checkSizeUI():
 	colorRectDown.rect_position.y=buttHarw.rect_position.y
 	
 	#=========================Размер карты
-	map_view.rect_position.y=colorRectUp.rect_size.y
-	map_view.rect_size.y=size.y-(colorRectUp.rect_size.y+colorRectDown.rect_size.y)
+	#HACK: убрал уменьшенный размер рендера вьюпорта
+	#map_view.rect_position.y=colorRectUp.rect_size.y
+	map_view.rect_size.y=size.y#-(colorRectUp.rect_size.y+colorRectDown.rect_size.y)
 	
 	viewportMap.size=map_view.rect_size
 	
@@ -572,11 +575,8 @@ func setMaxSize(node,startSizeFont,maxSize:Vector2):
 # наговнокодил дихотомический поиск вместо линейного
 
 func set_max_size_new(node,startSizeFont: int, maxSize:Vector2):
-#	prints('FONT', node.get("custom_fonts/font").font_data.font_path)
-#	return
 	if node!=null && node.text != '':
 		var _font: Font = node.get("custom_fonts/font");
-#		if _font == null: return
 		var _txt: String = node.text
 		
 		var _font_size: int = startSizeFont*2
@@ -622,7 +622,6 @@ func set_max_size_new(node,startSizeFont: int, maxSize:Vector2):
 			pass
 #		node.set("custom_fonts/font", _font)
 		node.get("custom_fonts/font").size = _font_size
-		prints('!!!set_max_size!!!', c, startSizeFont, endSizeFont, _font_size, node)
 	pass
 
 

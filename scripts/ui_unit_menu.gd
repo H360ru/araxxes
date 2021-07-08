@@ -59,10 +59,12 @@ func fillmenuByUnit(unit):
 	
 	#============
 	if unit.name=="harvestr":
-		tiles[3].setIcon(UI.NAME_TILE_TAKE)
+		#TODO: доделать недостающую кнопку?
+		#tiles[3].setIcon(UI.NAME_TILE_TAKE)
+		tiles[3].setText('')
 		tiles[4].setIcon(UI.NAME_TILE_SAFE)
 		
-		tiles[3].setTile("tile_harv_spice")
+		#tiles[3].setTile("tile_harv_spice")
 		
 	
 	if unit.name=="worm":
