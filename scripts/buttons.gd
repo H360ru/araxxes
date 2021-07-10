@@ -45,7 +45,7 @@ func input(e):
 		if e.button_index==BUTTON_LEFT && e.pressed:
 			var pos2d=game.map.checkEventPosition(e)
 			for bun in buttons:
-				if bun.get_global_rect().has_point(pos2d):
+				if bun.get_global_rect().has_point(pos2d) && bun.visible:
 					var name=bun.name.split("_")[1]
 					emit_signal("onButtonClick",bun,name)
 					return false

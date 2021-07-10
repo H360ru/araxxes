@@ -14,6 +14,7 @@ var cursor_instance: Node2D
 
 #HACK POOP
 var GLES2: bool
+var touch_screen: bool
 
 var visible: bool = true setget set_visible
 func set_visible(value):
@@ -28,10 +29,22 @@ func set_cursor_texture(txt:Resource):
 
 #провести инициализацию настроек
 func _init():
+	print('MOUSE MANAGER INIT')
 	GLES2 = bool(OS.get_current_video_driver() == OS.VIDEO_DRIVER_GLES2)
+	var _js_node = Global.get_node_or_null('JavaScriptUtils')
+	if _js_node:
+		printerr('JavaScriptUtils finded!')
+		touch_screen = _js_node.is_touch_screen()
+		printerr(touch_screen)
+
 
 #TODO: переписать понятно
 func change_cursor(path:String = Global.SETTINGS.cursor):
+	if touch_screen:
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+		delete_cursor_instance()
+		return
+	
 	if Global.SETTINGS.use_os_cursor:
 		return
 	var c = Global.find_node('*Cursor*', true, false)
@@ -66,6 +79,10 @@ func change_cursor(path:String = Global.SETTINGS.cursor):
 
 #Разделить вызов курсора и его отображение (системное или нет)
 func toggle_cursor(show:bool):
+	if touch_screen:
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+		delete_cursor_instance()
+		return
 	if show:
 		if Global.SETTINGS.use_os_cursor:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)

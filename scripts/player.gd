@@ -26,7 +26,8 @@ func set_spices(value):
 	spices = value
 	if spices >= 5:
 		print('WIN!!!!!!!')
-		Kostil.GAME.labelGameOvet.visible=true
+		# Kostil.GAME.labelGameOvet.visible=true
+		Kostil.game_end()
 
 #Отнять баллы
 func minusPoints(pointsMinus):

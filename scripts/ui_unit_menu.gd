@@ -61,7 +61,11 @@ func fillmenuByUnit(unit):
 	if unit.name=="harvestr":
 		#TODO: доделать недостающую кнопку?
 		#tiles[3].setIcon(UI.NAME_TILE_TAKE)
+		tiles[3].name = 'empty_test'
 		tiles[3].setText('')
+		tiles[3].icon.texture=null
+		tiles[3].points.visible=false
+		
 		tiles[4].setIcon(UI.NAME_TILE_SAFE)
 		
 		#tiles[3].setTile("tile_harv_spice")

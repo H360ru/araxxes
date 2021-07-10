@@ -58,10 +58,15 @@ func _ready():
 	prints('BACKGROUND, SITE_LABEL:', BACKGROUND, SITE_LABEL)
 
 func open_menu():
-	print('MENU!!!!')
 	var node = get_tree().get_root().get_node('Node2D/CanvasLayer/Меню')._to_child_name('ИнгеймМеню')
 	# print(node.name)
 	# node.visible = !node.visible
+
+func open_tutorial():
+	var node = get_tree().get_root().get_node('Node2D/CanvasLayer/Меню')._to_child_name('Туториал')
+
+func game_end():
+	var node = get_tree().get_root().get_node('Node2D/CanvasLayer/Меню')._to_child_name('КонецИгры')
 
 #BUG: HTTML5 build
 #At: res://scripts_new/kostil.gd:36:background_visible()

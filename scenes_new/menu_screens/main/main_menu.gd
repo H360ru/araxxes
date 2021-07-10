@@ -18,6 +18,7 @@ extends ui_screen
 func _on_play():
 	Kostil.GAME.whoToPlay=0
 	Kostil.GAME.newGame()
+	Kostil.open_tutorial()
 	Kostil.background_visible(false)
 	get_parent().visible = false
 

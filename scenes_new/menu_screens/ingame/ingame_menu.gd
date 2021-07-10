@@ -17,6 +17,7 @@ extends ui_screen
 
 func _on_play():
 	get_parent().visible = false
+	Kostil.GAME.butt.visibleByName("tomenu", true)
 
 func _on_settings():
 	get_parent()._to_child_ind(0)

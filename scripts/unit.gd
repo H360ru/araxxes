@@ -102,7 +102,8 @@ func attackToUnit(unit):
 				if stepToAttack!=-1 && stepToAttack+1<=attackLen:
 					
 					#===Временное
-					game.labelGameOvet.visible=true
+					# game.labelGameOvet.visible=true
+					Kostil.game_end()
 					
 
 #Вызывается при остановке юнита

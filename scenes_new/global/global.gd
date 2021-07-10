@@ -32,9 +32,15 @@ func _notification(what: int):
 
 func initialisation(cmdline_args = null):
 	print("Cmdline args: ", OS.get_cmdline_args())
-	system_check()
-	
-	
+	if OS.has_feature("JavaScript"):
+		js_initialisation()
+	#system_check()
+
+# HACK
+func js_initialisation():
+	var _node = load("res://web/js_system_check.gd").new()#instance()
+	_node.name = 'JavaScriptUtils' # надо бы название получше
+	add_child(_node)
 
 func system_check():
 	var feature_arr = ["Android", "HTML5", "JavaScript", "OSX", "iOS", "UWP", "Windows", "X11",\

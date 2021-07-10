@@ -50,6 +50,7 @@ var colorRectDown
 func _init(game,node).(game):
 	game=self
 	Kostil.GAME = self
+
 	self.node=node
 	
 	
@@ -129,6 +130,7 @@ func newGame():
 	onQueueChangePlayer(queue.getThisPlayer())
 	
 	unUnitMenu.close()
+	butt.visibleByName("tomenu",true)
 
 
 
@@ -183,10 +185,11 @@ func onButtonClick(button,name):
 			var labelN=labs.getByName("notic")
 			labelN.visible=false
 		if name=="tomenu":
-			menu.open()
-			menu.setMenuGame()
+			# menu.open()
+			# menu.setMenuGame()
 			# print('MENU!!!!')
 			Kostil.open_menu()
+			butt.visibleByName("tomenu",false)
 			pass
 	#==================меню
 	

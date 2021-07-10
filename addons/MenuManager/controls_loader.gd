@@ -17,11 +17,12 @@ var ui_parent
 var ui_screen_visible: bool #setget set_visible
 
 func set_visible(value):
+	if visible != value:
+		if value:
+			load_control()
+		else:
+			unload_control()
 	visible = value
-	if value:
-		load_control()
-	else:
-		unload_control()
 	if is_instance_valid(ui_origin_node):
 		ui_origin_node.visible = value
 
