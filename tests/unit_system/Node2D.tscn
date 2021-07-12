@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://tests/unit_system/Unit.tscn" type="PackedScene" id=1]
 [ext_resource path="res://tests/hex_grid/tileset.tres" type="TileSet" id=2]
@@ -40,7 +40,7 @@ func _process(delta):
 			actor.unit = team.get_child(unit)
 	
 	update()
-			
+
 func _draw():
 	if len(actor.get_path_points()) > 1:
 		draw_polyline(actor.get_path_points(), Color.red)
@@ -102,12 +102,12 @@ func clear_path():
 
 func add_path_point(point:Vector2, smooth_grade=0.3):
 	if _path.curve.get_point_count() > 1:
-		var last_ind = _path.curve.get_point_count()-1
-		# Make it smooth
-		_path.curve.set_point_out(last_ind, (point-_path.curve.get_point_position(last_ind))*smooth_grade)
-		_path.curve.set_point_in(last_ind, -_path.curve.get_point_out(last_ind))
-		
 		_path.curve.add_point(point)
+		var ind = _path.curve.get_point_count()-1
+		var last_ind = ind-1
+		# Make it smooth
+		_path.curve.set_point_in(ind, -(point-_path.curve.get_point_position(last_ind))*smooth_grade)
+		_path.curve.set_point_out(ind, -_path.curve.get_point_in(ind))
 	else:
 		_path.curve.add_point(point)
 
@@ -141,7 +141,13 @@ _data = {
 "points": PoolVector2Array(  )
 }
 
+[sub_resource type="Curve2D" id=4]
+_data = {
+"points": PoolVector2Array( -82.4069, 37.4577, 82.4069, -37.4577, 438.656, 186.527, -80.0875, -37.9496, 80.0875, 37.9496, 602.581, 187.418, 0, 0, 0, 0, 685.435, 135.746, 0, 0, 0, 0, 770.07, 185.637, 0, 0, 0, 0, 853.815, 238.2, 0, 0, 0, 0, 855.435, 329.019, 0, 0, 0, 0, 856.184, 434.65, 0, 0, 0, 0, 856.593, 513.656 )
+}
+
 [node name="Units" type="Node2D"]
+position = Vector2( 0.943909, 1.88776 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -171,7 +177,7 @@ position = Vector2( 871.955, 128.097 )
 
 [node name="Actor" type="Node" parent="."]
 script = SubResource( 2 )
-speed = 80
+speed = 150
 
 [node name="Path" type="Path2D" parent="Actor"]
 curve = SubResource( 3 )
@@ -180,6 +186,9 @@ curve = SubResource( 3 )
 rotate = false
 
 [node name="Tween" type="Tween" parent="Actor"]
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource( 4 )
 
 [connection signal="idled" from="Actor" to="Control" method="_on_Actor_idled"]
 [connection signal="tween_completed" from="Actor/Tween" to="Actor" method="_on_Tween_tween_completed"]

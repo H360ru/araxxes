@@ -1,0 +1,70 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://modules/isometric_sprite.gd" type="Script" id=1]
+[ext_resource path="res://tests/iso_sprite/burn.png" type="Texture" id=2]
+[ext_resource path="res://tests/iso_sprite/burn-export.png" type="Texture" id=3]
+[ext_resource path="res://tests/iso_sprite/light1.png" type="Texture" id=4]
+
+[sub_resource type="Animation" id=1]
+resource_name = "dissolve"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 2 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0, 5 ]
+}
+
+[node name="Node2D" type="Node2D"]
+
+[node name="IsoSprite" type="Node2D" parent="."]
+script = ExtResource( 1 )
+texture = ExtResource( 2 )
+directions = 8
+frames = 6
+direction = 3
+
+[node name="IsoSprite2" type="Node2D" parent="."]
+position = Vector2( 0, 48 )
+script = ExtResource( 1 )
+texture = ExtResource( 2 )
+normal_map = ExtResource( 3 )
+directions = 8
+frames = 6
+direction = 3
+frame = 2
+
+[node name="IsoSprite3" type="Node2D" parent="."]
+position = Vector2( 193.713, 51.8464 )
+script = ExtResource( 1 )
+texture = ExtResource( 2 )
+normal_map = ExtResource( 3 )
+directions = 8
+frames = 6
+direction = 3
+frame = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="IsoSprite3"]
+anims/dissolve = SubResource( 1 )
+
+[node name="Light2D" type="Light2D" parent="."]
+position = Vector2( 74.2196, 66.7314 )
+texture = ExtResource( 4 )
