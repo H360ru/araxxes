@@ -8,11 +8,15 @@ class_name NavigationGrid
 # pixel - мировые координаты 
 
 signal tilemap_tile_changed(cell, new_tile_id)
+signal new_cell_flag(cell, new_flag)
+signal cell_flag_removed(cell, removed_flag)
 
 export var obstacles_ids:PoolIntArray = PoolIntArray()
 
 var navigator:AStar2D
 var _navigator_used_rect:Rect2 # Размер тайлмапа при последнем парсинге карты
+
+var _tiles_flags = Dictionary() # Координате cell соответствуют ее флаги
 
 ################################################################################
 # Переопределнные методы -------------------------------------------------------
@@ -43,9 +47,12 @@ func set_cellv(cell:Vector2, tile_id:int, flip_x:bool=false, flip_y:bool=false, 
 		return
 		
 	# Если новая ячейка за пределами текщей карты то 
-	# старые индексы не подходят поэтому перепарсиваем
+	# старые индексы не подходят, обрабатываем отдельно
 	if not _is_cell_in_map_rect_vec(cell): 
-		build_navigator()
+		# Если мы вне карты хотим поставить препятствие,
+		# то на навигаторе это никак не отразится поэтому пофиг
+		if not tile_id in obstacles_ids:
+			build_navigator()
 		return
 		
 	var neigh_id:int
@@ -151,6 +158,57 @@ func get_cell_neighbors(cell:Vector2) -> Array:
 			printerr("No support")
 			return []
 
+
+func add_cell_flag(cell:Vector2, flag:int) -> void:
+	assert(flag >= 0) # Не бывает отрицательных флагов
+	# Все флаги хранятся в битах числа
+	var bit_flag:int = 1<<flag # Равносильно возведению 2 в степень flag
+	
+	if not cell in _tiles_flags: # Если еще не было то создаем
+		_tiles_flags[cell] = bit_flag
+	else:
+		_tiles_flags[cell] |= bit_flag # Активируем нужный бит
+		
+	emit_signal("new_cell_flag", cell, flag)
+
+
+func remove_cell_flag(cell:Vector2, flag:int) -> void:
+	assert(flag >= 0) # Не бывает отрицательных флагов
+	var bit_flag:int = 1<<flag
+	# Убираем только включенный флаг, иначе это затронет другие биты (т.е. флаги)
+	if is_cell_has_flag(cell, flag):
+		_tiles_flags[cell] -= bit_flag
+		emit_signal("cell_flag_removed", cell, flag)
+
+
+func get_cell_flags(cell:Vector2) -> int:
+	# Если ячейки нет в словаре, значит никто не манипулировал ее флагами
+	if not cell in _tiles_flags:
+		return 0 
+	else:
+		return _tiles_flags[cell]
+	
+
+func is_cell_has_flag(cell:Vector2, flag:int) -> bool:
+	var bit_flag:int = 1<<flag
+	
+	if cell in _tiles_flags:
+		return _tiles_flags[cell]&bit_flag > 0
+	else: # Если ячейка не была записана, значит флагов нет
+		return false
+		
+
+func get_cells_with_flag(flag:int) -> PoolVector2Array:
+	var bit_flag:int = 1<<flag
+	
+	var res:PoolVector2Array = PoolVector2Array()
+	
+	for i in _tiles_flags.keys():
+		if _tiles_flags[i]&bit_flag > 0:
+			res.append(i)
+			
+	return res
+	
 ################################################################################
 # Local методы -----------------------------------------------------------------
 ################################################################################
