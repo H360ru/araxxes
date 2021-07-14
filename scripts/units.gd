@@ -183,7 +183,8 @@ func onUnitMoveStop(unit):
 	
 	game.map.manMap.clearSelect()
 	
-	game.refreshPlayerLabel(unit.player)
+	#HACK: вроде исправление бага лейблов
+	#game.refreshPlayerLabel(unit.player)
 	
 	pass
 

@@ -13,5 +13,5 @@ func _input(event):
 	game.input(event)
 
 
-func _physics_process(delta):
+func _process(delta):
 	game.run(delta)

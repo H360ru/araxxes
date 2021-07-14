@@ -53,8 +53,15 @@ func run(delta):
 									unitPlayer=unitsPl[0]
 									
 									#=====Проложить маршрут к юниту игрока
+									#HACK: ограничил дальность прокладывания маршрута
 									tileFrom=unitCpu.getUnitTileCenter()
 									tileTo=unitPlayer.getUnitTileCenter()
+									var _dist: Vector2 = tileTo - tileFrom
+									var _clamp:float = 9000
+									if _dist.length() > _clamp:
+										_dist = _dist.clamped(_clamp)
+										var _map = game.map.manMap
+										tileTo = _map.getCenterTile(_map.getRandomNotBlockTile(_map.getCooTile(tileFrom + _dist), unitCpu))
 									
 								else:
 									#нету4 юнитов противника
@@ -109,6 +116,7 @@ func run(delta):
 							#===============================Ходить если нужно
 							if tileFrom!=null && tileTo!=null:
 								
+								#BUG виновник торжества целых 500ms
 								var route=unitCpu.navigator.buildRoute(tileFrom,tileTo,false,-1,true,unitCpu,[unitPlayer])
 								if route!=null:
 									
