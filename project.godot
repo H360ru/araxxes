@@ -32,7 +32,7 @@ _global_script_classes=[ {
 "base": "TileMap",
 "class": "NavigationGrid",
 "language": "GDScript",
-"path": "res://modules/hex_grid.gd"
+"path": "res://modules/navigation_grid.gd"
 }, {
 "base": "Node",
 "class": "NetRequest",

@@ -2,7 +2,7 @@
 
 [ext_resource path="res://tests/unit_system/Unit.tscn" type="PackedScene" id=1]
 [ext_resource path="res://tests/hex_grid/tileset.tres" type="TileSet" id=2]
-[ext_resource path="res://modules/hex_grid.gd" type="Script" id=3]
+[ext_resource path="res://modules/navigation_grid.gd" type="Script" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
