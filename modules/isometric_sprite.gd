@@ -8,10 +8,10 @@ export(Texture) var texture setget set_texture
 export(Texture) var normal_map setget set_normal_map
 
 # Параметры
-export(int, 1, 720) var directions = 1 setget set_directions
-export(int, 1, 1024) var frames = 1 setget set_frames
+export(int) var directions = 1 setget set_directions
+export(int) var frames = 1 setget set_frames
 export(bool) var counter_clock_wise = false
-export(int, 0, 360) var zero_direction_angle = 0
+export(int) var zero_direction_angle = 0 setget set_zero_direction_angle, get_zero_direction_angle
 
 # Инициализация параметров
 export(int) var direction = 0 setget set_direction
@@ -50,7 +50,7 @@ func _draw():
 ################################################################################
 
 func direct_by_rad(angle:float) -> void:
-	angle += deg2rad(zero_direction_angle)
+	angle += zero_direction_angle
 	# Изометрический угол не равен экранному, необходимо преобразовать
 	angle = _calc_iso_angle(angle)
 	if counter_clock_wise:
@@ -70,7 +70,7 @@ func get_direction_angle_rad(dir:int) -> float:
 	var dir_angle = 2*PI/directions 
 	# По часовой отнимаем, против прибавляем
 	var angle = dir_angle*dir if counter_clock_wise else -dir_angle*dir
-	angle += deg2rad(zero_direction_angle)
+	angle += zero_direction_angle
 	angle = _calc_iso_angle(angle) # Нужно учесть изометрию
 	
 	return angle
@@ -119,12 +119,15 @@ func set_normal_map(np:Texture):
 	update()
 	
 func set_directions(dirs:int):
-	directions = dirs
+	directions = max(1, dirs)
 	set_direction(min(directions-1, direction))
 	
 func set_frames(frs:int):
-	frames = frs
+	frames = max(1, frs)
 	set_frame(min(frames-1, frame))
+	
+func set_zero_direction_angle(angle:int):
+	zero_direction_angle = deg2rad(angle)
 	
 func set_direction(dir:int):
 	direction = _loop_int(dir, directions)
@@ -149,6 +152,13 @@ func set_centered(centr:bool):
 func set_offset(ofst:Vector2):
 	offset = ofst
 	update()
+
+################################################################################
+# Геттеры ----------------------------------------------------------------------
+################################################################################
+
+func get_zero_direction_angle():
+	return int(rad2deg(zero_direction_angle))
 
 ################################################################################
 # Локальные методы -------------------------------------------------------------
