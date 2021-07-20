@@ -296,7 +296,7 @@ func close():
 
 func input(e):
 	
-	if e is InputEventMouseButton:
+	if e.is_action_pressed('click'): #is InputEventMouseButton:
 		var even:InputEventMouseButton=e
 		if open:
 			if even.pressed:

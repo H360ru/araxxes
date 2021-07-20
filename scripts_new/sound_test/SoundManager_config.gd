@@ -16,5 +16,18 @@ export var Audio_Files_Dictionary : Dictionary = {
 	"ui_accept": "res://addons/SoundManager/SFX/wpn_select.wav",
 	"ui_deny": "res://addons/SoundManager/SFX/wpn_denyselect.wav",
 	"ui_set": "res://addons/SoundManager/SFX/wpn_hudoff.wav",
-	"vehicle": "res://addons/SoundManager/SFX/vehicle_select2.wav",
+
+	"vehicle": "res://addons/SoundManager/SFX/large_tracks2.wav",
+	"engine": "res://addons/SoundManager/SFX/vehicle_select2.wav",
+	"voice_copy1": "res://addons/SoundManager/SFX/copy1.wav",
+	"voice_copy2": "res://addons/SoundManager/SFX/copy2.wav",
+	"voice_copy3": "res://addons/SoundManager/SFX/copy3.wav",
+	"voice_copy4": "res://addons/SoundManager/SFX/copy4.wav",
+
+	"beep1": "res://addons/SoundManager/SFX/beep1.wav",
+	"beep2": "res://addons/SoundManager/SFX/beep2.wav",
+	"beep3": "res://addons/SoundManager/SFX/beep3.wav",
+	"beep4": "res://addons/SoundManager/SFX/beep4.wav",
+
+	"ambient": "res://addons/SoundManager/SFX/desert_ambient.mp3",
 	}

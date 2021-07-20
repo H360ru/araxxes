@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/copy3.wav-d1be1ac6202f352db0be1f858530845e.sample"
+
+[deps]
+
+source_file="res://addons/SoundManager/SFX/copy3.wav"
+dest_files=[ "res://.import/copy3.wav-d1be1ac6202f352db0be1f858530845e.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

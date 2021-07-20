@@ -1,0 +1,85 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://UI/src/theme/gdquest.theme" type="Theme" id=1]
+[ext_resource path="res://scenes_new/menu_screens/game_mode/game_mode.gd" type="Script" id=2]
+[ext_resource path="res://Assets/UI/button_normal.tres" type="StyleBox" id=3]
+[ext_resource path="res://Assets/UI/button_hover.tres" type="StyleBox" id=4]
+
+[node name="Режим" type="CenterContainer" groups=[
+"ui_menu",
+]]
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_mode = 2
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Настройки" type="MarginContainer" parent="."]
+margin_left = 360.0
+margin_top = 250.0
+margin_right = 660.0
+margin_bottom = 450.0
+rect_min_size = Vector2( 300, 200 )
+mouse_filter = 1
+
+[node name="Panel" type="Panel" parent="Настройки"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 284.0
+margin_bottom = 184.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Настройки"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 284.0
+margin_bottom = 184.0
+
+[node name="Label" type="Label" parent="Настройки/VBoxContainer"]
+margin_right = 268.0
+margin_bottom = 21.0
+mouse_filter = 1
+text = "Режим:"
+
+[node name="Харвестер" type="Button" parent="Настройки/VBoxContainer"]
+margin_top = 29.0
+margin_right = 268.0
+margin_bottom = 50.0
+custom_styles/hover = ExtResource( 4 )
+custom_styles/focus = ExtResource( 4 )
+custom_styles/normal = ExtResource( 3 )
+text = "Харвестер"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Червяка" type="Button" parent="Настройки/VBoxContainer"]
+margin_top = 58.0
+margin_right = 268.0
+margin_bottom = 79.0
+custom_styles/hover = ExtResource( 4 )
+custom_styles/focus = ExtResource( 4 )
+custom_styles/normal = ExtResource( 3 )
+text = "Червяка"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Выйти2" type="Button" parent="Настройки/VBoxContainer"]
+margin_top = 87.0
+margin_right = 268.0
+margin_bottom = 108.0
+custom_styles/hover = ExtResource( 4 )
+custom_styles/focus = ExtResource( 4 )
+custom_styles/normal = ExtResource( 3 )
+text = "Закрыть"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Настройки/VBoxContainer/Харвестер" to="." method="_on_harv"]
+[connection signal="pressed" from="Настройки/VBoxContainer/Червяка" to="." method="_on_worm"]
+[connection signal="pressed" from="Настройки/VBoxContainer/Выйти2" to="." method="_on_back"]

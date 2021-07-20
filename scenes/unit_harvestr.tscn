@@ -1,12 +1,72 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://textures/units/harvestr.png" type="Texture" id=1]
+[ext_resource path="res://scenes_new/UnitDustTrails.tscn" type="PackedScene" id=2]
+[ext_resource path="res://textures/fx/whitePuff16.png" type="Texture" id=3]
 
-[node name="Node2D" type="Node2D"]
+[sub_resource type="Shader" id=1]
+code = "
+shader_type canvas_item;
+render_mode blend_mix;
+
+// Wind settings.
+uniform float speed = 1.0;
+uniform float minStrength : hint_range(0.0, 1.0) = 0.05;
+uniform float maxStrength : hint_range(0.0, 1.0) = 0.01;
+uniform float strengthScale = 100.0;
+uniform float interval = 3.5;
+uniform float detail = 1.0;
+uniform float distortion : hint_range(0.0, 1.0);
+uniform float heightOffset : hint_range(0.0, 1.0);
+
+// With the offset value, you can if you want different moves for each asset. Just put a random value (1, 2, 3) in the editor. Don't forget to mark the material as unique if you use this
+uniform float offset = 0; 
+
+
+float getWind(vec2 vertex, vec2 uv, float time){
+    float diff = pow(maxStrength - minStrength, 2.0);
+    float strength = clamp(minStrength + diff + sin(time / interval) * diff, minStrength, maxStrength) * strengthScale;
+    float wind = (sin(time) + cos(time * detail)) * strength * max(0.0, (1.0-uv.y) - heightOffset);
+    
+    return wind; 
+}
+
+void vertex() {
+    vec4 pos = WORLD_MATRIX * vec4(0.0, 0.0, 0.0, 1.0);
+    float time = TIME * speed + offset;
+    //float time = TIME * speed + pos.x * pos.y  ; not working when moving...
+    VERTEX.x += getWind(VERTEX.xy, UV, time);
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/speed = 1.0
+shader_param/minStrength = 0.05
+shader_param/maxStrength = 0.01
+shader_param/strengthScale = 1000.0
+shader_param/interval = 3.5
+shader_param/detail = 1.0
+shader_param/distortion = null
+shader_param/heightOffset = null
+shader_param/offset = 0.0
+
+[node name="Harvester" type="Node2D"]
 
 [node name="sprite_32" type="Sprite" parent="."]
 scale = Vector2( 15, 15 )
 texture = ExtResource( 1 )
-vframes = 8
 hframes = 4
+vframes = 8
 frame = 31
+
+[node name="Trail" parent="sprite_32" instance=ExtResource( 2 )]
+scale = Vector2( 0.0666667, 0.0666667 )
+
+[node name="Sprite" type="Sprite" parent="sprite_32"]
+visible = false
+self_modulate = Color( 1, 1, 1, 0.533333 )
+show_behind_parent = true
+material = SubResource( 2 )
+position = Vector2( 0.170105, -4.14154 )
+scale = Vector2( 0.333449, 0.333449 )
+texture = ExtResource( 3 )

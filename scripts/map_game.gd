@@ -148,7 +148,10 @@ func onClickUnit(units,unit,sceenPos):
 				
 				manMap.clearSelect()
 				openMenuForUnit(unit)
-				Kostil.SOUND.play_bgm('ui_accept')
+
+				var _voice = ['beep1','beep2','beep3','beep4']
+				Kostil.SOUND.play_bgm(_voice[randi() % _voice.size()])
+				# Kostil.SOUND.play_bgm('ui_accept')
 				
 				
 			

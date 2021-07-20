@@ -27,10 +27,10 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer"]
-margin_left = 374.0
-margin_top = 195.0
-margin_right = 649.0
-margin_bottom = 405.0
+margin_left = 372.0
+margin_top = 245.0
+margin_right = 647.0
+margin_bottom = 455.0
 rect_min_size = Vector2( 275, 210 )
 mouse_filter = 1
 __meta__ = {

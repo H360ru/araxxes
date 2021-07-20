@@ -16,11 +16,12 @@ extends ui_screen
 ##	_exit_button.connect("button_down", self, '_on_exit')
 
 func _on_play():
-	Kostil.GAME.whoToPlay=0
-	Kostil.GAME.newGame()
-	Kostil.open_tutorial()
-	Kostil.background_visible(false)
-	get_parent().visible = false
+	get_parent()._to_child_name('РежимИгры')
+#	Kostil.GAME.whoToPlay=0
+#	Kostil.GAME.newGame()
+#	Kostil.open_tutorial()
+#	Kostil.background_visible(false)
+#	get_parent().visible = false
 
 func _on_settings():
 	get_parent()._to_child_ind(0)

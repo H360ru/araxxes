@@ -111,7 +111,7 @@ func _init(game,node).(game):
 #начать новую игру
 func newGame():
 	
-	
+	Kostil.SOUND.set_loop_mode(Kostil.SOUND.play_bgs('ambient').stream, 1)
 	
 	players.clear()
 	queue.clear()
@@ -239,8 +239,9 @@ func onUiUnitMenuClick(ui:UiUnitMenu,tile):
 	var unit=ui.unit
 	
 	if tile.enabled:
-		
-		
+		var _voice = ['beep1','beep2','beep3','beep4']
+		Kostil.SOUND.play_bgm(_voice[randi() % _voice.size()])
+		# Kostil.SOUND.play_bgm('ui_accept')
 		
 		if tile.name==UI.NAME_TILE_CLOSE:
 			ui.close()

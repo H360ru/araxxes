@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/desert_ambient.mp3-d0ba95e0bbb7d9d05a40c637d5b71b8c.mp3str"
+
+[deps]
+
+source_file="res://addons/SoundManager/SFX/desert_ambient.mp3"
+dest_files=[ "res://.import/desert_ambient.mp3-d0ba95e0bbb7d9d05a40c637d5b71b8c.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

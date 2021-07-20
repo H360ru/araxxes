@@ -77,10 +77,20 @@ var stopTile
 #КОСТЫЛИ###########################################################################
 
 var _movement_sound: String = 'vehicle'
+var trail: Node
 
 func _on_move_start(_unit_move):
+	if player.name == 'player':
+		var _voice = ['voice_copy1','voice_copy2','voice_copy3','voice_copy4']
+		Kostil.SOUND.play_units(_voice[randi() % _voice.size()])
 	# Kostil.SOUND.play_bgm(_movement_sound)
 	Kostil.SOUND.async_play_until_signal(_movement_sound, uMove, 'onUnitMoveStop')
+	# Kostil.SOUND.async_play_until_signal('engine', uMove, 'onUnitMoveStop')
+
+	trail.emitting = true
+
+func _on_move_end(_unit_move):
+	trail.emitting = false
 
 ###################################################################################
 
@@ -433,6 +443,9 @@ func _init(game,node,name).(game):
 		#Скорость
 		uMove.speed.maxSpeed=10
 		uMove.speed.speedDown=1
-		
+	
+	trail = self.node.get_node('Trail')
 	uMove.connect('onUnitMoveStart', self, '_on_move_start')
+	uMove.connect('onUnitMoveFinished', self, '_on_move_end')
+	
 	pass

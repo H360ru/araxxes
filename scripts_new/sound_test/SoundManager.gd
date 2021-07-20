@@ -33,6 +33,10 @@ export (Dictionary) var Default_Sounds_Properties = {
 		"Volume" : 0,
 		"Pitch" : 1,
 	},
+	"UNITS" : {
+		"Volume" : 0,
+		"Pitch" : 1,
+	},
 	"ME" : {
 		"Volume" : 0,
 		"Pitch" : 1,
@@ -53,9 +57,10 @@ var se_playing				: Array		= [ "SE0" ]
 var me_playing				: Array		= [ "ME0" ]
 
 var Audio_Busses : Dictionary = {
-	"BGM" : "Master",
-	"BGS" : "Master",
-	"SE" : "Master",
+	"BGM" : "Music",
+	"BGS" : "Ambience",
+	"SE" : "Effects",
+	"UNITS" : "Units",
 	"ME" : "Master",
 }
 
@@ -67,11 +72,11 @@ var Instantiated_Nodes : Array = []
 # Methods
 
 func async_play_until_signal(_sound_name: String, _object: Object, _signal: String):
-	var _sound = play_bgm(_sound_name)
+	var _sound = play_se(_sound_name)
 	set_loop_mode(_sound.stream, 1)
 	yield(_object, _signal)
 	
-	var _duration = 0.2
+	var _duration = 0.35#2
 #	Global.TWEEN.interpolate_property(_sound, "volume_db",
 #		_sound.volume_db, _sound.volume_db - 24, duration,
 #		Tween.TRANS_LINEAR, Tween.EASE_OUT)
@@ -84,11 +89,12 @@ func async_play_until_signal(_sound_name: String, _object: Object, _signal: Stri
 #			break
 	
 	#TODO: проверить на null ошибки корутины
-	var _tw = Tweening.tween_to(_sound, "volume_db", _sound.volume_db - 24, _duration)
-	yield(_tw, 'finished')
-	
-	_sound.stop()
-	_sound.volume_db = 0
+	if is_instance_valid(_sound):
+		var _tw = Tweening.tween_to(_sound, "volume_db", _sound.volume_db - 24, _duration)
+		yield(_tw, 'finished')
+		
+		_sound.stop()
+		_sound.volume_db = 0
 
 ##################################################
 #				SOUNDS HANDLING					 #
@@ -121,6 +127,12 @@ func play_se(sound_effect : String, from_position : float = 0.0, volume_db : flo
 	elif debug:
 		print_debug("No sound effect selected.")
 
+func play_units(sound_effect : String, from_position : float = 0.0, volume_db : float = -81,\
+	pitch_scale : float = -1, sound_to_override : String = ""):# -> void:
+	if sound_effect != "" and sound_effect != null:
+		return self.play("UNITS", sound_effect, from_position, volume_db, pitch_scale, sound_to_override)
+	elif debug:
+		print_debug("No sound effect selected.")
 
 # Play a given Music Effect
 func play_me(music_effect : String, from_position : float = 0.0, volume_db : float = -81,\
@@ -663,6 +675,8 @@ func play(sound_type : String, sound : String, from_position : float = 1.0,\
 	if Instantiated_Nodes.has(sound_path):
 		sound_index = Instantiated_Nodes.find(sound_path)
 		audiostream = Audiostreams[sound_index]
+		
+		#BUG: audiostream = NULL!!!
 		if audiostream.get_bus() != Audio_Busses[sound_type]:
 			audiostream.set_bus(Audio_Busses[sound_type])
 		if debug:
@@ -745,7 +759,7 @@ func add_sound(sound : String, sound_type : String, preinstance : bool = false) 
 	return sound_index
 
 func set_loop_mode(_stream: AudioStream, _mode: int) -> void:
-	if _stream is AudioStreamOGGVorbis:
+	if _stream is AudioStreamOGGVorbis or _stream is AudioStreamMP3:
 		_stream.loop = bool(_mode)
 	else:
 		_stream.loop_mode = _mode

@@ -56,6 +56,7 @@ func _ready():
 	BACKGROUND = get_tree().get_root().get_node('Node2D/CanvasLayer/Background')
 	SITE_LABEL = get_tree().get_root().get_node('Node2D/CanvasLayer/SiteLabel')
 	prints('BACKGROUND, SITE_LABEL:', BACKGROUND, SITE_LABEL)
+	randomize()
 
 func open_menu():
 	var node = get_tree().get_root().get_node('Node2D/CanvasLayer/Меню')._to_child_name('ИнгеймМеню')
