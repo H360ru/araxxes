@@ -23,6 +23,11 @@ func settings_init():
 	if !SettingsSaveLoad.load_settings():
 		SettingsControls.default_controls()
 		SettingsSaveLoad.load_settings_default()
+		# HACK:
+		var _vec: Vector2 = get_viewport().size()#OS.get_screen_size()
+		# printerr('Screen_size: ' + str(_vec))
+		Global.SETTINGS.set_value("resolution", _vec)
+
 		# TODO: добавить вызов диалога
 		SettingsSaveLoad.save_settings()
 		print("DEFAULT CONTROLS")

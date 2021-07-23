@@ -24,7 +24,7 @@ func _on_play():
 #	get_parent().visible = false
 
 func _on_settings():
-	get_parent()._to_child_ind(0)
+	get_parent()._to_child_name('Настройки')
 	Global.SOUND.play()
 
 func _on_help():

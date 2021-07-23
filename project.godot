@@ -179,7 +179,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/SoundManager/sound_manager.gd"
 }, {
-"base": "Node",
+"base": "Reference",
 "class": "SoundManagerModule",
 "language": "GDScript",
 "path": "res://scripts_new/sound_test/SoundManager_config.gd"
@@ -209,7 +209,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/touch.gd"
 }, {
-"base": "Object",
+"base": "Reference",
 "class": "Tweening",
 "language": "GDScript",
 "path": "res://scripts_new/Tween manager/Tweening.gd"

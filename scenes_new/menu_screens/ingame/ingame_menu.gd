@@ -20,7 +20,7 @@ func _on_play():
 	Kostil.GAME.butt.visibleByName("tomenu", true)
 
 func _on_settings():
-	get_parent()._to_child_ind(0)
+	get_parent()._to_child_name('Настройки')
 	Global.SOUND.play()
 
 func _on_help():

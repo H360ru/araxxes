@@ -42,7 +42,6 @@ settings = {
 "fullscreen": false,
 "game_speed": 6,
 "local": "ru",
-"resolution": Vector2( 1024, 600 ),
 "sound_volume": 0.0,
 "ui_tint": Color( 0, 0, 0, 1 ),
 "use_os_cursor": false,

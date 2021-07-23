@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://textures/tiles/attack.png" type="Texture" id=1]
 [ext_resource path="res://textures/tiles/move.png" type="Texture" id=2]
@@ -9,8 +9,11 @@
 [ext_resource path="res://textures/fx/round_blur.png" type="Texture" id=7]
 [ext_resource path="res://textures/fx/round.png" type="Texture" id=8]
 [ext_resource path="res://textures/fx/hologram_lines-b1399a8d-150x150.png" type="Texture" id=9]
+[ext_resource path="res://textures/fx/new_shader2.shader" type="Shader" id=10]
+[ext_resource path="res://textures/fx/whitePuff16.png" type="Texture" id=11]
+[ext_resource path="res://scripts_new/shader_cloud.gd" type="Script" id=12]
 
-[sub_resource type="Shader" id=6]
+[sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
 
 uniform vec4 baseColor: hint_color = vec4(0.3058, 0.835, 0.960, 1.);
@@ -45,8 +48,8 @@ void fragment() {
     COLOR.a = min(COLOR.a, hologram.a);
 }"
 
-[sub_resource type="ShaderMaterial" id=7]
-shader = SubResource( 6 )
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
 shader_param/baseColor = Color( 0, 0.811765, 1, 0 )
 shader_param/speed = 6.0
 shader_param/linesColor = Color( 1, 1, 1, 0.803922 )
@@ -54,7 +57,7 @@ shader_param/linesColorIntensity = 0.0
 shader_param/hologramTextureTiling = Vector2( 1, 0.2 )
 shader_param/hologramTexture = ExtResource( 9 )
 
-[sub_resource type="TileSet" id=8]
+[sub_resource type="TileSet" id=3]
 0/name = "attack.png 0"
 0/texture = ExtResource( 1 )
 0/tex_offset = Vector2( 0, 0 )
@@ -84,12 +87,20 @@ shader_param/hologramTexture = ExtResource( 9 )
 1/shapes = [  ]
 1/z_index = 0
 
-[sub_resource type="Curve" id=5]
+[sub_resource type="Curve" id=7]
 _data = [ Vector2( 0, 0.210227 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.655682 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="Gradient" id=4]
+[sub_resource type="Gradient" id=5]
 offsets = PoolRealArray( 0, 0.0671141, 0.919463, 1 )
 colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="ShaderMaterial" id=6]
+resource_local_to_scene = true
+shader = ExtResource( 10 )
+shader_param/masking_color = Color( 0.313726, 0.313726, 0.313726, 1 )
+shader_param/masking_range = 0.034
+shader_param/masking_shadow_range = 0.1
+shader_param/offset = Vector2( 0, 0.206 )
 
 [node name="Node2D" type="Node2D"]
 
@@ -101,12 +112,26 @@ cell_tile_origin = 1
 cell_y_sort = true
 centered_textures = true
 format = 1
-tile_data = PoolIntArray( 9, 0, 0, 11, 0, 0, 13, 0, 0, 65544, 0, 0, 65545, 0, 0, 65546, 0, 0, 65547, 0, 0, 65548, 0, 0, 65549, 0, 0, 65550, 0, 0, 65551, 0, 0, 65552, 0, 0, 131082, 0, 0, 131084, 0, 0, 131086, 0, 0, 131088, 0, 0 )
+tile_data = PoolIntArray( 9, 0, 0, 11, 0, 0, 13, 0, 0, 65544, 0, 0, 65545, 0, 0, 65546, 0, 0, 65547, 0, 0, 65548, 0, 0, 65549, 0, 0, 65550, 0, 0, 65551, 0, 0, 65552, 0, 0, 131082, 0, 0, 131084, 0, 0, 131086, 0, 0, 131088, 0, 0, 393185, 0, 0, 393191, 0, 0, 458721, 0, 0, 458722, 0, 0, 458723, 0, 0, 458724, 0, 0, 458725, 0, 0, 458726, 0, 0, 458727, 0, 0, 458728, 0, 0, 458729, 0, 0, 458730, 0, 0, 458731, 0, 0, 524255, 0, 0, 524256, 0, 0, 524257, 0, 0, 524258, 0, 0, 524259, 0, 0, 524260, 0, 0, 524261, 0, 0, 524262, 0, 0, 524263, 0, 0, 524264, 0, 0, 524265, 0, 0, 524266, 0, 0, 524267, 0, 0, 589790, 0, 0, 589791, 0, 0, 589792, 0, 0, 589793, 0, 0, 589794, 0, 0, 589795, 0, 0, 589796, 0, 0, 589797, 0, 0, 589798, 0, 0, 589799, 0, 0, 589800, 0, 0, 589801, 0, 0, 589802, 0, 0 )
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 1020, 700 )
+transparent_bg = true
+
+[node name="TileMapGround" type="TileMap" parent="Viewport"]
+tile_set = ExtResource( 3 )
+cell_size = Vector2( 959, 1882 )
+cell_half_offset = 1
+cell_tile_origin = 1
+cell_y_sort = true
+centered_textures = true
+format = 1
+tile_data = PoolIntArray( 9, 0, 0, 11, 0, 0, 13, 0, 0, 65544, 0, 0, 65545, 0, 0, 65546, 0, 0, 65547, 0, 0, 65548, 0, 0, 65549, 0, 0, 65550, 0, 0, 65551, 0, 0, 65552, 0, 0, 131082, 0, 0, 131084, 0, 0, 131086, 0, 0, 131088, 0, 0, 393185, 0, 0, 393191, 0, 0, 458721, 0, 0, 458722, 0, 0, 458723, 0, 0, 458724, 0, 0, 458725, 0, 0, 458726, 0, 0, 458727, 0, 0, 458728, 0, 0, 458729, 0, 0, 458730, 0, 0, 458731, 0, 0, 524255, 0, 0, 524256, 0, 0, 524257, 0, 0, 524258, 0, 0, 524259, 0, 0, 524260, 0, 0, 524261, 0, 0, 524262, 0, 0, 524263, 0, 0, 524264, 0, 0, 524265, 0, 0, 524266, 0, 0, 524267, 0, 0, 589790, 0, 0, 589791, 0, 0, 589792, 0, 0, 589793, 0, 0, 589794, 0, 0, 589795, 0, 0, 589796, 0, 0, 589797, 0, 0, 589798, 0, 0, 589799, 0, 0, 589800, 0, 0, 589801, 0, 0, 589802, 0, 0 )
 
 [node name="TileMapSelect" type="TileMap" parent="."]
 modulate = Color( 2, 2, 2, 0.572549 )
-material = SubResource( 7 )
-tile_set = SubResource( 8 )
+material = SubResource( 2 )
+tile_set = SubResource( 3 )
 cell_size = Vector2( 959, 1882 )
 cell_half_offset = 1
 cell_tile_origin = 1
@@ -153,7 +178,7 @@ gravity = Vector2( 0, -150 )
 angular_velocity = 205.8
 angular_velocity_random = 0.46
 scale_amount = 30.0
-scale_amount_curve = SubResource( 5 )
+scale_amount_curve = SubResource( 7 )
 
 [node name="Particles2D4" parent="." instance=ExtResource( 5 )]
 self_modulate = Color( 1, 0.937255, 0.745098, 0.196078 )
@@ -168,7 +193,7 @@ gravity = Vector2( 0, -150 )
 angular_velocity = 205.8
 angular_velocity_random = 0.46
 scale_amount = 25.0
-scale_amount_curve = SubResource( 5 )
+scale_amount_curve = SubResource( 7 )
 
 [node name="Clouds" parent="." instance=ExtResource( 4 )]
 self_modulate = Color( 0, 0, 0, 0.341176 )
@@ -178,4 +203,14 @@ texture = ExtResource( 8 )
 angle = 360.0
 angle_random = 1.0
 scale_amount = 35.0
-color_ramp = SubResource( 4 )
+color_ramp = SubResource( 5 )
+
+[node name="Sprite" type="Sprite" parent="."]
+self_modulate = Color( 0, 0, 0, 0.45098 )
+material = SubResource( 6 )
+position = Vector2( -17293.2, 17841.5 )
+scale = Vector2( 59.1615, 34.64 )
+z_index = 6
+texture = ExtResource( 11 )
+script = ExtResource( 12 )
+path_to_viewport = NodePath("../Viewport")
