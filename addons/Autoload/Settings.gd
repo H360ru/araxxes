@@ -24,7 +24,7 @@ func settings_init():
 		SettingsControls.default_controls()
 		SettingsSaveLoad.load_settings_default()
 		# HACK:
-		var _vec: Vector2 = get_viewport().size()#OS.get_screen_size()
+		var _vec: Vector2 = get_viewport().size#OS.get_screen_size()
 		# printerr('Screen_size: ' + str(_vec))
 		Global.SETTINGS.set_value("resolution", _vec)
 
