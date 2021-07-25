@@ -9,3 +9,7 @@ var map_position:Vector2
 
 func _init():
 	scene_state = UnitSceneState.new()
+	scene_state.connect("new_state", self, "on_new_state")
+	
+func on_new_state():
+	pass

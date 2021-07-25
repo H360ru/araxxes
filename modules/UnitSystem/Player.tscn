@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
 export var navigation_grid:NodePath
@@ -104,7 +104,7 @@ func start_moving():
 		unit.scene_state.current_path = get_path_points()
 		
 		var time = _path.curve.get_baked_length() / unit.move_speed
-		_move_manager.interpolate_property(_explorer, \"unit_offset\", 0.0, 1.0, time, Tween.TRANS_SINE)
+		_move_manager.interpolate_property(_explorer, \"unit_offset\", 0.0, 1.0, time)
 		if not _move_manager.is_active():
 			_move_manager.start()
 			
@@ -127,16 +127,16 @@ func _on_MoveManager_tween_completed(object, key):
 	SIdle()
 "
 
-[sub_resource type="Curve2D" id=1]
+[sub_resource type="Curve2D" id=2]
 _data = {
 "points": PoolVector2Array(  )
 }
 
 [node name="Player" type="Node2D"]
-script = SubResource( 2 )
+script = SubResource( 1 )
 
 [node name="Path" type="Path2D" parent="."]
-curve = SubResource( 1 )
+curve = SubResource( 2 )
 
 [node name="Explorer" type="PathFollow2D" parent="Path"]
 loop = false
