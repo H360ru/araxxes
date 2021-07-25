@@ -20,12 +20,24 @@ export(int) var frame = 0 setget set_frame
 # Параметры рисования
 export(bool) var centered setget set_centered
 export(Vector2) var offset setget set_offset
+export(bool) var transpose setget set_transpose
 
 
 func _draw():
 	if texture != null:
-		var sprite_size_x:int = texture.get_width()/directions
-		var sprite_size_y:int = texture.get_height()/frames
+		var frs = frames
+		var dirs = directions
+		var dir = direction
+		var frm = frame
+		if transpose:
+			dir = frame
+			frm = direction
+			
+			frs = directions
+			dirs = frames
+			
+		var sprite_size_x:int = texture.get_width()/dirs
+		var sprite_size_y:int = texture.get_height()/frs
 		
 		var draw_point:Vector2 = offset
 		if centered:
@@ -36,9 +48,9 @@ func _draw():
 				draw_point.x, draw_point.y,
 				sprite_size_x, sprite_size_y
 		)
-		
+
 		var texture_region:Rect2 = Rect2(
-				sprite_size_x*direction, sprite_size_y*frame,
+				sprite_size_x*dir, sprite_size_y*frm,
 				sprite_size_x, sprite_size_y
 		)
 		
@@ -151,6 +163,10 @@ func set_centered(centr:bool):
 	
 func set_offset(ofst:Vector2):
 	offset = ofst
+	update()
+
+func set_transpose(trps:bool):
+	transpose = trps
 	update()
 
 ################################################################################
