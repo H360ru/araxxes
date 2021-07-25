@@ -1,0 +1,147 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node2D
+
+export var navigation_grid:NodePath
+export var _path_smooth_grade:float = 0.3
+
+onready var _path = $Path
+onready var _explorer = $Path/Explorer
+onready var _move_manager = $MoveManager
+
+const WAIT = UnitSceneState.ActionStates.WAIT
+const IDLE = UnitSceneState.ActionStates.IDLE
+const IN_MOVE = UnitSceneState.ActionStates.IN_MOVE
+const IN_ATTACK = UnitSceneState.ActionStates.IN_ATTACK
+
+signal new_state
+signal new_unit
+
+var unit:Unit setget set_unit
+var state:int
+
+var _navigation_grid_node:NavigationGrid
+
+func SWait():
+	state = WAIT
+	if unit != null:
+		unit.scene_state.action_state = WAIT
+	emit_signal(\"new_state\")
+	
+func SIdle():
+	state = IDLE
+	if unit != null:
+		unit.scene_state.action_state = IDLE
+	emit_signal(\"new_state\")
+	
+func SMove():
+	state = IN_MOVE
+	if unit != null:
+		unit.scene_state.action_state = IN_MOVE
+	emit_signal(\"new_state\")
+	
+func SAttack():
+	state = IN_ATTACK
+	if unit != null:
+		unit.scene_state.action_state = IN_ATTACK
+	emit_signal(\"new_state\")
+
+func set_unit(ut:Unit):
+	unit = ut
+	clear_path()
+	emit_signal(\"new_unit\")
+	
+func _ready():
+	_navigation_grid_node = get_node(navigation_grid)
+	
+func _process(delta):
+	match state:
+		IDLE:
+			_process_idle(delta)
+	
+func _process_idle(delta):
+	if unit != null:
+		if get_path_point_count() > 1:
+			unit.scene_state.current_look_angle = (_path.curve.get_point_position(1)-unit.global_position).angle()
+		else:
+			unit.scene_state.current_look_angle = (get_global_mouse_position()-unit.global_position).angle()
+
+func get_path_point_count():
+	if _path != null:
+		return _path.curve.get_point_count()
+	return 0
+
+func add_path_point(point:Vector2):
+	if _path == null:
+		return
+		
+	if _path.curve.get_point_count() > 0:
+		_path.curve.add_point(point)
+		var ind = _path.curve.get_point_count()-1
+		var last_ind = ind-1
+
+		_path.curve.set_point_in(ind, -(point-_path.curve.get_point_position(last_ind))*_path_smooth_grade)
+		_path.curve.set_point_out(ind, -_path.curve.get_point_in(ind))
+	else:
+		_path.curve.add_point(point)
+	
+func clear_path():
+	if _path != null:
+		_path.curve.clear_points()
+	
+func get_path_points():
+	if _path != null:
+		return _path.curve.get_baked_points()
+	return []
+	
+func start_moving():
+	if unit == null or _move_manager == null or _path == null or _explorer == null:
+		printerr(\"Prematurely tried to moving\")
+		return
+		
+	if _path.curve.get_point_count() > 1:
+		unit.scene_state.current_path = get_path_points()
+		
+		var time = _path.curve.get_baked_length() / unit.move_speed
+		_move_manager.interpolate_property(_explorer, \"unit_offset\", 0.0, 1.0, time, Tween.TRANS_SINE)
+		if not _move_manager.is_active():
+			_move_manager.start()
+			
+		SMove()
+		
+	
+func attack(unit:Unit):
+	pass
+
+func _on_MoveManager_tween_step(object, key, elapsed, value):
+	unit.scene_state.current_global_position = _explorer.position
+	unit.scene_state.current_look_angle = _explorer.rotation
+	unit.scene_state.current_path_completeness = value
+	unit.scene_state.current_map_position = _navigation_grid_node.world_to_map(_explorer.position)
+	unit.scene_state.current_speed = unit.move_speed # TODO сделать нормальное вычисление скорости
+
+
+func _on_MoveManager_tween_completed(object, key):
+	clear_path()
+	SIdle()
+"
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array(  )
+}
+
+[node name="Player" type="Node2D"]
+script = SubResource( 2 )
+
+[node name="Path" type="Path2D" parent="."]
+curve = SubResource( 1 )
+
+[node name="Explorer" type="PathFollow2D" parent="Path"]
+loop = false
+
+[node name="MoveManager" type="Tween" parent="."]
+
+[connection signal="tween_completed" from="MoveManager" to="." method="_on_MoveManager_tween_completed"]
+[connection signal="tween_step" from="MoveManager" to="." method="_on_MoveManager_tween_step"]

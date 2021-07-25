@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://modules/isometric_sprite.gd" type="Script" id=1]
+[ext_resource path="res://tests/unit_system_new/harv.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Unit
+
+onready var sprite:IsoSprite = $IsoSprite
+
+func _init():
+	map_position = Vector2(3, 2)
+
+func _process(delta):
+	
+	if scene_state.action_state == UnitSceneState.ActionStates.IN_MOVE:
+		sprite.direct_by_rad(scene_state.current_look_angle)
+		global_position = scene_state.current_global_position
+		map_position = scene_state.current_map_position
+		
+	elif scene_state.action_state == UnitSceneState.ActionStates.IDLE:
+		sprite.direct_by_rad(scene_state.current_look_angle)
+"
+
+[node name="Unit" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="IsoSprite" type="Node2D" parent="."]
+script = ExtResource( 1 )
+texture = ExtResource( 2 )
+directions = 32
+counter_clock_wise = true
+zero_direction_angle = 90
+direction = 14
+centered = true

@@ -84,6 +84,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://tests/Tween manager/Tweening.gd"
 }, {
+"base": "Node2D",
+"class": "Unit",
+"language": "GDScript",
+"path": "res://modules/UnitSystem/unit.gd"
+}, {
+"base": "Resource",
+"class": "UnitSceneState",
+"language": "GDScript",
+"path": "res://modules/UnitSystem/unit_scene_state.gd"
+}, {
 "base": "Control",
 "class": "ui_screen",
 "language": "GDScript",
@@ -105,6 +115,8 @@ _global_script_class_icons={
 "SoundManager": "",
 "SoundManagerModule": "",
 "Tweening": "",
+"Unit": "",
+"UnitSceneState": "",
 "ui_screen": ""
 }
 
