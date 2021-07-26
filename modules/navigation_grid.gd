@@ -140,6 +140,49 @@ func find_map_path(cell1:Vector2, cell2:Vector2) -> PoolVector2Array:
 	return path
 
 
+func get_distance_area(cell:Vector2, distance:int) -> PoolVector2Array:
+	# Если вне карты то индекс посчитается неправильно
+	if not _is_cell_in_map_rect_vec(cell):
+		return PoolVector2Array()
+	# Если точки нет то нее никуда не пройти
+	if not navigator.has_point(_calc_cell_id_vec(cell)):
+		return PoolVector2Array()
+		
+	# Везде работаем с id, а не координатами
+	var start:int = _calc_cell_id_vec(cell)
+	var queue:Array = [start] # Колхозная очередь из списка
+	
+	var area:PoolVector2Array = PoolVector2Array()
+	
+	# Словарь {id : <кол-во узлов от начала до этой точки>}
+	var distances:Dictionary = {}
+	distances[start] = 0
+	
+	var current:int # id рассматриваемой точки
+	var new_distance:int
+	
+	# Типичный проход в шрину
+	while not queue.empty():
+		
+		current = queue.pop_front()
+		area.append(navigator.get_point_position(current))
+		
+		for neigh in navigator.get_point_connections(current):
+			new_distance = distances[current] + 1
+			# Добавляем новую точку только если расстояние до нее не больше чем надо
+			if not neigh in distances:
+				if new_distance <= distance: 
+					distances[neigh] = new_distance
+					queue.append(neigh)
+			else:
+				if new_distance < distances[neigh]:
+					distances[neigh] = new_distance
+					# Перерассматриваем точку что бы от нее все посчиталось правильно
+					queue.append(neigh)
+	
+	return area
+
+
 func get_cell_center_local(cell:Vector2) -> Vector2:
 	return map_to_world(cell)+cell_size/2
 	
