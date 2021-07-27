@@ -123,9 +123,16 @@ _global_script_class_icons={
 [application]
 
 config/name="Araxxes"
-run/main_scene="res://tests/path_follow.tscn"
+config/description="test_description"
+run/main_scene="res://tests/override_architecture/Main_test.tscn"
 config/icon="res://icon.png"
 config/auto_accept_quit=false
+config/project_settings_override.HTML5="res://tests/override_architecture/override_test.cfg"
+config/project_settings_override.web="res://tests/override_architecture/override_test.cfg"
+
+[assets]
+
+sprite_path=""
 
 [autoload]
 
@@ -134,14 +141,33 @@ SettingsControls="*res://addons/Autoload/SettingsControls.gd"
 SettingsSaveLoad="*res://addons/Autoload/SettingsSaveLoad.gd"
 Settings="*res://addons/Autoload/Settings.gd"
 Console="*res://addons/quentincaffeino-console/src/Console.tscn"
+Network="*res://network/network.gd"
+
+[debug]
+
+multirun/number_of_windows=2
+multirun/window_distance=1270
+multirun/add_custom_args=true
+multirun/first_window_args="listen"
+multirun/other_window_args="join"
+multirun/scene_path="main"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/MenuManager/plugin.cfg", "res://addons/quentincaffeino-console/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/MenuManager/plugin.cfg", "res://addons/multirun/plugin.cfg", "res://addons/quentincaffeino-console/plugin.cfg" )
 
 [global]
 
 back=false
+sprite_path="res://tests/hex_grid/troll.png"
+global_path="res://scenes/global/global.gd"
+global_path.HTML5="res://scenes/global/global_web.gd"
+client_path="res://network/client/client.gd"
+client_path.HTML5="res://network/client/web_client/client.gd"
+server_path="res://network/server_files/websocket_server/ws_server.gd"
+server_path.ENet="res://network/server_files/enet_server/enet_server.gd"
+sprite_path.E3_promo="res://icon.png"
+sprite_path.debug="res://icon.png"
 
 [importer_defaults]
 

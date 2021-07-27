@@ -37,25 +37,10 @@ class ClientData:
 		if !(_login or _password):
 			printerr('ClientData null instantiation!!!')
 
-#func _ready():
-##	if server_mode:
-##		create_server()
-#	Console.write_line("Server node added")
-#	pass
-
-# TODO Протестировать возможность RPC вызова на различных для клиент/сервера нодах
-
-# TODO: #39 добавить поддержку WebRTCMultiplayer для браузера
-# вместо NetworkedMultiplayerENet
 func create_multiplayer_peer(_mode = 0):
-	if Global.is_html():
-		network = WebSocketClient.new();
-		Console.write_line('html: '+str(network))
-		network.connect("connection_established", self, "_on_connection_established")
-		network.connect("connection_error", self, "_on_connection_error")
-		network.connect("connection_closed", self, "_on_connection_closed")
-	else:
-		network = WebSocketServer.new()# NetworkedMultiplayerENet.new()
+
+	network = WebSocketServer.new()# NetworkedMultiplayerENet.new()
+	Console.write_line('html: '+str(network))
 	
 	#TODO: #26 доделать реакции на нетворк ивенты
 	# warning-ignore:return_value_discarded
@@ -64,17 +49,11 @@ func create_multiplayer_peer(_mode = 0):
 	network.connect("connection_failed", self, "_on_peer_event")
 	
 	get_tree().multiplayer.connect('network_peer_packet', self, '_on_packet')
-	match _mode:
-		1:
-			# server side
-			# warning-ignore:return_value_discarded
-			network.connect("peer_connected", self, "_on_client_connected")
-			# warning-ignore:return_value_discarded
-			network.connect("peer_disconnected", self, "_on_client_disconnected")
-		0:
-			# client side
-			# warning-ignore:return_value_discarded
-			network.connect("server_disconnected", self, "_on_peer_event")
+	
+	# warning-ignore:return_value_discarded
+	network.connect("peer_connected", self, "_on_client_connected")
+	# warning-ignore:return_value_discarded
+	network.connect("peer_disconnected", self, "_on_client_disconnected")
 	pass
 
 func _on_connection_established( protocol: String ):
@@ -101,10 +80,7 @@ func create_server(_cli: bool = true):
 	#network.allow_object_decoding = true
 	
 	var check
-	if Global.is_html():
-		check = network.listen( port, PoolStringArray(), true)
-	else:
-		check = network.listen( port, PoolStringArray(), true)#network.create_server(port, max_peers)
+	check = network.listen( port, PoolStringArray(), true)#network.create_server(port, max_peers)
 		
 	Global.get_tree().set_network_peer(network)
 	if check == OK:
@@ -164,46 +140,9 @@ func _disconnect_client(_user_id):
 	yield(get_tree().create_timer(2), "timeout")
 	network.disconnect_peer(_user_id, true)
 
-
-func create_client(_cli: bool = true):
-	# var url = "ws://127.0.0.1:" + str(PORT) # You use "ws://" at the beginning of the address for WebSocket connections
-
-	# var error = client.connect_to_url(url, PoolStringArray(), true);
-
-	create_multiplayer_peer()
-	#network.allow_object_decoding = true
-	
-	var _ip = '127.0.0.1'
-	var _port = port # 1909
-	var check # = network.create_client(_ip, _port)
-
-	if Global.is_html():
-		var _socket_adress = "ws://"+_ip+":"+str(port)
-		check = network.connect_to_url(_socket_adress, PoolStringArray(), true);
-		# web_poll()
-	else:
-		check = network.create_client(_ip, _port)
-	
-	Global.get_tree().set_network_peer(network)
-	if check == OK:
-		Console.write_line("Welcome to chat!")
-	else:
-		Console.write_line("Connection error: "+ check)
-		return
-
 func _process(delta):
 	if network:
 		network.poll()
-		# print('server poll')
-		# if Global.is_html():
-		# else:
-		# 	network.listen( port, PoolStringArray(), true)
-
-
-func web_poll():
-	while true:
-		network.poll()
-		yield(get_tree(), "idle_frame")
 
 func _push_message(_text):
 	rpc_id(1, '_receive_message', _text)#, login_name)
