@@ -10,13 +10,9 @@ onready var _path = $Path
 onready var _explorer = $Path/Explorer
 onready var _move_manager = $MoveManager
 
-const WAIT = UnitSceneState.ActionStates.WAIT
-const IDLE = UnitSceneState.ActionStates.IDLE
-const IN_MOVE = UnitSceneState.ActionStates.IN_MOVE
-const IN_ATTACK = UnitSceneState.ActionStates.IN_ATTACK
-
 signal new_state
 signal new_unit
+signal move_complete
 
 var unit:Unit setget set_unit
 var state:int
@@ -24,27 +20,27 @@ var state:int
 var _navigation_grid_node:NavigationGrid
 
 func SWait():
-	state = WAIT
+	state = UnitSceneState.ActionStates.WAIT
 	if unit != null:
-		unit.scene_state.action_state = WAIT
+		unit.scene_state.action_state = UnitSceneState.ActionStates.WAIT
 	emit_signal(\"new_state\")
 	
 func SIdle():
-	state = IDLE
+	state = UnitSceneState.ActionStates.IDLE
 	if unit != null:
-		unit.scene_state.action_state = IDLE
+		unit.scene_state.action_state = UnitSceneState.ActionStates.IDLE
 	emit_signal(\"new_state\")
 	
 func SMove():
-	state = IN_MOVE
+	state = UnitSceneState.ActionStates.IN_MOVE
 	if unit != null:
-		unit.scene_state.action_state = IN_MOVE
+		unit.scene_state.action_state = UnitSceneState.ActionStates.IN_MOVE
 	emit_signal(\"new_state\")
 	
 func SAttack():
-	state = IN_ATTACK
+	state = UnitSceneState.ActionStates.IN_ATTACK
 	if unit != null:
-		unit.scene_state.action_state = IN_ATTACK
+		unit.scene_state.action_state = UnitSceneState.ActionStates.IN_ATTACK
 	emit_signal(\"new_state\")
 
 func set_unit(ut:Unit):
@@ -57,7 +53,7 @@ func _ready():
 	
 func _process(delta):
 	match state:
-		IDLE:
+		UnitSceneState.ActionStates.IDLE:
 			_process_idle(delta)
 	
 func _process_idle(delta):
@@ -104,7 +100,7 @@ func start_moving():
 		unit.scene_state.current_path = get_path_points()
 		
 		var time = _path.curve.get_baked_length() / unit.move_speed
-		_move_manager.interpolate_property(_explorer, \"unit_offset\", 0.0, 1.0, time)
+		_move_manager.interpolate_property(_explorer, \"unit_offset\", 0.0, 1.0, time, unit.move_pattern)
 		if not _move_manager.is_active():
 			_move_manager.start()
 			
@@ -124,7 +120,7 @@ func _on_MoveManager_tween_step(object, key, elapsed, value):
 
 func _on_MoveManager_tween_completed(object, key):
 	clear_path()
-	SIdle()
+	emit_signal(\"move_complete\")
 "
 
 [sub_resource type="Curve2D" id=2]

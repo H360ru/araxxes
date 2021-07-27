@@ -32,7 +32,7 @@ func on_new_state():
 			animator.play(\"Walk\")
 
 func step():
-	tween.interpolate_property(self, \"global_position\", null, scene_state.current_global_position, 0.5, Tween.TRANS_CUBIC)
+	tween.interpolate_property(self, \"global_position\", null, scene_state.current_global_position, 0.5, Tween.TRANS_SINE)
 	tween.start()
 	sprite.direct_by_rad(scene_state.current_look_angle)
 	map_position = scene_state.current_map_position
@@ -113,7 +113,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0.1, 0.6 ),
+"times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [  ],
@@ -138,7 +138,7 @@ frames = 16
 counter_clock_wise = true
 zero_direction_angle = 270
 direction = 1
-frame = 9
+frame = 7
 centered = true
 offset = Vector2( 0, -21 )
 transpose = true
