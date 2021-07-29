@@ -202,6 +202,18 @@ func get_cell_neighbors(cell:Vector2) -> Array:
 			return []
 
 
+func get_map_distance(cell1:Vector2, cell2:Vector2) -> int:
+	var off = cell2-cell1
+	match cell_half_offset:
+		HALF_OFFSET_NEGATIVE_Y:
+			return _get_dist_neg_y(off)
+		HALF_OFFSET_Y:
+			return _get_dist_y(off)
+		_:
+			printerr("No distance support for ", cell_half_offset, " offset")
+			return 0
+
+
 func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, accuracity:int=0) -> Vector2:
 	var pixel1 = get_cell_center_local(cell1)
 	var pixel2 = get_cell_center_local(cell2)
@@ -305,6 +317,18 @@ func get_cells_with_flag(flag:int) -> PoolVector2Array:
 # Local методы -----------------------------------------------------------------
 ################################################################################
 
+func _get_dist_neg_y(off):
+	var x = off.x as int
+	var y = off.y - (x + abs(x%2))/2
+	var z = -x-y
+	return (abs(x) + abs(y) + abs(z)) / 2
+	
+func _get_dist_y(off):
+	var x = off.x as int
+	var y = off.y - (x - abs(x%2))/2
+	var z = -x-y
+	return (abs(x) + abs(y) + abs(z)) / 2
+
 func _get_three_left_top_neighbors(x:int, y:int) -> Array:
 	# Возвращает двух левых и верхнего соседей
 	# Пока работает только для смещений по Y
@@ -315,7 +339,7 @@ func _get_three_left_top_neighbors(x:int, y:int) -> Array:
 	elif cell_half_offset == HALF_OFFSET_Y:
 		parity = -1
 	else:
-		printerr("Соседи для такого смещения недоступны")
+		printerr("No neighbors support for ", cell_half_offset, " offset support")
 		return []
 		
 	var y_offset:int = parity*(1 - 2*(int(abs(x))%2))
