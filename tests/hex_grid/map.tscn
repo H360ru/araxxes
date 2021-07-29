@@ -23,8 +23,11 @@ func _draw():
 			# но это только для дебага
 			draw_line(tmp.navigator.get_point_position(i), tmp.navigator.get_point_position(j), Color.red)
 	
-	for i in area:
-		draw_circle(i, 15.0, Color.green)
+	draw_line(tmp.get_cell_center_local(Vector2(8, 3)), tmp.get_cell_center_local(tmp.mouse_cell), Color.white, 6.0)
+	draw_circle(tmp.get_obstacle_intersection(Vector2(8, 3), tmp.mouse_cell, 5), 15.0, Color.blue)
+	
+#	for i in area:
+#		draw_circle(i, 15.0, Color.green)
 
 func _process(delta):
 	
@@ -38,7 +41,7 @@ func _process(delta):
 		position.y -= 300*delta
 	
 #	if Input.is_action_just_pressed(\"mouse_left\"): # 
-	area = tmp.get_distance_area(tmp.mouse_cell, 10)
+#	area = tmp.get_distance_area(tmp.mouse_cell, 10)
 	
 	update()
 "

@@ -202,6 +202,55 @@ func get_cell_neighbors(cell:Vector2) -> Array:
 			return []
 
 
+func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, accuracity:int=0) -> Vector2:
+	var pixel1 = get_cell_center_local(cell1)
+	var pixel2 = get_cell_center_local(cell2)
+	if cell1 == cell2:
+		return pixel1
+	var offset = pixel2 - pixel1
+	var angle = offset.abs().angle() # Нужна положительная тригонометрия
+	# Выведено из правильного треугольника, образуемого тремя соседними точками
+	var a = abs(PI/3 - angle) if angle > PI/6 else angle
+	# cell_size.x/cos(a) - расстояние до следующей ячейки
+	var step = cell_size.x/cos(a) / offset.length()
+	
+	var lerp_point = pixel1
+	var weight = -step/3 # Нужно небольшое смещение что бы 100% захватить cell2
+	
+	while weight < 1:
+		if get_cellv(world_to_map(lerp_point)) in obstacles_ids:
+			# Если < 0, значит приращений не было и это первая точка
+			if weight < 0 or accuracity == 0: 
+				return lerp_point
+			
+			var obstacle_coord:Vector2 = map_to_world(world_to_map(lerp_point))
+			var obst = Rect2(map_to_world(world_to_map(lerp_point)), cell_size)
+			
+			var left_bound:Vector2 = lerp_point - offset*step
+			var right_bound:Vector2 = lerp_point
+			var mid:Vector2
+			# Если наткнулись на препятствие, значит мы перескачили пересечение с ним
+			# поэтому возвращаемся назад на половину и уточняем
+			for i in range(accuracity):
+				mid = left_bound + (right_bound - left_bound)/2
+				# Если точка внутри препятствия
+				if obst.has_point(mid):
+					right_bound = mid # то недошли до пересечения, смещаемся назад
+				else:
+					left_bound = mid # перешли пересечение, смещаемся веперед
+					
+			return mid
+			
+		weight += step
+		lerp_point += offset * step
+	# Не встретили ни одного препятствия
+	return pixel2
+
+
+func is_cells_visible(cell1:Vector2, cell2:Vector2):
+	return world_to_map(get_obstacle_intersection(cell1, cell2)) == cell2
+
+
 func add_cell_flag(cell:Vector2, flag:int) -> void:
 	assert(flag >= 0) # Не бывает отрицательных флагов
 	# Все флаги хранятся в битах числа
