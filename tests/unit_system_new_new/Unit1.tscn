@@ -1,0 +1,159 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://modules/isometric_sprite.gd" type="Script" id=1]
+[ext_resource path="res://tests/unit_system_new_new/walker3.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Unit
+
+export var speed = 30.0
+
+onready var sprite = $IsoSprite
+onready var _anim = $AnimationPlayer
+onready var _move_tween = $MoveTween
+onready var _path = $Path
+onready var _explorer = $Path/Explorer
+
+
+
+func _init():
+	map_position = Vector2(5, 4)
+
+func move_along_path(path:Curve2D):
+	_path.curve = path
+	
+	var t = _path.curve.get_baked_length()/speed
+	
+	_move_tween.interpolate_property(_explorer, \"unit_offset\", 0.0, 1.0, t)
+	_move_tween.start()
+	
+	_to_move()
+
+func _on_MoveTween_tween_step(object, key, elapsed, value):
+	sprite.direct_by_rad(_explorer.rotation)
+
+func _on_MoveTween_tween_completed(object, key):
+	if object == _explorer:
+		_to_idle()
+		emit_signal(\"move_finished\")
+
+func on_anim_walk_step():
+	_move_tween.interpolate_property(self, \"global_position\", null, _explorer.position, 0.5, Tween.TRANS_SINE)
+
+func _to_idle():
+	_anim.play(\"Idle\")
+	
+func _to_move():
+	_anim.play(\"Walk\")
+
+
+
+"
+
+[sub_resource type="Curve2D" id=4]
+_data = {
+"points": PoolVector2Array(  )
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "Idle"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("IsoSprite:scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1, 0.95 ), Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("IsoSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 4 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "Walk"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("IsoSprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 2 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("IsoSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0, 15 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".:on_anim_walk_step")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.4, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "on_anim_walk_step"
+}, {
+"args": [  ],
+"method": "on_anim_walk_step"
+} ]
+}
+
+[node name="Unit1" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="Path" type="Path2D" parent="."]
+curve = SubResource( 4 )
+
+[node name="Explorer" type="PathFollow2D" parent="Path"]
+
+[node name="IsoSprite" type="Node2D" parent="."]
+script = ExtResource( 1 )
+texture = ExtResource( 2 )
+directions = 8
+frames = 16
+counter_clock_wise = true
+zero_direction_angle = -90
+frame = 13
+centered = true
+offset = Vector2( 0, -23 )
+transpose = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Idle = SubResource( 2 )
+anims/Walk = SubResource( 3 )
+
+[node name="MoveTween" type="Tween" parent="."]
+
+[connection signal="tween_completed" from="MoveTween" to="." method="_on_MoveTween_tween_completed"]
+[connection signal="tween_step" from="MoveTween" to="." method="_on_MoveTween_tween_step"]
