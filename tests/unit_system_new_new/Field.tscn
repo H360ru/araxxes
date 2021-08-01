@@ -2,15 +2,26 @@
 
 [ext_resource path="res://tests/hex_grid/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://modules/navigation_grid.gd" type="Script" id=2]
-[ext_resource path="res://tests/unit_system_new_new/Unit1.tscn" type="PackedScene" id=3]
+[ext_resource path="res://modules/UnitSystem/units_group.gd" type="Script" id=3]
 [ext_resource path="res://modules/UnitSystem/player.gd" type="Script" id=4]
 [ext_resource path="res://tests/hex_grid/tiles/WWT-01.png" type="Texture" id=5]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Sprite
+
+onready var grid = $\"../\"
+
+func _process(delta):
+	position = grid.map_to_world(grid.world_to_map(grid.get_local_mouse_position()))
+"
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
-onready var units = $\"../Units\"
-onready var grid = $\"../Grid\"
+var robot:PackedScene = preload(\"res://tests/unit_system_new_new/Unit1.tscn\")
+
+onready var units:UnitsGroup = $\"../Units\"
+onready var grid:NavigationGrid = $\"../Grid\"
 onready var player:Player = $\"../Player\"
 
 enum States{
@@ -28,21 +39,16 @@ func SWaitPlayer():
 
 func _ready():
 	SReady()
-	for i in units.get_children():
-		i.position = grid.get_cell_center_global(i.map_position)
 
 func _process(delta):
 	var mouse_cell = grid.world_to_map(grid.get_local_mouse_position())
 	match state:
 		States.READY:
 			if Input.is_action_just_pressed(\"mouse_left\"):
-				var unit_on_cell:bool = false
-				for i in units.get_children():
-					if i.map_position == mouse_cell:
-						unit_on_cell = true
-						player.unit = i
-						
-				if not unit_on_cell and player.unit != null:
+				var unit = units.get_unit_on_cell(mouse_cell)
+				if unit:
+					player.unit = unit
+				elif player.unit != null:
 					player.clear_unit_path()
 					var path = grid.find_pixel_path(player.unit.map_position, mouse_cell)
 					for i in path:
@@ -55,18 +61,13 @@ func _process(delta):
 
 func _on_Player_move_finished():
 	SReady()
+
+
+func _on_Field_ready():
+	units.create_unit(robot, Vector2(3, 3))
 "
 
 [sub_resource type="GDScript" id=3]
-script/source = "extends Sprite
-
-onready var grid = $\"../\"
-
-func _process(delta):
-	position = grid.map_to_world(grid.world_to_map(grid.get_local_mouse_position()))
-"
-
-[sub_resource type="GDScript" id=2]
 script/source = "extends Camera2D
 
 
@@ -101,18 +102,6 @@ func _process(delta):
 
 [node name="Field" type="Node"]
 
-[node name="Control" type="Node" parent="."]
-script = SubResource( 1 )
-
-[node name="Player" type="Node" parent="."]
-script = ExtResource( 4 )
-grid_node_path = NodePath("../Grid")
-
-[node name="Units" type="Node2D" parent="."]
-
-[node name="Unit1" parent="Units" instance=ExtResource( 3 )]
-z_index = 1
-
 [node name="Grid" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 82, 94 )
@@ -129,12 +118,24 @@ modulate = Color( 0, 0.321569, 1, 0.337255 )
 texture = ExtResource( 5 )
 centered = false
 offset = Vector2( -23, -16 )
-script = SubResource( 3 )
+script = SubResource( 2 )
+
+[node name="Units" type="Node2D" parent="."]
+script = ExtResource( 3 )
+navigation_grid_path = NodePath("../Grid")
+
+[node name="Player" type="Node" parent="."]
+script = ExtResource( 4 )
+grid_node_path = NodePath("../Grid")
+
+[node name="Control" type="Node" parent="."]
+script = SubResource( 1 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 zoom = Vector2( 2, 2 )
 smoothing_enabled = true
-script = SubResource( 2 )
+script = SubResource( 3 )
 
+[connection signal="ready" from="." to="Control" method="_on_Field_ready"]
 [connection signal="move_finished" from="Player" to="Control" method="_on_Player_move_finished"]
