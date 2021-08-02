@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://tests/hex_grid/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://modules/navigation_grid.gd" type="Script" id=2]
@@ -6,7 +6,7 @@
 [ext_resource path="res://modules/UnitSystem/player.gd" type="Script" id=4]
 [ext_resource path="res://tests/hex_grid/tiles/WWT-01.png" type="Texture" id=5]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Sprite
 
 onready var grid = $\"../\"
@@ -15,7 +15,25 @@ func _process(delta):
 	position = grid.map_to_world(grid.world_to_map(grid.get_local_mouse_position()))
 "
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=4]
+script/source = "extends Node2D
+
+onready var pl = $\"../\"
+
+func _draw():
+	if pl != null and pl.unit != null:
+		if pl._unit_path.get_point_count() > 0:
+			draw_polyline(pl._unit_path.get_baked_points(), Color.red, 2.0, true)
+			
+		draw_circle(pl.unit.global_position - global_position, 20.0, Color(1.0, 0.0, 0.0, 0.3))
+		
+		
+
+func _process(delta):
+	update()
+"
+
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
 var robot:PackedScene = preload(\"res://tests/unit_system_new_new/Unit1.tscn\")
@@ -26,7 +44,8 @@ onready var player:Player = $\"../Player\"
 
 enum States{
 	WAIT_PLAYER,
-	READY
+	READY,
+	TARGETING
 }
 
 var state:int
@@ -36,6 +55,9 @@ func SReady():
 	
 func SWaitPlayer():
 	state = States.WAIT_PLAYER
+	
+func STargeting():
+	state = States.TARGETING
 
 func _ready():
 	SReady()
@@ -54,17 +76,42 @@ func _process(delta):
 					for i in path:
 						player.add_unit_path_point(i)
 				
+			if Input.is_action_just_pressed(\"mouse_right\"):
+				STargeting()
+				
 			if Input.is_action_just_pressed(\"ui_select\"):
 				if player.unit != null:
 					player.go_path()
 					SWaitPlayer()
+					
+		States.TARGETING:
+			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell)
+			player.aim_to_point(p+grid.position)
+			
+			# test only #######
+			player.unit.sprite.direct_by_rad((p-player.unit.global_position).angle())
+			###################
+			
+			if Input.is_action_just_pressed(\"ui_select\"):
+				player.attack()
+				SWaitPlayer()
 
 func _on_Player_move_finished():
 	SReady()
 
+func _on_Player_unit_attacked():
+	units.damage_unit_at_cell(grid.world_to_map(player.get_global_aim()), player.unit.weapon.damage)
+	SReady()
 
 func _on_Field_ready():
 	units.create_unit(robot, Vector2(3, 3))
+	units.create_unit(robot, Vector2(8, 4))
+
+func _on_Units_unit_damaged(unit):
+	print(unit.health)
+
+func _on_Units_unit_out_of_health(unit):
+	units.destroy_unit(unit)
 "
 
 [sub_resource type="GDScript" id=3]
@@ -118,18 +165,21 @@ modulate = Color( 0, 0.321569, 1, 0.337255 )
 texture = ExtResource( 5 )
 centered = false
 offset = Vector2( -23, -16 )
-script = SubResource( 2 )
-
-[node name="Units" type="Node2D" parent="."]
-script = ExtResource( 3 )
-navigation_grid_path = NodePath("../Grid")
+script = SubResource( 1 )
 
 [node name="Player" type="Node" parent="."]
 script = ExtResource( 4 )
 grid_node_path = NodePath("../Grid")
 
+[node name="Canvas" type="Node2D" parent="Player"]
+script = SubResource( 4 )
+
 [node name="Control" type="Node" parent="."]
-script = SubResource( 1 )
+script = SubResource( 2 )
+
+[node name="Units" type="Node2D" parent="."]
+script = ExtResource( 3 )
+navigation_grid_path = NodePath("../Grid")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
@@ -139,3 +189,6 @@ script = SubResource( 3 )
 
 [connection signal="ready" from="." to="Control" method="_on_Field_ready"]
 [connection signal="move_finished" from="Player" to="Control" method="_on_Player_move_finished"]
+[connection signal="unit_attacked" from="Player" to="Control" method="_on_Player_unit_attacked"]
+[connection signal="unit_damaged" from="Units" to="Control" method="_on_Units_unit_damaged"]
+[connection signal="unit_out_of_health" from="Units" to="Control" method="_on_Units_unit_out_of_health"]

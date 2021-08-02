@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://modules/isometric_sprite.gd" type="Script" id=1]
 [ext_resource path="res://tests/unit_system_new_new/walker3.png" type="Texture" id=2]
+[ext_resource path="res://tests/unit_system_new_new/wp1.tres" type="Resource" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Unit
@@ -11,10 +12,11 @@ export var speed = 30.0
 onready var sprite = $IsoSprite
 onready var _anim = $AnimationPlayer
 onready var _move_tween = $MoveTween
+onready var _shoot_tween = $ShootTween
 onready var _path = $Path
 onready var _explorer = $Path/Explorer
 
-
+var bullet = preload(\"res://tests/unit_system_new_new/Bullet.tscn\")
 
 func _init():
 	map_position = Vector2(5, 4)
@@ -28,6 +30,19 @@ func move_along_path(path:Curve2D):
 	_move_tween.start()
 	
 	_to_move()
+
+func shoot_to_global(point:Vector2):
+	var bul = bullet.instance()
+	add_child(bul)
+	var bul_speed = 500.0
+	var t = (point - global_position).length() / bul_speed
+	bul.rotation = (point - global_position).angle()
+	_shoot_tween.interpolate_property(bul, \"global_position\", global_position, point, t, Tween.TRANS_SINE, Tween.EASE_IN)
+	_shoot_tween.start()
+	
+	yield(_shoot_tween, \"tween_all_completed\")
+	bul.queue_free()
+	emit_signal(\"attacked\")
 
 func _on_MoveTween_tween_step(object, key, elapsed, value):
 	sprite.direct_by_rad(_explorer.rotation)
@@ -50,13 +65,12 @@ func _to_move():
 
 "
 
-[sub_resource type="Curve2D" id=4]
+[sub_resource type="Curve2D" id=2]
 _data = {
 "points": PoolVector2Array(  )
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "Idle"
+[sub_resource type="Animation" id=3]
 length = 2.0
 loop = true
 tracks/0/type = "value"
@@ -84,8 +98,7 @@ tracks/1/keys = {
 "values": [ 4 ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "Walk"
+[sub_resource type="Animation" id=4]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("IsoSprite:texture")
@@ -131,9 +144,11 @@ tracks/2/keys = {
 
 [node name="Unit1" type="Node2D"]
 script = SubResource( 1 )
+weapon = ExtResource( 3 )
+max_health = 11
 
 [node name="Path" type="Path2D" parent="."]
-curve = SubResource( 4 )
+curve = SubResource( 2 )
 
 [node name="Explorer" type="PathFollow2D" parent="Path"]
 
@@ -150,10 +165,12 @@ offset = Vector2( 0, -23 )
 transpose = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Idle = SubResource( 2 )
-anims/Walk = SubResource( 3 )
+anims/Idle = SubResource( 3 )
+anims/Walk = SubResource( 4 )
 
 [node name="MoveTween" type="Tween" parent="."]
+
+[node name="ShootTween" type="Tween" parent="."]
 
 [connection signal="tween_completed" from="MoveTween" to="." method="_on_MoveTween_tween_completed"]
 [connection signal="tween_step" from="MoveTween" to="." method="_on_MoveTween_tween_step"]

@@ -7,6 +7,7 @@ export(NodePath) var grid_node_path
 onready var _grid_node = get_node(grid_node_path)
 
 signal move_finished
+signal unit_attacked
 
 var unit:Unit setget set_unit
 func set_unit(value:Unit):
@@ -15,6 +16,7 @@ func set_unit(value:Unit):
 
 
 var _unit_path:Curve2D = Curve2D.new()
+var _unit_target:Vector2 = Vector2()
 
 func add_unit_path_point(point:Vector2):
 	if _unit_path == null:
@@ -54,12 +56,26 @@ func clear_unit_path():
 func get_unit_path_point_count():
 	return _unit_path.get_point_count()
 	
-	
 func go_path():
 	unit.move_along_path(_unit_path)
 	
 	yield(unit, "move_finished")
+	
 	if _grid_node and _unit_path.get_point_count() > 0:
 		unit.map_position = _grid_node.world_to_map(_unit_path.get_point_position(_unit_path.get_point_count()-1))
+		
 	clear_unit_path()
 	emit_signal("move_finished")
+
+func aim_to_point(global_position:Vector2):
+	_unit_target = global_position
+
+func get_global_aim():
+	return _unit_target
+
+func attack():
+	unit.shoot_to_global(_unit_target)
+	
+	yield(unit, "attacked")
+	
+	emit_signal("unit_attacked")
