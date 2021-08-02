@@ -303,6 +303,7 @@ func get_volume_db(sound : String) -> float:
 	return volume_db
 
 
+# warning-ignore:unused_argument
 func set_pitch_scale(pitch_scale : float, sound : String = "") -> void:
 	var sound_index = self.find_sound(sound)
 	if sound_index >= 0:
@@ -383,7 +384,9 @@ func is_preload_resources_enabled() -> bool:
 func preload_audio_files_from_path(path : String):
 	var file_name : String
 	var dir := Directory.new()
+# warning-ignore:return_value_discarded
 	dir.open(path)
+# warning-ignore:return_value_discarded
 	dir.list_dir_begin(true, true)
 	if dir:
 		file_name = dir.get_next()
@@ -472,6 +475,7 @@ func unload_resource_from_string(file : String) -> void:
 			return
 	
 	if Preloaded_Resources.has(file_name):
+# warning-ignore:return_value_discarded
 		Preloaded_Resources.erase(file_name)
 	elif debug:
 		print_debug("An error occured while unloading resource: " + file)
@@ -497,8 +501,10 @@ func unload_resources_from_dir(path : String) -> void:
 func preinstantiate_nodes_from_path(path : String, sound_type : String = ""):
 	var file_name : String
 	var dir := Directory.new()
+# warning-ignore:return_value_discarded
 	dir.open(path)
 	if dir:
+# warning-ignore:return_value_discarded
 		dir.list_dir_begin(true, true)
 		file_name = dir.get_next()
 		while file_name != "":
@@ -522,7 +528,7 @@ func preinstantiate_nodes_from_list(files_list : Array, type_list : Array, all_s
 func preinstantiate_node_from_string(file : String, sound_type : String = "") -> void:	
 	var Stream = null
 	var file_name = file
-	var sound_index = 0
+#	var sound_index = 0
 
 	if self.is_import_file(file):
 		file_name = file_name.get_basename()
@@ -568,7 +574,7 @@ func uninstantiate_all_nodes(force_uninstantiation : bool = false) -> void:
 
 
 func uninstantiate_nodes_from_list(files_list : Array) -> void:
-	var index = 0
+#	var index = 0
 	for file in files_list:
 		if (file is String):
 			self.uninstantiate_node_from_string(file)
@@ -576,7 +582,7 @@ func uninstantiate_nodes_from_list(files_list : Array) -> void:
 
 func uninstantiate_node_from_string(file : String) -> void:
 	var file_name = file
-	var sound_index = 0
+#	var sound_index = 0
 
 	if self.is_import_file(file):
 		file_name = file_name.get_basename()
@@ -595,7 +601,7 @@ func uninstantiate_nodes_from_dir(path : String) -> void:
 	if dir.open(path + "/") == OK:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
-		var sound_index = 0
+#		var sound_index = 0
 		while (file_name != ""):
 			if (self.is_audio_file(file_name)):
 				self.uninstantiate_node_from_string(file_name)
@@ -636,6 +642,7 @@ func _ready() -> void:
 func get_sound_manager_settings()-> void:
 	var data_settings : Dictionary
 	var file: File = File.new()
+# warning-ignore:return_value_discarded
 	file.open("res://addons/sound_manager/SoundManager.json", File.READ)
 	var json : JSONParseResult = JSON.parse(file.get_as_text())
 	file.close()
@@ -783,6 +790,7 @@ func _on_sound_finished(sound_name : String) -> void:
 
 func preload_audio_files() -> void:
 	var directory := Directory.new()
+# warning-ignore:return_value_discarded
 	directory.open("res://")
 	self.preload_audio_files_from_path("res://")
 	self.preload_audio_files_r(directory)
@@ -791,6 +799,7 @@ func preload_audio_files() -> void:
 func preload_audio_files_r(directory : Directory):
 	if directory == null:
 		return
+# warning-ignore:return_value_discarded
 	directory.list_dir_begin(true, true)
 	var dir_name = directory.get_next()
 	while dir_name != "":
@@ -801,8 +810,10 @@ func preload_audio_files_r(directory : Directory):
 		dir_name = directory.get_next()
 
 
+# warning-ignore:function_conflicts_variable
 func preinstantiate_nodes() -> void:
 	var directory := Directory.new()
+# warning-ignore:return_value_discarded
 	directory.open("res://")
 	self.enable_node_preinstantiation(true)
 	self.preinstantiate_nodes_from_path("res://")
@@ -812,6 +823,7 @@ func preinstantiate_nodes() -> void:
 func preinstatiate_nodes_r(directory : Directory):
 	if directory == null:
 		return
+# warning-ignore:return_value_discarded
 	directory.list_dir_begin(true, true)
 	var dir_name = directory.get_next()
 	while dir_name != "":

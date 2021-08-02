@@ -24,8 +24,8 @@ var spices=0 setget set_spices
 
 func set_spices(value):
 	spices = value
-	if spices >= 5:
-		print('WIN!!!!!!!')
+	if name == "player" && spices >= 5:
+		#print('WIN!!!!!!!')
 		# Kostil.GAME.labelGameOvet.visible=true
 		Kostil.game_end()
 
@@ -37,9 +37,9 @@ func minusPoints(pointsMinus):
 	pass
 
 
-func _init(game,type,name).(game):
-	self.type=type
-	self.name=name
+func _init(game, _type, _name).(game):
+	self.type = _type
+	self.name = _name
 	
 	pass
 

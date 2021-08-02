@@ -2,7 +2,7 @@ extends Node
 var _max_touch_points
 
 func _init():
-	print('JavaScriptUtils INIT')
+	#print('JavaScriptUtils INIT')
 	_max_touch_points = JavaScript.eval('navigator.maxTouchPoints;')#JavaScript.eval('String(navigator.platform);')
 	pass
 

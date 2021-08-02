@@ -4,7 +4,7 @@ onready var _shader = get_material()#material.shader
 var prev_pos: Vector2
 
 func _init(value = 'Cursor init test'):
-	print(value)
+	#print(value)
 #	if true:
 #		set_script(load("res://Scripts/cursor_no_shader.gd"))
 

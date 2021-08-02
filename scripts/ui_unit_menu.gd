@@ -45,10 +45,10 @@ func onChangeViewportSize():
 
 
 #Заполнить меню для юнита
-func fillmenuByUnit(unit):
+func fillmenuByUnit(_unit):
 	
 	
-	self.unit=unit
+	self.unit = _unit
 	
 	#=======заполнение для всех
 	tiles[0].setIcon(UI.NAME_TILE_POINTS)
@@ -58,7 +58,7 @@ func fillmenuByUnit(unit):
 	
 	
 	#============
-	if unit.name=="harvestr":
+	if _unit.name=="harvestr":
 		#TODO: доделать недостающую кнопку?
 		#tiles[3].setIcon(UI.NAME_TILE_TAKE)
 		tiles[3].name = 'empty_test'
@@ -71,7 +71,7 @@ func fillmenuByUnit(unit):
 		#tiles[3].setTile("tile_harv_spice")
 		
 	
-	if unit.name=="worm":
+	if _unit.name=="worm":
 		tiles[3].setIcon(UI.NAME_TILE_ATTACK)
 		tiles[4].setIcon(UI.NAME_TILE_CLOSE)
 		tiles[5].setIcon(UI.NAME_TILE_CLOSE)
@@ -79,27 +79,27 @@ func fillmenuByUnit(unit):
 		tiles[3].setTile("tile3")
 		
 	#========================Включение выключение кнопок
-	checkIconsMenuByUnit(unit)
+	checkIconsMenuByUnit(_unit)
 			
 		
 	pass
 	
 	
 #Проверит ьелемнты меню для юнита. если нужно включить выключить и тд.
-func checkIconsMenuByUnit(unit):
+func checkIconsMenuByUnit(_unit):
 	
 	
 	#==========Тест в конопках и очки
 	
-	setPointsByName(UI.NAME_TILE_POINTS,unit.player.points as String)
-	setPointsByName(UI.NAME_TILE_ATTACK,unit.pointAttack as String)
-	setPointsByName(UI.NAME_TILE_SAFE,unit.pointSafe as String)
-	setPointsByName(UI.NAME_TILE_TAKE,unit.pointSpice as String)
-	setPointsByName(UI.NAME_TILE_MOVE,unit.player.points as String)
+	setPointsByName(UI.NAME_TILE_POINTS, _unit.player.points as String)
+	setPointsByName(UI.NAME_TILE_ATTACK, _unit.pointAttack as String)
+	setPointsByName(UI.NAME_TILE_SAFE, _unit.pointSafe as String)
+	setPointsByName(UI.NAME_TILE_TAKE, _unit.pointSpice as String)
+	setPointsByName(UI.NAME_TILE_MOVE, _unit.player.points as String)
 	
 	
 	#===========Когда двигается
-	if unit.isRunning():
+	if _unit.isRunning():
 		enableByName(UI.NAME_TILE_END,false)
 		enableByName(UI.NAME_TILE_MOVE,false)
 		enableByName(UI.NAME_TILE_BACK,false)
@@ -110,26 +110,26 @@ func checkIconsMenuByUnit(unit):
 		enableByName(UI.NAME_TILE_MOVE,true)
 		
 		#=======Вернуться назад
-		enableByName(UI.NAME_TILE_BACK,unit.states.issetSave())
+		enableByName(UI.NAME_TILE_BACK, _unit.states.issetSave())
 		
 		#=======Защита
-		enableByName(UI.NAME_TILE_SAFE,unit.isSafeSet())
+		enableByName(UI.NAME_TILE_SAFE, _unit.isSafeSet())
 		
 		#======Плитка для взятия
 		var settileTak=false
-		if unit.isTakeSpace():
+		if _unit.isTakeSpace():
 			settileTak=true
 			#unit.takeSpace()
 		
 		enableByName(UI.NAME_TILE_TAKE,settileTak)	
 		
 		#=======Атака
-		enableByName(UI.NAME_TILE_ATTACK,unit.player.points>=unit.pointAttack)	
+		enableByName(UI.NAME_TILE_ATTACK, _unit.player.points >= _unit.pointAttack)	
 	
 	enableByName(UI.NAME_TILE_CLOSE,true)	
 	
 	#===========когда выключены все иконки
-	if game.queue.isThisPlayPlayer(unit.player)==false:
+	if game.queue.isThisPlayPlayer(_unit.player)==false:
 		var i=0;
 		for tile in tiles:
 			if i>0:
@@ -238,7 +238,7 @@ func checkPosition():
 	
 	#==========Что бы меню не выходило за пределы камеры
 	
-	var vs=node.get_viewport().size
+#	var vs=node.get_viewport().size
 	
 #	pos.x=max(sizeTile,pos.x)
 #	pos.y=max(sizeTile,pos.y)
@@ -278,6 +278,7 @@ func checkSize():
 		
 	pass
 	
+# warning-ignore:function_conflicts_variable
 func open():
 	
 	timeChangeVisible=OS.get_system_time_msecs()
@@ -314,14 +315,14 @@ func input(e):
 	
 	pass
 
-func _init(game,node).(game):
+func _init(game, _node).(game):
 	
-	self.node=node
+	self.node = _node
 	
 	#====Плитки для меню
 	var i=0
 	while true:
-		var tile=UiTile.new(game,node.get_node("tile"+i as String))
+		var tile=UiTile.new(game, _node.get_node("tile"+i as String))
 		tile.tileId=i
 		
 		

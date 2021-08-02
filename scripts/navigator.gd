@@ -12,7 +12,7 @@ var checkBlock
 #limitStep - Использовать для получения карты возможности движения или атака к примеру
 #ignoreTo - если не интересует конечная плитка какая она
 #unit - для какого юнита строить маршрут
-func buildRoute(from:Vector2,to:Vector2,checkBlock,limitStep=-1,ignoreTo=false,unit=null,ignoreUnits=null):
+func buildRoute(from:Vector2,to:Vector2, _checkBlock,limitStep=-1, _ignoreTo=false,unit=null, _ignoreUnits=null):
 	
 	var manmap:ManagerMap=game.map.manMap
 	
@@ -23,11 +23,11 @@ func buildRoute(from:Vector2,to:Vector2,checkBlock,limitStep=-1,ignoreTo=false,u
 	var cellTo=manmap.tileMapGround.get_cell(tileTo.x,tileTo.y)
 	
 	checkUnit=unit
-	self.ignoreTo=ignoreTo
-	self.ignoreUnits=ignoreUnits
-	self.checkBlock=checkBlock
+	self.ignoreTo = _ignoreTo
+	self.ignoreUnits = _ignoreUnits
+	self.checkBlock = _checkBlock
 	
-	if cellFrom!=-1 && (cellTo!=-1 || ignoreTo):
+	if cellFrom!=-1 && (cellTo!=-1 || _ignoreTo):
 		
 		
 		#====Проверка блокировки для юнита
@@ -38,7 +38,7 @@ func buildRoute(from:Vector2,to:Vector2,checkBlock,limitStep=-1,ignoreTo=false,u
 			
 			
 		#======
-		if (isBlock==false || ignoreTo) || checkBlock==false:
+		if (isBlock==false || _ignoreTo) || checkBlock==false:
 			
 			#проверенные плитки
 			var tilesCheked:Array=[]

@@ -22,13 +22,13 @@ func set_volume(volume: float, bus_inx = 0):
 func play(sound_name: String = 'ui_accept'):
 	if !library[sound_name].is_playing():
 		library[sound_name].play()
-		print("SOUND")
+		#print("SOUND")
 
 func load_sounds(init_sounds: Dictionary):
-	prints("Lib test:", init_sounds)
+	#prints("Lib test:", init_sounds)
 	for name in init_sounds:
 		library[name] = create_player(init_sounds[name])
-		prints('Library:', library[name])
+		#prints('Library:', library[name])
 
 func create_player(sound_path: String):
 	var player = AudioStreamPlayer.new()

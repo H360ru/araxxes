@@ -6,8 +6,8 @@ extends EditorPlugin
 
 #TEST
 #func _enter_tree():
-#	print('EditorPlugin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+#	#print('EditorPlugin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
 static func check_version():
-	print('EditorPlugin TestSingleton!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+	#print('EditorPlugin TestSingleton!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 #	add_autoload_singleton("TestSingleton", "res://Scripts/corutine.gd")

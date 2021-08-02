@@ -10,7 +10,7 @@ var fromMenu
 
 var rectPosDo
 
-func onButtonClick(button,name):
+func onButtonClick(_button, _name):
 	pass
 	
 func onChangeViewportSize():
@@ -55,12 +55,12 @@ func close():
 	pass
 	
 	
-func run(delta):
+func run(_delta):
 	pass
 
-func _init(game,menu,node).(game):
-	self.node=node
-	self.menu=menu
+func _init(game, _menu, _node).(game):
+	self.node = _node
+	self.menu = _menu
 	
 	
 	pass

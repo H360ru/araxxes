@@ -41,15 +41,15 @@ func save_settings_resource()->void:
 		dir.make_dir_recursive(CONFIG_DIR)
 	ResourceSaver.save(CONFIG_DIR + CONFIG_FILE_NAME + CONFIG_EXTENSION, new_save)
 #	ResourceSaver.save(CONFIG_DIR + CONFIG_FILE_NAME + CONFIG_EXTENSION, File.new())
-	print('Save_settings_resource')
-	print(new_save.settings)
+	#print('Save_settings_resource')
+	#print(new_save.settings)
 
 func load_settings_resource(_CONFIG_DIR = CONFIG_DIR, _CONFIG_FILE_NAME = CONFIG_FILE_NAME, \
 	_CONFIG_EXTENSION = CONFIG_EXTENSION)->bool:
 	if !ResourceLoader.exists(_CONFIG_DIR + _CONFIG_FILE_NAME + _CONFIG_EXTENSION):
 		return false
 	
-	print("Start Load_settings_resource")
+	#print("Start Load_settings_resource")
 	var new_load:Resource = ResourceLoader.load(_CONFIG_DIR + _CONFIG_FILE_NAME + _CONFIG_EXTENSION, 'Resource', true)
 	if !new_load:
 		return false
@@ -62,7 +62,7 @@ func load_settings_resource(_CONFIG_DIR = CONFIG_DIR, _CONFIG_FILE_NAME = CONFIG
 #	Global.SETTINGS.set_value('local', new_load.language)
 	Global.SETTINGS.set_settings(new_load.settings)
 	Global.SETTINGS.changed = false # UI UTIL PROPETRY
-	print("Load_settings_resource")
+	#print("Load_settings_resource")
 	return true
 
 func save_settings_config(settings: Dictionary, file_dir: String, file_name: String):
@@ -116,7 +116,7 @@ func save_settings_JSON()->void:
 	var save_data:Dictionary = get_save_data_JSON()
 	SettingsSaver.store_line(to_json(save_data))
 	SettingsSaver.close()
-	print('Save_settings_JSON')
+	#print('Save_settings_JSON')
 
 func load_settings_JSON()->bool:
 	if Settings.HTML5: 										#need to confirm but for now means that HTML5 won't use the saving

@@ -32,7 +32,7 @@ func getV(vec):
 	pass
 	
 	
-func _init(w,h):
-	self.w=w
-	self.h=h
+func _init(_w, _h):
+	self.w = _w
+	self.h = _h
 	pass

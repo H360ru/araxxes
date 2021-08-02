@@ -21,7 +21,7 @@ func this(vec):
 func finish(vec):
 	finishT=vec
 
-func _init(index):
-	self.index=index
+func _init(_index):
+	self.index = _index
 	pass
 

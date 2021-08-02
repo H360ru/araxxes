@@ -7,6 +7,7 @@ func _on_controls():
 
 func _on_default():
 #	Global.SETTINGS.load_settings()
+# warning-ignore:return_value_discarded
 	SettingsSaveLoad.load_settings_default()
 	get_parent().update_control()
 	pass

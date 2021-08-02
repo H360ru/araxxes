@@ -4,7 +4,7 @@ extends Sprite
 #var prev_pos: Vector2
 #
 #func _init(value = 'Cursor init test'):
-#	print(value)
+#	#print(value)
 #	if true:
 #		set_script()
 #

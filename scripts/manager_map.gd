@@ -428,14 +428,14 @@ func generateMap():
 
 
 
-func _init(game,nodeMap,cameraGame:CameraGame).(game):
+func _init(game,nodeMap, _cameraGame:CameraGame).(game):
 	
 	tileMapGround=nodeMap.get_node("TileMapGround")
 	tileMapSelect=nodeMap.get_node("TileMapSelect")
 	tileMapSelect.clear()
 	tileMapSelect.modulate.a=0.3
 	
-	self.cameraGame=cameraGame
+	self.cameraGame = _cameraGame
 	
 	blockedTiles=TileBlocks.new(game)
 	

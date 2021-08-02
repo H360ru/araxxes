@@ -5,7 +5,7 @@ class_name OptionButtonSetting
 export(String) var setting
 
 func _ready():#_enter_tree():
-	print('Type: ', get_class())
+	#print('Type: ', get_class())
 	if !setting:
 		push_error(name + ': setting is null')
 

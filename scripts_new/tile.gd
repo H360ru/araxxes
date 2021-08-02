@@ -1,7 +1,9 @@
 extends TextureRect
 
 func _ready():
+# warning-ignore:return_value_discarded
 	connect("mouse_entered", self, "_entered")
+# warning-ignore:return_value_discarded
 	connect("mouse_exited", self, "_exited")
 
 func _entered():

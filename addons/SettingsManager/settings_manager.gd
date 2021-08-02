@@ -32,10 +32,10 @@ var changed: bool = false
 
 #TODO: передавать ссылку конфигов инициализации
 #func _init(settings_file):
-#	print('property_list:')
+#	#print('property_list:')
 ##	for i in get_property_list():
-##		print(i)#['name'])
-##	print(get_settings())
+##		#print(i)#['name'])
+##	#print(get_settings())
 #
 #	#BUG: вызывало дублирование курсора 
 ##	set_settings(get_settings())
@@ -43,11 +43,11 @@ var changed: bool = false
 
 
 #func set(property, value):
-#	prints('Property set test:', property, value)
+#	#prints('Property set test:', property, value)
 
 # Main setter interface
 func set_value(property, value):
-	prints('Property test:', property, value)
+	#prints('Property test:', property, value)
 	
 	#TODO: проверку на существование переменной
 	set(property, value)
@@ -96,12 +96,12 @@ func set_value(property, value):
 
 func load_settings(CONFIG_DIR = "user://saves/", CONFIG_FILE_NAME = "default", CONFIG_EXTENSION = ".tres"):
 	if !ResourceLoader.exists("res://saves/default.tres"):
-		print(CONFIG_DIR + CONFIG_FILE_NAME + CONFIG_EXTENSION)
+		#print(CONFIG_DIR + CONFIG_FILE_NAME + CONFIG_EXTENSION)
 		return false
 	
 	var new_load:Resource = ResourceLoader.load("res://saves/default.tres", 'Resource', true)
 	self.set_settings(new_load.settings)
-	print("load_settings")
+	#print("load_settings")
 	return true
 
 func get_settings() -> Dictionary:
@@ -116,7 +116,7 @@ func get_settings() -> Dictionary:
 
 func set_settings(settings:Dictionary ):
 	for i in settings.keys():
-		print(i)
+		#print(i)
 		set_value(i, settings[i])
 
 

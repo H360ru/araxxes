@@ -143,7 +143,7 @@ func run(delta):
 	
 	
 	
-func input(e):
+func input(_e):
 	
 	return true
 	
@@ -151,17 +151,17 @@ func input(e):
 
 
 
-func _init(game,node).(game):
+func _init(game, _node).(game):
 	
 	
-	self.node=node
+	self.node = _node
 	
-	texrect=node.get_node("TextureRect")
-	menu_container=node.find_node("menu_container")
-	menu_game=node.find_node("menu_game")
+	texrect = _node.get_node("TextureRect")
+	menu_container = _node.find_node("menu_container")
+	menu_game = _node.find_node("menu_game")
 	
 	
-	menuSetting=MenuSetting.new(game,self,node.get_node("setting"))
+	menuSetting=MenuSetting.new(game,self, _node.get_node("setting"))
 	menuMain=MenuMain.new(game,self,menu_container)
 	menuGame=MenuGame.new(game,self,menu_game)
 	

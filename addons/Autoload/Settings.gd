@@ -13,7 +13,7 @@ func _ready()->void:
 #	SettingsResolution.get_resolution()
 #	if !SettingsSaveLoad.load_settings():
 #		SettingsControls.default_controls()
-#		print("default_controls")
+#		#print("default_controls")
 #	SettingsAudio.get_volumes()
 	#SettingsSaveLoad.save_settings()											#Call this method to trigger Settings saving
 	settings_init()
@@ -30,5 +30,5 @@ func settings_init():
 
 		# TODO: добавить вызов диалога
 		SettingsSaveLoad.save_settings()
-		print("DEFAULT CONTROLS")
+		#print("DEFAULT CONTROLS")
 		return "default_controls"

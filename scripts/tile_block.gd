@@ -39,7 +39,7 @@ func removeUnit(unit):
 	if ind!=-1:
 		units.remove(ind)
 
-func _init(xy):
-	self.xy=xy
+func _init(_xy):
+	self.xy = _xy
 	pass
 

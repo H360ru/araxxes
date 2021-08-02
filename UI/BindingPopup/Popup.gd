@@ -7,6 +7,7 @@ var NewEvent:InputEvent
 func _ready()->void:
 	popup_exclusive = true
 	set_process_input(false)
+# warning-ignore:return_value_discarded
 	connect("about_to_show", self, "receive_input")
 	#Localization
 #	SettingsLanguage.connect("ReTranslate", self, "retranslate")

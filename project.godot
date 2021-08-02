@@ -179,7 +179,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/SoundManager/sound_manager.gd"
 }, {
-"base": "Reference",
+"base": "Node",
 "class": "SoundManagerModule",
 "language": "GDScript",
 "path": "res://scripts_new/sound_test/SoundManager_config.gd"
@@ -209,7 +209,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/touch.gd"
 }, {
-"base": "Reference",
+"base": "Object",
 "class": "Tweening",
 "language": "GDScript",
 "path": "res://scripts_new/Tween manager/Tweening.gd"
@@ -343,6 +343,26 @@ click={
 "deadzone": 0.5,
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
  ]
+}
+Right={
+"deadzone": 0.5,
+"events": [  ]
+}
+Left={
+"deadzone": 0.5,
+"events": [  ]
+}
+Up={
+"deadzone": 0.5,
+"events": [  ]
+}
+Down={
+"deadzone": 0.5,
+"events": [  ]
+}
+Jump={
+"deadzone": 0.5,
+"events": [  ]
 }
 
 [input_devices]

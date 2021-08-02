@@ -13,20 +13,20 @@ export(NodePath) var parent
 func _unhandled_input(event):
 	if event.is_action_pressed("click"):
 #		grab_focus()
-#		print('grab_focus')
+#		#print('grab_focus')
 		_ui_release_focus()
-#		print(get_parent_control().name)
+#		#print(get_parent_control().name)
 
 func _ui_release_focus():
 	var f = get_focus_owner()
-#	print(f.name, ' focus_owner Self: ', self.name)
+#	#print(f.name, ' focus_owner Self: ', self.name)
 	if f != null:
 		f.release_focus()
 #	_anim(get_node(parent))
 #	_anim_test()
 #		_anim(self, true)
 #		yield(_tween,"tween_completed")
-#		print(get_parent().name)
+#		#print(get_parent().name)
 		get_parent()._back()
 
 func _anim(node: Control, reverse = false):

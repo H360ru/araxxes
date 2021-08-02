@@ -6,7 +6,7 @@ var player
 #Юнит который сеяас ходит
 var unitMove
 
-func run(delta):
+func run(_delta):
 	
 	
 	var que:Queue=game.queue

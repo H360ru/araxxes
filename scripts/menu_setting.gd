@@ -16,7 +16,7 @@ var button_settingback
 var setSize=false
 
 
-func onButtonClick(button,name):
+func onButtonClick(_button,name):
 	
 	if isOpen():
 		if name=="settingback":
@@ -55,10 +55,11 @@ func close():
 	pass
 	
 	
-func run(delta):
-	var targ=0
-	if node.visible:
-		targ=1
+func run(_delta):
+#	var targ=0
+#	if node.visible:
+#		targ=1
+	pass
 	
 	#node.modulate.a=(1-alpha)/20
 	#alpha=node.modulate.a
@@ -80,6 +81,7 @@ func _init(game,menu,node).(game,menu,node):
 	option_speed.add_item("speed x5")
 	option_speed.add_item("speed x6")
 	
+# warning-ignore:return_value_discarded
 	option_speed.connect("item_selected",self,"onItemSelectedSpeed")
 	
 	bg=node.find_node("bg")

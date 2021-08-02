@@ -23,4 +23,4 @@ func _enter_tree():
 
 #func _on_ResolutionsOptions_item_selected(index):
 #	Global.SETTINGS.set_value('resolution', get_item_metadata(index))
-##	print(get_item_metadata(index))
+##	#print(get_item_metadata(index))

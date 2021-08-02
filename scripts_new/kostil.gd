@@ -55,19 +55,17 @@ func _ready():
 	yield(get_tree(), 'idle_frame')
 	BACKGROUND = get_tree().get_root().get_node('Node2D/CanvasLayer/Background')
 	SITE_LABEL = get_tree().get_root().get_node('Node2D/CanvasLayer/SiteLabel')
-	prints('BACKGROUND, SITE_LABEL:', BACKGROUND, SITE_LABEL)
+	#prints('BACKGROUND, SITE_LABEL:', BACKGROUND, SITE_LABEL)
 	randomize()
 
 func open_menu():
-	var node = get_tree().get_root().get_node('Node2D/CanvasLayer/Меню')._to_child_name('ИнгеймМеню')
-	# print(node.name)
-	# node.visible = !node.visible
+	get_tree().get_root().get_node('Node2D/CanvasLayer/Меню')._to_child_name('ИнгеймМеню')
 
 func open_tutorial():
-	var node = get_tree().get_root().get_node('Node2D/CanvasLayer/Меню')._to_child_name('Туториал')
+	get_tree().get_root().get_node('Node2D/CanvasLayer/Меню')._to_child_name('Туториал')
 
 func game_end():
-	var node = get_tree().get_root().get_node('Node2D/CanvasLayer/Меню')._to_child_name('КонецИгры')
+	get_tree().get_root().get_node('Node2D/CanvasLayer/Меню')._to_child_name('КонецИгры')
 
 #BUG: HTTML5 build
 #At: res://scripts_new/kostil.gd:36:background_visible()
@@ -79,15 +77,15 @@ func background_visible(_bool: bool):
 	SITE_LABEL.visible = _bool
 
 func mad_text_size_test():
-	var _font = DynamicFont.new()
-	_font.font_data = load('res://fonts/Ubuntu-B.ttf')
+	var _test_font = DynamicFont.new()
+	_test_font.font_data = load('res://fonts/Ubuntu-B.ttf')
 	for text in test_arr:
 		var _d = {}
 		for size in range(1, 60):
-			_font.size = size
-			_d[size] = _font.get_string_size(text)#_d[_font.get_string_size(text)] = size
+			_test_font.size = size
+			_d[size] = _test_font.get_string_size(text)#_d[_font.get_string_size(text)] = size
 			yield(get_tree(), "idle_frame")
-		prints(text, _d)
+		#prints(text, _d)
 
 func get_string_size(_txt, _size, _node):
 	if !font.size_arr.has(_txt):#== '12324':

@@ -39,8 +39,8 @@ var stopped=true
 
 
 #Устновить точки для передвижения
-func setMovePoints(movePoints):
-	self.movePoints=movePoints
+func setMovePoints(_movePoints):
+	self.movePoints = _movePoints
 	thisPoint=0
 	end=false
 	
@@ -85,14 +85,14 @@ func move(delta):
 			#======Следт точка
 			
 			if pos.distance_to(poi)<20:
-				# prints('Проехал', game.map.manMap.getCooTile(game.map.di.mToPix(poi)))
-				# prints('Hex center', poi)
-				# prints('lastTileFree', unit.lastTileFree)
-				# prints('getTileUnit', unit.getTileUnit())
+				# #prints('Проехал', game.map.manMap.getCooTile(game.map.di.mToPix(poi)))
+				# #prints('Hex center', poi)
+				# #prints('lastTileFree', unit.lastTileFree)
+				# #prints('getTileUnit', unit.getTileUnit())
 				if unit.name == "harvestr":
 					var _tile = game.map.manMap.getCooTile(game.map.di.mToPix(poi))#unit.getTileUnit()#lastTileFree
 					if game.map.manMap.isTileSpice(_tile.x as int, _tile.y as int):
-						# prints('Spice at',_tile.x,_tile.y)
+						# #prints('Spice at',_tile.x,_tile.y)
 						game.map.manMap.setTileSand(_tile.x,_tile.y)
 						unit.player.spices+=1
 						game.refreshPlayerLabel(unit.player)
@@ -133,6 +133,6 @@ func run(delta):
 	
 	pass
 
-func _init(game,unit).(game):
-	self.unit=unit
+func _init(game, _unit).(game):
+	self.unit = _unit
 	pass

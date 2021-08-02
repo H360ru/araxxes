@@ -189,10 +189,8 @@ func onUnitMoveStop(unit):
 	pass
 
 #Вызывается при начале окончания движения
-func onUnitMoveFinished(unit):
-	
-	
-	pass	
+func onUnitMoveFinished(_unit):
+	pass
 
 func checkNode(node):
 	if node.name.find("sp_unit")==0:
@@ -239,7 +237,7 @@ func onClickMap(vec2d:Vector2):
 			var routeSelect=unit.routeSelectMove
 			if routeSelect!=null:
 				
-				var hoSteps=unit.hoSteps
+#				var hoSteps=unit.hoSteps
 				
 				var indexStep=routeSelect.containTile(inMap)
 				if indexStep!=-1:
@@ -295,8 +293,7 @@ func run(delta):
 	
 		pass
 
-func input(e):
-	
+func input(_e):
 	pass
 
 func _init(game).(game):

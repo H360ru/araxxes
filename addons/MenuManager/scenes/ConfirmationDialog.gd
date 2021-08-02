@@ -23,13 +23,13 @@ func _enter_tree():
 	save.connect("button_down", self, "hide")
 #func _ready():
 #	get_cancel().grab_focus()
-#	print()
+#	#print()
 
 func _on_event(value):
 	buffer += [value]
-	print('buffer add ', value)
+	#print('buffer add ', value)
 	yield(get_tree(),"idle_frame")
 	if buffer:
-		print(buffer)
+		#print(buffer)
 		emit_signal("answer", buffer)
 		buffer.clear()

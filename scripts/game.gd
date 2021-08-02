@@ -47,11 +47,11 @@ var colorRectUp
 var colorRectDown
 
 
-func _init(game,node).(game):
+func _init(game, _node).(game):
 	game=self
 	Kostil.GAME = self
 
-	self.node=node
+	self.node = _node
 	
 	
 	setting=Setting.new(self)
@@ -64,40 +64,48 @@ func _init(game,node).(game):
 	multyTouch=MultyTouch.new(self)
 	
 	queue=Queue.new(self)
+# warning-ignore:return_value_discarded
 	queue.connect("onQueueEndTour",self,"onQueueEndTour")
+# warning-ignore:return_value_discarded
 	queue.connect("onQueueChangePlayer",self,"onQueueChangePlayer")
 	
-	map_view=node.get_node("map_view")
-	viewportMap=node.get_node("Viewport")
+	map_view = _node.get_node("map_view")
+	viewportMap = _node.get_node("Viewport")
 	
-	colorRectUp=node.get_node("ColorRect_up")
-	colorRectDown=node.get_node("ColorRect_down")
+	colorRectUp = _node.get_node("ColorRect_up")
+	colorRectDown = _node.get_node("ColorRect_down")
 	
 	# TODO BUG: виновник торжества
-	unUnitMenu=UiUnitMenu.new(self,node.get_node("ui_unit_menu"))
+	unUnitMenu=UiUnitMenu.new(self, _node.get_node("ui_unit_menu"))
 	
+# warning-ignore:return_value_discarded
 	unUnitMenu.connect("onUiUnitMenuClick",self,"onUiUnitMenuClick")
 	
 	butt=Buttons.new(self)
+# warning-ignore:return_value_discarded
 	butt.connect("onButtonClick",self,"onButtonClick")
 	
 	labs=Labels.new(self)
+# warning-ignore:return_value_discarded
 	labs.connect("onLabelClick",self,"onLabelClick")
 	
-	map=MapGame.new(self,node.get_node("Viewport/map"))
+	map=MapGame.new(self, _node.get_node("Viewport/map"))
 	#Подключение мультитач событий
+# warning-ignore:return_value_discarded
 	multyTouch.connect("onMultyTouchStart",map,"onMultyTouchStart")
+# warning-ignore:return_value_discarded
 	multyTouch.connect("onMultyTouchFinish",map,"onMultyTouchFinish")
+# warning-ignore:return_value_discarded
 	multyTouch.connect("onMultyTouchRun",map,"onMultyTouchRun")
 	
-	menu=Menu.new(self,node.get_node("main_menu"))
+	menu=Menu.new(self, _node.get_node("main_menu"))
 	
 	
 	
-	labelGameOvet=node.get_node("gameover")
+	labelGameOvet = _node.get_node("gameover")
 	
 	#============
-	calcNodes(node,"checkNode")
+	calcNodes(_node,"checkNode")
 	
 	#=============
 	
@@ -165,9 +173,10 @@ func refreshPlayerLabel(player):
 	checkSizeUI()
 		
 
-func onLabelClick(label,name):
+func onLabelClick(_label, name):
 	
 	if name.find("site")==0:
+# warning-ignore:return_value_discarded
 		OS.shell_open("https://example.com")
 	
 	pass	
@@ -187,7 +196,7 @@ func onButtonClick(button,name):
 		if name=="tomenu":
 			# menu.open()
 			# menu.setMenuGame()
-			# print('MENU!!!!')
+			# #print('MENU!!!!')
 			Kostil.open_menu()
 			butt.visibleByName("tomenu",false)
 			pass
@@ -201,18 +210,18 @@ func onButtonClick(button,name):
 	pass	
 	
 #Вызывается для каждого нода в начале
-func checkNode(node):
+func checkNode(_node):
 	
 	var theme=getThemeOrnate()
-	if node is Label || node is Button:
-		node.theme=theme
+	if _node is Label || _node is Button:
+		_node.theme=theme
 		pass
 	
-	butt.checkButton(node)
+	butt.checkButton(_node)
 	
-	map.checkNodes(node)
+	map.checkNodes(_node)
 	
-	labs.checkLabel(node)
+	labs.checkLabel(_node)
 	
 	pass	
 	
@@ -316,8 +325,8 @@ func onChangeViewportSize():
 func checkUIGame():
 	
 	
-	var size=node.get_viewport().size
-	var offsetScreen=size.x/20
+#	var size=node.get_viewport().size
+#	var offsetScreen=size.x/20
 	
 	#=====Кнопки
 	
@@ -546,12 +555,12 @@ func debugA(text):
 
 # TODO BUG: 93!!! вызова minusFontSize
 #Установить максимальный размер контролу с текстом. кнопки метки и тд.
-func setMaxSize(node,startSizeFont,maxSize:Vector2):
-	set_max_size_new(node,startSizeFont, maxSize)
+func setMaxSize(_node,startSizeFont,maxSize:Vector2):
+	set_max_size_new(_node,startSizeFont, maxSize)
 #	if node!=null && node.text != '':
-##		print('setMaxSize CALL!!!')
+##		#print('setMaxSize CALL!!!')
 ##		if node.text == '':
-##			print('NULL NODE TEXT!!!')
+##			#print('NULL NODE TEXT!!!')
 #		var c=0
 #		setFontSize(node,startSizeFont)
 #		var back=false
@@ -578,20 +587,20 @@ func setMaxSize(node,startSizeFont,maxSize:Vector2):
 # POOP: 
 # наговнокодил дихотомический поиск вместо линейного
 
-func set_max_size_new(node,startSizeFont: int, maxSize:Vector2):
-	if node!=null && node.text != '':
-		var _font: Font = node.get("custom_fonts/font");
-		var _txt: String = node.text
+func set_max_size_new(_node,startSizeFont: int, maxSize:Vector2):
+	if _node!=null && _node.text != '':
+		var _font: Font = _node.get("custom_fonts/font");
+		var _txt: String = _node.text
 		
 		var _font_size: int = startSizeFont*2
 		_font.size = startSizeFont*2
-		if maxSize.x > Kostil.get_string_size(_txt, startSizeFont*2, node).x:
-			node.get("custom_fonts/font").size = startSizeFont-15
+		if maxSize.x > Kostil.get_string_size(_txt, startSizeFont*2, _node).x:
+			_node.get("custom_fonts/font").size = startSizeFont-15
 #			node.set("custom_fonts/font", _font)
 			return
 		
 		_font_size = startSizeFont
-		while maxSize.x < Kostil.get_string_size(_txt, _font_size, node).x:
+		while maxSize.x < Kostil.get_string_size(_txt, _font_size, _node).x:
 			_font_size /= 2
 			if _font_size < 1:
 				_font_size = 1
@@ -599,7 +608,7 @@ func set_max_size_new(node,startSizeFont: int, maxSize:Vector2):
 		startSizeFont = _font_size
 		
 		var endSizeFont: int
-		while maxSize.x > Kostil.get_string_size(_txt, _font_size, node).x:
+		while maxSize.x > Kostil.get_string_size(_txt, _font_size, _node).x:
 			_font_size *= 2
 		endSizeFont = _font_size
 		
@@ -607,66 +616,68 @@ func set_max_size_new(node,startSizeFont: int, maxSize:Vector2):
 		
 		
 		_font_size = startSizeFont
-		var back = false
+#		var back = false
 		
-		var c=0
+#		var c=0
 		while true:
+# warning-ignore:narrowing_conversion
+# warning-ignore:integer_division
 			midpoint = floor((endSizeFont + startSizeFont)/2)
 			
 			_font_size = midpoint
-			var thisSize = Kostil.get_string_size(_txt, midpoint, node)
+			var thisSize = Kostil.get_string_size(_txt, midpoint, _node)
 			
 			if thisSize.x>maxSize.x || thisSize.y>maxSize.y:
 				endSizeFont = midpoint
 			elif thisSize.x<maxSize.x && thisSize.y<maxSize.y:
 				startSizeFont = midpoint
-			c+=1
+#			c+=1
 			if (endSizeFont - startSizeFont) < 2:#c>startSizeFont*2:
 				break
 			pass
 #		node.set("custom_fonts/font", _font)
-		node.get("custom_fonts/font").size = _font_size
+		_node.get("custom_fonts/font").size = _font_size
 	pass
 
 
 # TODO BUG подозрительном много вызовов 151!
 #Вернуть размер строки в метке
-func getLabelSizeString(node):
-	var font:Font=node.get("custom_fonts/font");
+func getLabelSizeString(_node):
+	var font:Font = _node.get("custom_fonts/font");
 	if font!=null:
-		return font.get_string_size(node.text)
+		return font.get_string_size(_node.text)
 			
-func setFontSize(node,size):
-	var font:Font=node.get("custom_fonts/font");
+func setFontSize(_node,size):
+	var font:Font = _node.get("custom_fonts/font");
 	if font!=null:
 		font.size=size
-		node.set("custom_fonts/font",font);	
+		_node.set("custom_fonts/font",font);	
 		
-func getFontSize(node):
-	var font:Font=node.get("custom_fonts/font");
+func getFontSize(_node):
+	var font:Font = _node.get("custom_fonts/font");
 	if font!=null:
 		return font.size
 
 # TODO BUG: вызывает лагспайк на 6.8ms 93!!! вызова
-func minusFontSize(node):
-	prints(node, 'getFontSize CALL!!!')
-	var font:Font=node.get("custom_fonts/font");
+func minusFontSize(_node):
+	#prints(_node, 'getFontSize CALL!!!')
+	var font:Font = _node.get("custom_fonts/font");
 	if font!=null && font.size>0:
 		font.size-=1
-		node.set("custom_fonts/font",font);	
+		_node.set("custom_fonts/font",font);	
 		
-func plusFontSize(node):
-	var font:Font=node.get("custom_fonts/font");
+func plusFontSize(_node):
+	var font:Font = _node.get("custom_fonts/font");
 	if font!=null && font.size>0:
 		font.size+=1
-		node.set("custom_fonts/font",font);		
+		_node.set("custom_fonts/font",font);		
 		
-func setTextColor(node,color):
-	var font=node.get("custom_fonts/font");
+func setTextColor(_node,color):
+	var font=_node.get("custom_fonts/font");
 	if color!=null:
 		font.outline_color=color
-		node.set("custom_fonts/font",font);
+		_node.set("custom_fonts/font",font);
 	
-	node.set("custom_colors/font_color",color)
+	_node.set("custom_colors/font_color",color)
 	
 	

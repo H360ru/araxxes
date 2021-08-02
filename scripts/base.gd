@@ -14,27 +14,28 @@ func onChangeViewportSize():
 	pass
 
 
-func run(delta):
+func run(_delta):
 	pass
 
-func _init(game):
-	self.game=game
+func _init(_game):
+	self.game = _game
 	
 	
 #node - начальный нод, funcCallback имя функции с параметром нода
 func calcNodes(node,funcCallback):
 	
 	if self.is_connected("onNode", self, funcCallback)==false:
+# warning-ignore:return_value_discarded
 		self.connect("onNode", self, funcCallback)
 	
-	var startNode=node;
+#	var startNode=node;
 	var thist=node;
 	
-	var count:int=0;
+#	var count:int=0;
 	var back=false;
 	
 	while true:
-		count+=1;
+#		count+=1;
 		
 		var ch=thist.get_children();
 		var continuew=false;
@@ -63,12 +64,9 @@ func calcNodes(node,funcCallback):
 			var childrenBack=parent.get_children();
 			var selectNext=false;#выбрать следующй текущим
 			if childrenBack.empty()==false:
-				var lastynode;
+#				var lastynode;
 				for chb in childrenBack:
-					lastynode=chb;
-					
-					
-					
+#					lastynode=chb;
 					if chb==thist:
 						selectNext=true;
 					else:

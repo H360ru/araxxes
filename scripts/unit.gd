@@ -252,7 +252,7 @@ func getPosInScreen():
 	
 	if cam!=null:
 		
-		var rectCam:Rect2=cam.getRectCam()
+#		var rectCam:Rect2=cam.getRectCam()
 		var posUnit=getCooUnitInMap()
 		#return cam.nodeCamera2d.get_viewport().size*((posUnit-rectCam.position)/rectCam.size)
 		return cam.getPosDisplayFromMap(posUnit)
@@ -282,8 +282,8 @@ func getTilesMap(limitStep,unit,checkBlock):
 	
 	var cooPam=getUnitTileCenter()
 	
-	var route:Route=self.navigator.buildRoute(cooPam,cooPam+Vector2(99999,99999),checkBlock,limitStep,true,unit);
-	return route;
+	var _route:Route=self.navigator.buildRoute(cooPam,cooPam+Vector2(99999,99999),checkBlock,limitStep,true,unit);
+	return _route;
 	
 	pass
 
@@ -312,20 +312,20 @@ func moveToTile(vec2d,limitsStep):
 		#uMove.pos=game.map.di.pixToM(vec2d);
 		
 		var cooPam=getUnitTileCenter()
-		var route:Route=self.navigator.buildRoute(cooPam,vec2d,true,limitsStep,false,self);
-		moveOnRoute(route,limitsStep,0)
+		var _route:Route=self.navigator.buildRoute(cooPam,vec2d,true,limitsStep,false,self);
+		moveOnRoute(_route,limitsStep,0)
 
-		saveSave(route.getSpiceTiles())
+		saveSave(_route.getSpiceTiles())
 		pass
 	pass
 
 
 #начать двигаться по маршруту, лимит шагов
-func moveOnRoute(route,limitStep,offsetBack):
-	if route!=null:
+func moveOnRoute(_route,limitStep,offsetBack):
+	if _route!=null:
 		
 		
-		var pointsMap=route.getPoints(limitStep,offsetBack)
+		var pointsMap=_route.getPoints(limitStep,offsetBack)
 		
 		var i=0;
 		while true:
@@ -340,7 +340,7 @@ func moveOnRoute(route,limitStep,offsetBack):
 				break
 				
 				
-		self.route=route
+		self.route = _route
 		 
 		
 		self.uMove.setMovePoints(pointsMap)
@@ -401,11 +401,11 @@ func getFrame():
 	pass
 
 
-func _init(game,node,name).(game):
-	self.node=node
-	self.name=name
+func _init(game, _node, _name).(game):
+	self.node = _node
+	self.name = _name
 	
-	params=node.name.split("_")
+	params= _node.name.split("_")
 	
 	navigator=Navigator.new(game);
 	
@@ -415,7 +415,7 @@ func _init(game,node,name).(game):
 	states=UnitStates.new(game,self)
 	
 	#настройки отдельно для каждого юнита
-	if name=="harvestr":
+	if _name=="harvestr":
 		moveX1Len=6
 		moveX2Len=12
 		moveX1Point=1
@@ -429,7 +429,7 @@ func _init(game,node,name).(game):
 		#Скорость
 		uMove.speed.maxSpeed=15
 		
-	if name=="worm":
+	if _name=="worm":
 		moveX1Len=5
 		moveX2Len=10
 		moveX1Point=1
@@ -445,7 +445,9 @@ func _init(game,node,name).(game):
 		uMove.speed.speedDown=1
 	
 	trail = self.node.get_node('Trail')
+# warning-ignore:return_value_discarded
 	uMove.connect('onUnitMoveStart', self, '_on_move_start')
+# warning-ignore:return_value_discarded
 	uMove.connect('onUnitMoveFinished', self, '_on_move_end')
 	
 	pass

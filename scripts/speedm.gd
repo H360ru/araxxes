@@ -23,9 +23,9 @@ func run(delta):
 	pass
 
 
-func _init(maxSpeed,speedUp,speedDown,thisSpeed):
-	self.maxSpeed=maxSpeed
-	self.speedUp=speedUp
-	self.speedDown=speedDown
-	self.thisSpeed=thisSpeed
+func _init(_maxSpeed, _speedUp, _speedDown, _thisSpeed):
+	self.maxSpeed = _maxSpeed
+	self.speedUp = _speedUp
+	self.speedDown = _speedDown
+	self.thisSpeed = _thisSpeed
 	pass

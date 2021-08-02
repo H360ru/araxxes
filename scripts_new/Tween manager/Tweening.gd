@@ -73,10 +73,11 @@ class Tweener:
 		delay = new_delay
 		return self
 	
+# warning-ignore:function_conflicts_variable
 	func in_sequence():
 		in_sequence = true
 	
-	func end(whatever, whatever2):
+	func end(_whatever, _whatever2):
 		emit_signal("finished")
 		tween.queue_free()
 		node.get_tree().get_meta("tweeners").erase(self)

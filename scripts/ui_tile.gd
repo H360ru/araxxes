@@ -32,17 +32,17 @@ var smallText
 #Чем больше тем медленнее открывает
 var coeffOpenSpeed=2.0
 
-func setPoints(points):
-	self.points.text=points
+func setPoints(_points):
+	self.points.text = _points
 	if lastSize!=null:
 		setSize(lastSize)
 	pass
 
 #Добавить тмаленький текст под основным
-func setSmallText(text):
+func setSmallText(_text):
 	if smallText==null:
 		smallText=self.text.duplicate()
-		smallText.text=text
+		smallText.text=_text
 		self.text.get_parent().add_child(smallText)
 		refreshThemeAndFont(smallText)
 		
@@ -60,8 +60,8 @@ func clearSmallText():
 	
 
 
-func setTile(name):
-	node.texture=load("res://textures/ui/"+name+".png")
+func setTile(_name):
+	node.texture=load("res://textures/ui/"+_name+".png")
 	
 	pass
 
@@ -77,13 +77,13 @@ func checkFontColorPoints():
 	pass
 
 #Установить иконку name - имя иконки в каталоге testures/ui/
-func setIcon(name):
-	self.name=name
-	if name != UI.NAME_TILE_POINTS:
-		icon.texture=Kostil.icon_dictionary[name]#load("res://textures/ui/"+name+".png")
+func setIcon(_name):
+	self.name = _name
+	if _name != UI.NAME_TILE_POINTS:
+		icon.texture=Kostil.icon_dictionary[_name]#load("res://textures/ui/"+name+".png")
 	
 	
-	if name==UI.NAME_TILE_EMPTY:
+	if _name==UI.NAME_TILE_EMPTY:
 		icon.texture=null
 		enable(false)
 	
@@ -91,31 +91,31 @@ func setIcon(name):
 	clearSmallText()
 	
 	#=======надписи согласно иконке
-	if name==UI.NAME_TILE_ATTACK:
+	if _name==UI.NAME_TILE_ATTACK:
 		setText("Атака")
-	if name==UI.NAME_TILE_BACK:
+	if _name==UI.NAME_TILE_BACK:
 		setText("Отмена")
-	if name==UI.NAME_TILE_CLOSE:
+	if _name==UI.NAME_TILE_CLOSE:
 		setText("Закрыть")
-	if name==UI.NAME_TILE_EMPTY:
+	if _name==UI.NAME_TILE_EMPTY:
 		setText("")
-	if name==UI.NAME_TILE_END:
+	if _name==UI.NAME_TILE_END:
 		setText("конец")
 		setSmallText("хода")
-	if name==UI.NAME_TILE_MOVE:
+	if _name==UI.NAME_TILE_MOVE:
 		setText("Движение")
-	if name==UI.NAME_TILE_SAFE:
+	if _name==UI.NAME_TILE_SAFE:
 		setText("Защита")	
-	if name==UI.NAME_TILE_TAKE:
+	if _name==UI.NAME_TILE_TAKE:
 		setText("Взять")
 		setSmallText("Спайс")	
-	if name==UI.NAME_TILE_POINTS:
+	if _name==UI.NAME_TILE_POINTS:
 		setText("Очков")	
 		setSmallText("Действия")
 	pass
 
-func setText(text):
-	self.text.text=text
+func setText(_text):
+	self.text.text = _text
 	
 	if lastSize!=null:
 		setSize(lastSize)
@@ -123,15 +123,16 @@ func setText(text):
 	pass
 
 #Включить или выключить кнопку меню
-func enable(enabled):
-	self.enabled=enabled
-	if enabled:
+func enable(_enabled):
+	self.enabled = _enabled
+	if _enabled:
 		alpha=1.0
 	else:
 		alpha=0.5
 	
 	pass
 
+# warning-ignore:function_conflicts_variable
 func open():
 	timeColse=0
 	openCoeffSeTime=1
@@ -143,7 +144,7 @@ func close():
 
 
 
-func run(delta):
+func run(_delta):
 	
 	if open:
 		openCoeff+=(1.0-openCoeff)/coeffOpenSpeed
@@ -174,20 +175,20 @@ func setTileTexture(id):
 	pass
 
 
-func setMinSize(node):
-	node.rect_min_size=node.rect_size
+func setMinSize(_node):
+	_node.rect_min_size = _node.rect_size
 
 # TODO BUG: лакспайк на 13.6 ms 6 вызовов
 #разместить текстовый нод посредине плитки по ширине, и после posY, с максимальнім размером maxSize
-func setNodeAfterPosY(node,posY,startFontSize,maxSize):
+func setNodeAfterPosY(_node,posY,startFontSize,maxSize):
 	
-	game.setMaxSize(node,startFontSize,maxSize)
-	var sizeLabel=game.getLabelSizeString(node)
+	game.setMaxSize(_node,startFontSize,maxSize)
+	var sizeLabel=game.getLabelSizeString(_node)
 	if sizeLabel!=null:
-		node.rect_size=sizeLabel
+		_node.rect_size=sizeLabel
 		
-		node.rect_position=(lastSize/2)-(node.rect_size/2)
-		node.rect_position.y=posY
+		_node.rect_position=(lastSize/2)-(_node.rect_size/2)
+		_node.rect_position.y=posY
 
 # TODO BUG: вызывает лагспайк на 8.5ms 3 вызова
 func setSize(size:Vector2):
@@ -308,20 +309,20 @@ func setSize(size:Vector2):
 	pass
 
 
-func refreshThemeAndFont(node):
-	node.theme=game.getThemeOrnate()
-	var font:Font=node.get("custom_fonts/font");
-	if font!=null:
-		font=font.duplicate()
-		node.set("custom_fonts/font",font);	
+func refreshThemeAndFont(_node):
+	_node.theme = game.getThemeOrnate()
+	var font:Font = _node.get("custom_fonts/font");
+	if font != null:
+		font = font.duplicate()
+		_node.set("custom_fonts/font",font);	
 	pass
 
-func _init(game,node).(game):
-	self.node=node
+func _init(game, _node).(game):
+	self.node = _node
 	
-	icon=node.find_node("icon")
-	text=node.find_node("text")
-	points=node.find_node("points")
+	icon = _node.find_node("icon")
+	text = _node.find_node("text")
+	points = _node.find_node("points")
 	
 	
 	text.uppercase=true

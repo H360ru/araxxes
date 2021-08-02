@@ -3,7 +3,7 @@ extends MenuInMenu
 
 
 
-func onButtonClick(button,name):
+func onButtonClick(_button,name):
 	if isOpen():
 		
 		if name=="gameResume":
@@ -50,7 +50,7 @@ func close():
 	pass
 	
 	
-func run(delta):
+func run(_delta):
 	pass
 
 

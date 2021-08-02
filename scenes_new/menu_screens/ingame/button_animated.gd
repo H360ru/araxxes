@@ -3,10 +3,14 @@ extends Button
 var base_size = rect_size
 
 func _enter_tree():
+# warning-ignore:return_value_discarded
 	connect("focus_entered", self, "_on__focus_entered")
+# warning-ignore:return_value_discarded
 	connect("focus_exited", self, "_on__focus_exited")
 	
+# warning-ignore:return_value_discarded
 	connect("mouse_entered", self, "_on__mouse_entered")
+# warning-ignore:return_value_discarded
 	connect("mouse_exited", self, "_on__mouse_exited")
 
 func _on__focus_entered():
@@ -26,7 +30,7 @@ func _on__mouse_exited():
 	release_focus()
 #	pass
 
-func _check_mouse(i: bool):
+func _check_mouse(_i: bool):
 	if get_local_mouse_position() < rect_size:
 		_on__mouse_entered()
 

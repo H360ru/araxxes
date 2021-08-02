@@ -96,7 +96,7 @@ func run(delta):
 			if timeStartChangeTarget>0:
 				
 				#====перемещение к целии
-				var timeChanged=OS.get_system_time_msecs()-timeStartChangeTarget
+#				var timeChanged=OS.get_system_time_msecs()-timeStartChangeTarget
 				var vecToTarget=nodeTarget.transform.origin-nodeCamera2d.transform.origin
 				var lenv=vecToTarget.length()
 				
@@ -129,6 +129,7 @@ func run(delta):
 		lastVecHand=null
 		
 	#========Что то делать раз в сек. 
+# warning-ignore:integer_division
 	if OS.get_system_time_msecs()/1000%2==chec1s:	
 		chec1s+=1
 		chec1s%=2
@@ -332,7 +333,7 @@ func input(e):
 				if clickMousePos!=null && mouseClick!=null:
 					if (clickMousePos-mouseClick).length()<10:
 						
-						var vps=nodeCamera2d.get_viewport().size;
+#						var vps=nodeCamera2d.get_viewport().size;
 						
 						var clickInMap=getPosMapFromDisplay(clickMousePos)
 						
@@ -365,8 +366,8 @@ func onJoystickKey(key,down):
 		
 	pass
 
-func _init(game,nodeCamera2d).(game):
-	self.nodeCamera2d=nodeCamera2d
+func _init(game, _nodeCamera2d).(game):
+	self.nodeCamera2d = _nodeCamera2d
 	
 	var c=0
 	while true:

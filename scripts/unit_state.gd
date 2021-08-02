@@ -44,8 +44,8 @@ func loadState():
 	pass
 	
 
-func _init(game,unit).(game):
-	self.unit=unit
+func _init(game, _unit).(game):
+	self.unit = _unit
 	pass
 
 

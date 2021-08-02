@@ -54,7 +54,7 @@ func _on_control_visibility_changed():
 
 func load_control():
 	if control_node:
-		print(name, " load_control")
+		#print(name, " load_control")
 		ui_origin_node = control_node.instance()
 		if !visible:
 			ui_origin_node.visible = false
@@ -62,7 +62,7 @@ func load_control():
 
 func unload_control():
 	if ui_origin_node != null and is_instance_valid(ui_origin_node):
-		print(name, " unload_control")
+		#print(name, " unload_control")
 		ui_origin_node.queue_free()
 
 func change_control(new_control: PackedScene):
@@ -83,12 +83,12 @@ func group_children(group = 'ui'):
 	return arr
 
 func _back():
-#	print(ui_parent.name)
-	print(name, ' _back to')
+#	#print(ui_parent.name)
+	#print(name, ' _back to')
 	if ui_parent:
 		Global.SOUND.play('ui_deny')
 		
-		print(ui_parent.name)
+		#print(ui_parent.name)
 #		visible = false
 		ui_parent.visible = true#ui_parent.ui_screen_visible = true
 #		ui_parent.ui_origin_node.visible = true
@@ -99,8 +99,8 @@ func _back():
 		
 #		ui_origin_node.visible = false
 		self.visible = false#self.ui_screen_visible = false
-	else:
-		print('Корень меню ', name)
+#	else:
+		#print('Корень меню ', name)
 
 func _to_child_ind(index:int):
 	Global.SOUND.play()
@@ -159,7 +159,7 @@ func wait_popup_for(call_method: String, signal_binds: Array = [], mode: int = 0
 #	if mode == 0:
 	bind_check = false if mode == 0 else true
 	for i in signal_binds:
-		print('checking ', str(i))
+		#print('checking ', str(i))
 		bind_check = bind_check or check.has(i) if mode == 0\
 		else bind_check and check.has(i)
 #			if !check.has(i):
@@ -181,7 +181,7 @@ func wait_popup_for(call_method: String, signal_binds: Array = [], mode: int = 0
 func wait_popup_answer():
 	var window = call_popup()
 	var r = yield(window, "answer")
-	print("Window call: ", r)
+	#print("Window call: ", r)
 	return r
 
 func call_popup() -> WindowDialog:
@@ -192,7 +192,7 @@ func call_popup() -> WindowDialog:
 	return window
 
 func save_and_back(signal_binds: Array = []):
-	print('save binds: ', signal_binds)
+	#print('save binds: ', signal_binds)
 	if signal_binds.has('Не сохранять'):
 #		SettingsSaveLoad.load_settings()
 		Settings.settings_init()
@@ -204,4 +204,5 @@ func save_and_back(signal_binds: Array = []):
 #	Global.SETTINGS.changed = false # UI UTIL PROPETRY
 
 func print_test(array: Array):
-	print(array)
+	#print(array)
+	pass

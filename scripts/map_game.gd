@@ -31,22 +31,23 @@ var cpu:CPU;
 
 
 
-func _init(game,node).(game):
-	self.node=node
+func _init(game, _node).(game):
+	self.node = _node
 	
 	
-	unitsNode=node.get_node("units")
+	unitsNode = _node.get_node("units")
 	
-	camera=node.get_node("Camera2D")
+	camera = _node.get_node("Camera2D")
 	
 	cameraGame=CameraGame.new(game,camera);
 	
-	manMap=ManagerMap.new(game,node,cameraGame)
+	manMap=ManagerMap.new(game, _node,cameraGame)
 	manMap.generateMap()
 	
 	units=Units.new(game)
 	
 	
+# warning-ignore:return_value_discarded
 	units.connect("onClickUnit",self,"onClickUnit")
 	
 	cpu=CPU.new(game)
@@ -54,6 +55,7 @@ func _init(game,node).(game):
 	
 	#calcNodes(node,"checkNodes")
 	
+# warning-ignore:return_value_discarded
 	cameraGame.connect("onCameraGameClickMap",units,"onClickMap")
 	
 	
@@ -137,9 +139,9 @@ func openMenuForUnit(unit:Unit):
 
 
 #Вызываетсяпри клике по юниту
-func onClickUnit(units,unit,sceenPos):
+func onClickUnit(_units,unit, _sceenPos):
 	
-	if self.units==units:
+	if self.units == _units:
 		if unit!=null:
 			var thisPlayer=game.queue.getThisPlayer()
 			
@@ -209,9 +211,9 @@ func onMultyTouchRun():
 	pass
 	
 #проверка всех нодов	
-func checkNodes(node):
-	if units!=null:
-		units.checkNode(node)
+func checkNodes(_node):
+	if units != null:
+		units.checkNode(_node)
 		
 	
 	pass
@@ -229,7 +231,7 @@ func run(delta):
 	.run(delta)
 	
 	
-	var vp=camera.get_viewport().size
+#	var vp=camera.get_viewport().size
 	
 	if cameraGame!=null:
 	

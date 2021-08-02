@@ -18,10 +18,10 @@ var step=0
 
 
 
-func _init(x,y,step):
-	self.x=x
-	self.y=y
-	self.step=step
+func _init(_x, _y, _step):
+	self.x = _x
+	self.y =_y
+	self.step = _step
 	pass
 
 

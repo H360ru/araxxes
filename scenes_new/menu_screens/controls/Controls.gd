@@ -37,6 +37,7 @@ func set_action_list()->void:
 		var Name:Label = ActionNode.find_node("Name") #Name of actions
 		var Add:Button = ActionNode.find_node("AddAction") #Used for adding new ControlBind
 		Name.text = Action
+# warning-ignore:return_value_discarded
 		Add.connect("pressed", self, "add_control", [Action])
 		set_control_list(Action)
 
@@ -46,7 +47,7 @@ func set_control_list(Action)->void:
 		for i in range(list.size()): #Maybe just list would be OK but to be sure it goes right it's range()
 			new_bind(Action, list[i])
 	else:
-		print('OptionsControls.gd: 39 - SettingsControls.ActionControls does not have: ', Action)
+		#print('OptionsControls.gd: 39 - SettingsControls.ActionControls does not have: ', Action)
 
 func new_bind(Action, event)->void: #Adding bound InputEvent in the list
 	var eventNode:HBoxContainer = ControlBind.instance()
@@ -57,6 +58,7 @@ func new_bind(Action, event)->void: #Adding bound InputEvent in the list
 	var Remove:Button = eventNode.find_node("RemoveAction")
 	
 	BindName.text = get_InputEvent_name(event)
+# warning-ignore:return_value_discarded
 	Remove.connect("pressed", self, "remove_control", [[Action, event, eventNode]]) #Name, event, node
 
 func get_InputEvent_name(event:InputEvent)->String:
@@ -79,6 +81,7 @@ func get_InputEvent_name(event:InputEvent)->String:
 			text += "Axis: " + str(event.axis) + " "
 		
 		if !stick.empty():	#known
+# warning-ignore:narrowing_conversion
 			var value:int = round(event.axis_value)
 			if stick.ends_with('X'):
 				if value > 0:

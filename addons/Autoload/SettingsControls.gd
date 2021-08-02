@@ -26,8 +26,8 @@ func set_actions_info()->void:
 	ActionControls.clear()
 	for Action in Actions:
 		var ActionList:Array = InputMap.get_action_list(Action) #associated controlls to the action
-		print('Settings controls action list for: ', Action)
-		print(ActionList)
+		#print('Settings controls action list for: ', Action)
+		#print(ActionList)
 		ActionControls[Action] = ActionList
 
 func print_events_list(ActionList:Array)->void:

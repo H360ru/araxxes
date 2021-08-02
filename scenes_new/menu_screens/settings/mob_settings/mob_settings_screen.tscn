@@ -25,10 +25,10 @@ __meta__ = {
 [node name="TabContainer2" type="MarginContainer" parent="." groups=[
 "ui_menu",
 ]]
-margin_left = 396.0
-margin_top = 41.0
-margin_right = 627.0
-margin_bottom = 559.0
+margin_left = 394.0
+margin_top = 104.0
+margin_right = 625.0
+margin_bottom = 595.0
 focus_mode = 2
 theme = ExtResource( 1 )
 custom_constants/margin_right = 0
@@ -46,7 +46,7 @@ __meta__ = {
 self_modulate = Color( 0.290196, 0.290196, 0.290196, 0.901961 )
 margin_top = 0.0
 margin_right = 231.0
-margin_bottom = 518.0
+margin_bottom = 491.0
 
 [node name="NinePatchRect2" parent="TabContainer2" instance=ExtResource( 3 )]
 self_modulate = Color( 0.4, 0.4, 0.4, 1 )
@@ -54,7 +54,7 @@ margin_right = 231.0
 
 [node name="Настройки" type="MarginContainer" parent="TabContainer2"]
 margin_right = 231.0
-margin_bottom = 518.0
+margin_bottom = 491.0
 mouse_filter = 1
 size_flags_horizontal = 0
 custom_constants/margin_right = 5
@@ -66,7 +66,7 @@ custom_constants/margin_bottom = 12
 margin_left = 5.0
 margin_top = 10.0
 margin_right = 226.0
-margin_bottom = 506.0
+margin_bottom = 479.0
 custom_constants/vseparation = 6
 
 [node name="Label" type="Label" parent="TabContainer2/Настройки/VBoxContainer"]
@@ -316,6 +316,7 @@ __meta__ = {
 setting = "sound_volume"
 
 [node name="Управление" type="Button" parent="TabContainer2/Настройки/VBoxContainer"]
+visible = false
 margin_top = 421.0
 margin_right = 221.0
 margin_bottom = 442.0
@@ -328,9 +329,9 @@ __meta__ = {
 }
 
 [node name="Default" type="Button" parent="TabContainer2/Настройки/VBoxContainer"]
-margin_top = 448.0
+margin_top = 421.0
 margin_right = 221.0
-margin_bottom = 469.0
+margin_bottom = 442.0
 custom_styles/hover = ExtResource( 13 )
 custom_styles/focus = ExtResource( 13 )
 custom_styles/normal = ExtResource( 12 )
@@ -340,9 +341,9 @@ __meta__ = {
 }
 
 [node name="Back" type="Button" parent="TabContainer2/Настройки/VBoxContainer"]
-margin_top = 475.0
+margin_top = 448.0
 margin_right = 221.0
-margin_bottom = 496.0
+margin_bottom = 469.0
 custom_styles/hover = ExtResource( 13 )
 custom_styles/focus = ExtResource( 13 )
 custom_styles/normal = ExtResource( 12 )

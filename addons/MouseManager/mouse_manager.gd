@@ -29,7 +29,7 @@ func set_cursor_texture(txt:Resource):
 
 #провести инициализацию настроек
 func _init():
-	print('MOUSE MANAGER INIT')
+	#print('MOUSE MANAGER INIT')
 	GLES2 = bool(OS.get_current_video_driver() == OS.VIDEO_DRIVER_GLES2)
 	var _js_node = Global.get_node_or_null('JavaScriptUtils')
 	if _js_node:
@@ -50,7 +50,7 @@ func change_cursor(path:String = Global.SETTINGS.cursor):
 	var c = Global.find_node('*Cursor*', true, false)
 	if c:
 		if c.is_queued_for_deletion():
-			print("!!!!!!!!!!!!!!tree_exited!!!!!!!!!!!!!!!!!!")
+			#print("!!!!!!!!!!!!!!tree_exited!!!!!!!!!!!!!!!!!!")
 #			yield(c, "tree_exited")
 #			yield(get_tree(), "idle_frame")
 			if func_queue:
@@ -61,7 +61,7 @@ func change_cursor(path:String = Global.SETTINGS.cursor):
 		else:
 			c.queue_free()
 			yield(c, "tree_exited")
-#			print(func_queue)
+#			#print(func_queue)
 	var node #= load('res://addons/MouseManager/cursor_node/Cursor3NoShader.tscn')#load(path)
 	var _cursor_node_path = 'res://addons/MouseManager/cursor_node/'
 	var _no_shader_path = 'no_shader/'
