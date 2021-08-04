@@ -81,7 +81,6 @@ func clear() -> void:
 	.clear()
 	reset_navigator()
 
-
 ################################################################################
 # Public методы ----------------------------------------------------------------
 ################################################################################
@@ -119,7 +118,7 @@ func build_navigator() -> void:
 					navigator.connect_points(_calc_cell_id(x, y), _calc_cell_id(i.x, i.y))
 
 	
-func find_pixel_path(cell1:Vector2, cell2:Vector2) -> PoolVector2Array:
+func find_pixel_path(cell1:Vector2, cell2:Vector2, global=false) -> PoolVector2Array:
 	# Если ячейки вне тайлмапа то нет смысла их проверять
 	if not _is_cell_in_map_rect_vec(cell1) or not _is_cell_in_map_rect_vec(cell2):
 		return PoolVector2Array()
@@ -128,7 +127,11 @@ func find_pixel_path(cell1:Vector2, cell2:Vector2) -> PoolVector2Array:
 	var idx2:int = _calc_cell_id_vec(cell2)
 	
 	if navigator.has_point(idx1) and navigator.has_point(idx2):
-		return navigator.get_point_path(idx1, idx2)
+		var path = navigator.get_point_path(idx1, idx2)
+		if global:
+			for i in range(len(path)):
+				path[i] = to_global(path[i])
+		return path
 	else:
 		return PoolVector2Array()
 
@@ -140,7 +143,7 @@ func find_map_path(cell1:Vector2, cell2:Vector2) -> PoolVector2Array:
 	return path
 
 
-func get_distance_area(cell:Vector2, distance:int) -> PoolVector2Array:
+func get_distance_area(cell:Vector2, distance:int, global=false) -> PoolVector2Array:
 	# Если вне карты то индекс посчитается неправильно
 	if not _is_cell_in_map_rect_vec(cell):
 		return PoolVector2Array()
@@ -165,7 +168,10 @@ func get_distance_area(cell:Vector2, distance:int) -> PoolVector2Array:
 	while not queue.empty():
 		
 		current = queue.pop_front()
-		area.append(navigator.get_point_position(current))
+		if not global:
+			area.append(navigator.get_point_position(current))
+		else:
+			area.append(to_global(navigator.get_point_position(current)))
 		
 		for neigh in navigator.get_point_connections(current):
 			new_distance = distances[current] + 1
@@ -181,7 +187,16 @@ func get_distance_area(cell:Vector2, distance:int) -> PoolVector2Array:
 					queue.append(neigh)
 	
 	return area
-
+	
+	
+func get_map_distance_area(cell:Vector2, distance:int):
+	var area = get_distance_area(cell, distance)
+	var res:PoolVector2Array = PoolVector2Array()
+	for i in area:
+		res.append(world_to_map(i))
+		
+	return res
+	
 
 func get_cell_center_local(cell:Vector2) -> Vector2:
 	return map_to_world(cell)+cell_size/2
@@ -190,6 +205,14 @@ func get_cell_center_local(cell:Vector2) -> Vector2:
 func get_cell_center_global(cell:Vector2) -> Vector2:
 	return to_global(get_cell_center_local(cell))
 	
+
+func global_world_to_map(world:Vector2):
+	return world_to_map(to_local(world))
+
+
+func global_map_to_world(map:Vector2):
+	return to_global(map_to_world(map))
+
 
 func get_cell_neighbors(cell:Vector2) -> Array:
 	match cell_half_offset:
@@ -214,7 +237,7 @@ func get_map_distance(cell1:Vector2, cell2:Vector2) -> int:
 			return 0
 
 
-func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, accuracity:int=0) -> Vector2:
+func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, global=false, accuracity:int=0) -> Vector2:
 	var pixel1 = get_cell_center_local(cell1)
 	var pixel2 = get_cell_center_local(cell2)
 	if cell1 == cell2:
@@ -251,12 +274,12 @@ func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, accuracity:int=0) -
 				else:
 					left_bound = mid # перешли пересечение, смещаемся веперед
 					
-			return mid
+			return to_global(mid) if global else mid
 			
 		weight += step
 		lerp_point += offset * step
 	# Не встретили ни одного препятствия
-	return pixel2
+	return to_global(pixel2) if global else pixel2
 
 
 func is_cells_visible(cell1:Vector2, cell2:Vector2):

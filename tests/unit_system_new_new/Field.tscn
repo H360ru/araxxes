@@ -1,36 +1,38 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://tests/hex_grid/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://modules/navigation_grid.gd" type="Script" id=2]
 [ext_resource path="res://modules/UnitSystem/units_group.gd" type="Script" id=3]
 [ext_resource path="res://modules/UnitSystem/player.gd" type="Script" id=4]
-[ext_resource path="res://tests/hex_grid/tiles/WWT-01.png" type="Texture" id=5]
 
 [sub_resource type="GDScript" id=1]
-script/source = "extends Sprite
-
-onready var grid = $\"../\"
-
-func _process(delta):
-	position = grid.map_to_world(grid.world_to_map(grid.get_local_mouse_position()))
-"
-
-[sub_resource type="GDScript" id=4]
 script/source = "extends Node2D
 
-onready var pl = $\"../\"
+export(NodePath) var grid_path
+export(NodePath) var player_path
+export(NodePath) var units_path
+export(NodePath) var control_path
 
-func _draw():
-	if pl != null and pl.unit != null:
-		if pl._unit_path.get_point_count() > 0:
-			draw_polyline(pl._unit_path.get_baked_points(), Color.red, 2.0, true)
-			
-		draw_circle(pl.unit.global_position - global_position, 20.0, Color(1.0, 0.0, 0.0, 0.3))
-		
-		
+onready var grid = get_node_or_null(grid_path)
+onready var player = get_node_or_null(player_path)
+onready var units = get_node_or_null(units_path)
+onready var control = get_node_or_null(control_path)
 
 func _process(delta):
 	update()
+	
+func _draw():
+	if player != null and player.unit != null:
+		draw_circle(player.unit.global_position-global_position, 25.0, Color(0.0, 1.0, 0.0, 0.3))
+		
+	match control.state:
+		control.States.READY:
+			if player.get_unit_path_point_count() > 0:
+				draw_polyline(player.get_baked_path_points(), Color.green, 2.0, true)
+			for i in control.move_area:
+				draw_circle(grid.get_cell_center_global(i), 10.0, Color(0.0, 1.0, 0.0, 0.3))
+		control.States.TARGETING:
+			draw_line(player.unit.global_position-global_position, player.get_global_aim(), Color.red, 2.0, true)
 "
 
 [sub_resource type="GDScript" id=2]
@@ -50,6 +52,8 @@ enum States{
 
 var state:int
 
+var move_area:PoolVector2Array = PoolVector2Array()
+
 func SReady():
 	state = States.READY
 	
@@ -63,18 +67,20 @@ func _ready():
 	SReady()
 
 func _process(delta):
-	var mouse_cell = grid.world_to_map(grid.get_local_mouse_position())
+	var mouse_cell = grid.global_world_to_map(grid.get_global_mouse_position())
 	match state:
 		States.READY:
 			if Input.is_action_just_pressed(\"mouse_left\"):
 				var unit = units.get_unit_on_cell(mouse_cell)
 				if unit:
 					player.unit = unit
+					move_area = grid.get_map_distance_area(player.unit.map_position, player.unit.move_remains)
 				elif player.unit != null:
-					player.clear_unit_path()
-					var path = grid.find_pixel_path(player.unit.map_position, mouse_cell)
-					for i in path:
-						player.add_unit_path_point(i)
+					if mouse_cell in move_area:
+						player.clear_unit_path()
+						var path = grid.find_pixel_path(player.unit.map_position, mouse_cell, true)
+						for i in path:
+							player.add_unit_path_point(i)
 				
 			if Input.is_action_just_pressed(\"mouse_right\"):
 				STargeting()
@@ -82,11 +88,12 @@ func _process(delta):
 			if Input.is_action_just_pressed(\"ui_select\"):
 				if player.unit != null:
 					player.go_path()
+					player.unit.deduct_move(max(player.get_unit_path_point_count()-1, 0))
 					SWaitPlayer()
 					
 		States.TARGETING:
-			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell)
-			player.aim_to_point(p+grid.position)
+			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell, true, 5)
+			player.aim_to_point(p)
 			
 			# test only #######
 			player.unit.sprite.direct_by_rad((p-player.unit.global_position).angle())
@@ -98,9 +105,11 @@ func _process(delta):
 
 func _on_Player_move_finished():
 	SReady()
+	print(player.unit.move_remains)
+	move_area = grid.get_map_distance_area(player.unit.map_position, player.unit.move_remains)
 
 func _on_Player_unit_attacked():
-	units.damage_unit_at_cell(grid.world_to_map(player.get_global_aim()), player.unit.weapon.damage)
+	units.damage_unit_at_cell(grid.world_to_map(player.get_global_aim()-grid.global_position), player.unit.weapon.damage)
 	SReady()
 
 func _on_Field_ready():
@@ -150,6 +159,7 @@ func _process(delta):
 [node name="Field" type="Node"]
 
 [node name="Grid" type="TileMap" parent="."]
+position = Vector2( 94, 87 )
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 82, 94 )
 cell_half_offset = 1
@@ -160,19 +170,16 @@ tile_data = PoolIntArray( 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 0, 
 script = ExtResource( 2 )
 obstacles_ids = PoolIntArray( 8 )
 
-[node name="Sprite" type="Sprite" parent="Grid"]
-modulate = Color( 0, 0.321569, 1, 0.337255 )
-texture = ExtResource( 5 )
-centered = false
-offset = Vector2( -23, -16 )
-script = SubResource( 1 )
-
 [node name="Player" type="Node" parent="."]
 script = ExtResource( 4 )
 grid_node_path = NodePath("../Grid")
 
-[node name="Canvas" type="Node2D" parent="Player"]
-script = SubResource( 4 )
+[node name="Drawer" type="Node2D" parent="."]
+script = SubResource( 1 )
+grid_path = NodePath("../Grid")
+player_path = NodePath("../Player")
+units_path = NodePath("../Units")
+control_path = NodePath("../Control")
 
 [node name="Control" type="Node" parent="."]
 script = SubResource( 2 )

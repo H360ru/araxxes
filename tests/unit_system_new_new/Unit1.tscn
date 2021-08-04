@@ -41,6 +41,7 @@ func shoot_to_global(point:Vector2):
 	_shoot_tween.start()
 	
 	yield(_shoot_tween, \"tween_all_completed\")
+	
 	bul.queue_free()
 	emit_signal(\"attacked\")
 
@@ -49,6 +50,8 @@ func _on_MoveTween_tween_step(object, key, elapsed, value):
 
 func _on_MoveTween_tween_completed(object, key):
 	if object == _explorer:
+		global_position = _explorer.position
+		_move_tween.stop_all()
 		_to_idle()
 		emit_signal(\"move_finished\")
 
@@ -146,6 +149,8 @@ tracks/2/keys = {
 script = SubResource( 1 )
 weapon = ExtResource( 3 )
 max_health = 11
+move_distance = 5
+speed = 300.0
 
 [node name="Path" type="Path2D" parent="."]
 curve = SubResource( 2 )

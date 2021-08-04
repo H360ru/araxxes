@@ -18,6 +18,7 @@ func set_unit(value:Unit):
 var _unit_path:Curve2D = Curve2D.new()
 var _unit_target:Vector2 = Vector2()
 
+
 func add_unit_path_point(point:Vector2):
 	if _unit_path == null:
 		return
@@ -49,6 +50,10 @@ func add_unit_path_point(point:Vector2):
 			_unit_path.set_point_out(mid_idx, normal*t)
 	
 	
+func get_baked_path_points():
+	return _unit_path.get_baked_points()
+	
+	
 func clear_unit_path():
 	_unit_path.clear_points()
 	
@@ -61,9 +66,8 @@ func go_path():
 	
 	yield(unit, "move_finished")
 	
-	if _grid_node and _unit_path.get_point_count() > 0:
-		unit.map_position = _grid_node.world_to_map(_unit_path.get_point_position(_unit_path.get_point_count()-1))
-		
+	unit.map_position = _grid_node.global_world_to_map(unit.global_position)
+	
 	clear_unit_path()
 	emit_signal("move_finished")
 
