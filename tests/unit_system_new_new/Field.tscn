@@ -56,6 +56,8 @@ var move_area:PoolVector2Array = PoolVector2Array()
 
 func SReady():
 	state = States.READY
+	if player != null and player.unit != null:
+		move_area = grid.get_map_distance_area(player.unit.map_position, player.unit.move_remains, units.get_surrounding_units_cells(player.unit))
 	
 func SWaitPlayer():
 	state = States.WAIT_PLAYER
@@ -74,11 +76,12 @@ func _process(delta):
 				var unit = units.get_unit_on_cell(mouse_cell)
 				if unit:
 					player.unit = unit
-					move_area = grid.get_map_distance_area(player.unit.map_position, player.unit.move_remains)
+					move_area = grid.get_map_distance_area(player.unit.map_position, player.unit.move_remains, units.get_surrounding_units_cells(player.unit))
+					
 				elif player.unit != null:
 					if mouse_cell in move_area:
 						player.clear_unit_path()
-						var path = grid.find_pixel_path(player.unit.map_position, mouse_cell, true)
+						var path = grid.find_pixel_path(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), true)
 						for i in path:
 							player.add_unit_path_point(i)
 				
@@ -86,13 +89,13 @@ func _process(delta):
 				STargeting()
 				
 			if Input.is_action_just_pressed(\"ui_select\"):
-				if player.unit != null:
+				if player.unit != null and player.can_move():
 					player.go_path()
 					player.unit.deduct_move(max(player.get_unit_path_point_count()-1, 0))
 					SWaitPlayer()
 					
 		States.TARGETING:
-			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell, true, 5)
+			var p = grid.get_cell_center_global(grid.get_map_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit)))
 			player.aim_to_point(p)
 			
 			# test only #######
@@ -106,15 +109,16 @@ func _process(delta):
 func _on_Player_move_finished():
 	SReady()
 	print(player.unit.move_remains)
-	move_area = grid.get_map_distance_area(player.unit.map_position, player.unit.move_remains)
+	
 
 func _on_Player_unit_attacked():
-	units.damage_unit_at_cell(grid.world_to_map(player.get_global_aim()-grid.global_position), player.unit.weapon.damage)
+	units.damage_unit_at_cell(grid.global_world_to_map(player.get_global_aim()), player.unit.weapon.damage)
 	SReady()
 
 func _on_Field_ready():
 	units.create_unit(robot, Vector2(3, 3))
 	units.create_unit(robot, Vector2(8, 4))
+	units.create_unit(robot, Vector2(4, 7))
 
 func _on_Units_unit_damaged(unit):
 	print(unit.health)
@@ -159,7 +163,7 @@ func _process(delta):
 [node name="Field" type="Node"]
 
 [node name="Grid" type="TileMap" parent="."]
-position = Vector2( 94, 87 )
+position = Vector2( -318.725, -116.188 )
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 82, 94 )
 cell_half_offset = 1

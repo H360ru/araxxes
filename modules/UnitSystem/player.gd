@@ -19,6 +19,10 @@ var _unit_path:Curve2D = Curve2D.new()
 var _unit_target:Vector2 = Vector2()
 
 
+func can_move():
+	return _unit_path.get_point_count() > 0
+
+
 func add_unit_path_point(point:Vector2):
 	if _unit_path == null:
 		return

@@ -58,6 +58,14 @@ func damage_unit_at_cell(cell:Vector2, damage:int):
 	if unit != null:
 		unit.damage(damage)
 	
+func get_surrounding_units_cells(unit:Unit):
+	var res:PoolVector2Array = PoolVector2Array()
+	for i in get_all_units():
+		if i != unit:
+			res.append(i.map_position)
+			
+	return res
+	
 func _on_unit_damaged(unit:Unit):
 	emit_signal("unit_damaged", unit)
 	
