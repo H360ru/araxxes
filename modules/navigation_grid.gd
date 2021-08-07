@@ -237,8 +237,12 @@ func get_cell_neighbors(cell:Vector2) -> Array:
 			return _get_cell_neighs_y(cell)
 		HALF_OFFSET_NEGATIVE_Y:
 			return _get_cell_neighs_neg_y(cell)
+		HALF_OFFSET_X:
+			return _get_cell_neighs_x(cell)
+		HALF_OFFSET_NEGATIVE_X:
+			return _get_cell_neighs_neg_x(cell)
 		_:
-			printerr("No support")
+			printerr("No neighbors support for ", cell_half_offset, " offset")
 			return []
 
 
@@ -249,6 +253,10 @@ func get_map_distance(cell1:Vector2, cell2:Vector2) -> int:
 			return _get_dist_neg_y(off)
 		HALF_OFFSET_Y:
 			return _get_dist_y(off)
+		HALF_OFFSET_X:
+			return _get_dist_x(off)
+		HALF_OFFSET_NEGATIVE_X:
+			return _get_dist_neg_x(off)
 		_:
 			printerr("No distance support for ", cell_half_offset, " offset")
 			return 0
@@ -263,7 +271,7 @@ func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obstacles
 	var angle = offset.abs().angle() # Нужна положительная тригонометрия
 	# Выведено из правильного треугольника, образуемого тремя соседними точками
 	var a = abs(PI/3 - angle) if angle > PI/6 else angle
-	# cell_size.x/cos(a) - расстояние до следующей ячейки
+	# cell_size.x/cos(a) - длина вектора до соединяющей две ячейки линии по направлению нужного
 	var step = cell_size.x/cos(a) / offset.length()
 	
 	var lerp_pixel = pixel1
@@ -306,7 +314,7 @@ func get_map_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obsta
 
 
 func is_cells_visible(cell1:Vector2, cell2:Vector2):
-	return world_to_map(get_obstacle_intersection(cell1, cell2)) == cell2
+	return get_map_obstacle_intersection(cell1, cell2) == cell2
 
 
 func add_cell_flag(cell:Vector2, flag:int) -> void:
@@ -374,19 +382,59 @@ func _get_dist_y(off):
 	var y = off.y - (x - abs(x%2))/2
 	var z = -x-y
 	return (abs(x) + abs(y) + abs(z)) / 2
+	
+func _get_dist_x(off):
+	var y = off.y as int
+	var x = off.x - (y-abs(y%2))/2
+	var z = -x-y
+	return int(abs(x) + abs(y) + abs(z))/2
+	
+func _get_dist_neg_x(off):
+	var y = off.y as int
+	var x = off.x - (y+abs(y%2))/2
+	var z = -x-y
+	return int(abs(x) + abs(y) + abs(z))/2
 
 func _get_three_left_top_neighbors(x:int, y:int) -> Array:
-	# Возвращает двух левых и верхнего соседей
-	# Пока работает только для смещений по Y
+	match cell_half_offset:
+		HALF_OFFSET_NEGATIVE_X, HALF_OFFSET_X:
+			return _get_three_left_top_neighbors_x_neg_x(x, y)
+		HALF_OFFSET_NEGATIVE_Y, HALF_OFFSET_Y:
+			return _get_three_left_top_neighbors_y_neg_y(x, y)
+		_:
+			printerr("No neighbors support for ", cell_half_offset, " offset")
+			return []
+
+func _get_three_left_top_neighbors_x_neg_x(x:int, y:int) -> Array:
+	var res:Array
+	
+	var offset = 0 if cell_half_offset == HALF_OFFSET_X else 1
+	
+	var type = abs(y%2)==offset
+	
+	if type:
+		res = [
+			Vector2(x-1, y),
+			Vector2(x-1, y-1),
+			Vector2(x, y-1)
+		]
+	else:
+		res = [
+			Vector2(x-1, y),
+			Vector2(x, y-1),
+			Vector2(x+1, y-1)
+		]
+	
+	return res
+
+func _get_three_left_top_neighbors_y_neg_y(x:int, y:int) -> Array:
+	# Возвращает двух левых и верхнего соседей для Y и Neg Y смещений
 	var res:Array
 	var parity:int
 	if cell_half_offset == HALF_OFFSET_NEGATIVE_Y:
 		parity = 1
 	elif cell_half_offset == HALF_OFFSET_Y:
 		parity = -1
-	else:
-		printerr("No neighbors support for ", cell_half_offset, " offset")
-		return []
 		
 	var y_offset:int = parity*(1 - 2*(int(abs(x))%2))
 	
@@ -425,6 +473,44 @@ func _get_cell_neighs_y(cell:Vector2) -> Array:
 	return res
 	
 
+func _get_cell_neighs_x(cell:Vector2):
+	var res:Array
+	
+	var x = cell.x as int
+	var y = cell.y as int
+	
+	var parity = y%2
+	
+	res = [
+		cell + Vector2(parity-1, -1),
+		cell + Vector2(-1, 0),
+		cell + Vector2(parity-1, 1),
+		cell + Vector2(parity, -1),
+		cell + Vector2(1, 0),
+		cell + Vector2(parity, 1)
+	]
+	
+	return res
+	
+func _get_cell_neighs_neg_x(cell:Vector2):
+	var res:Array
+	
+	var x = cell.x as int
+	var y = cell.y as int
+	
+	var parity = y%2
+	
+	res = [
+		cell + Vector2(-1, 0),
+		cell + Vector2(-parity, -1),
+		cell + Vector2(-parity, 1),
+		cell + Vector2(1-parity, -1),
+		cell + Vector2(1, 0),
+		cell + Vector2(1-parity, 1)
+	]
+	
+	return res
+
 func _disable_points(pts:PoolVector2Array):
 	var id:int
 	for i in pts:
@@ -447,17 +533,13 @@ func _enable_points(pts:PoolVector2Array):
 	
 func  _is_cell_in_map_rect_vec(cell:Vector2) -> bool:
 	# Находится ли клетка внутри тайлмапа
-	var is_x:bool = (cell.x >= _navigator_used_rect.position.x and 
-		cell.x < _navigator_used_rect.position.x + _navigator_used_rect.size.x)
-	var is_y:bool = (cell.y >= _navigator_used_rect.position.y and
-		cell.y < _navigator_used_rect.position.y + _navigator_used_rect.size.y)
-		
-	return is_x and is_y
-	
+	return _navigator_used_rect.has_point(cell)
+
+
 func _is_cell_in_map_rect(x:int, y:int) -> bool:
 	return _is_cell_in_map_rect_vec(Vector2(x, y))
-	
-	
+
+
 func _calc_cell_id(x:int, y:int) -> int:
 	var x_id_component:int = x + abs(_navigator_used_rect.position.x)
 	var y_id_component:int = (y + abs(_navigator_used_rect.position.y))*_navigator_used_rect.size.x
