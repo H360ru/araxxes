@@ -65,6 +65,11 @@ func clear_unit_path():
 func get_unit_path_point_count():
 	return _unit_path.get_point_count()
 	
+func clear_settings():
+	_unit_path.clear_points()
+	_unit_target = Vector2()
+	unit = null
+	
 func go_path():
 	unit.move_along_path(_unit_path)
 	

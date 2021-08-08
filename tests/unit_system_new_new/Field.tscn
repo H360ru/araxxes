@@ -25,6 +25,12 @@ func _draw():
 	if player != null and player.unit != null:
 		draw_circle(player.unit.global_position-global_position, 25.0, Color(0.0, 1.0, 0.0, 0.3))
 		
+	for i in units.get_occupied_cells_by_group(control.player_group):
+		draw_circle(to_local(grid.get_cell_center_global(i)), 15.0, Color.green)
+		
+	for i in units.get_occupied_cells_by_group(control.enemy_group):
+		draw_circle(to_local(grid.get_cell_center_global(i)), 15.0, Color.red)
+		
 	match control.state:
 		control.States.READY:
 			if player.get_unit_path_point_count() > 0:
@@ -44,14 +50,18 @@ onready var units:UnitsGroup = $\"../Units\"
 onready var grid:NavigationGrid = $\"../Grid\"
 onready var player:Player = $\"../Player\"
 
+const player_group = \"team\"
+const enemy_group = \"enemies\"
+
 enum States{
 	WAIT_PLAYER,
 	READY,
-	TARGETING
+	TARGETING,
+	
 }
 
 var state:int
-
+var current_group = player_group
 var move_area:PoolVector2Array = PoolVector2Array()
 
 func SReady():
@@ -74,7 +84,7 @@ func _process(delta):
 		States.READY:
 			if Input.is_action_just_pressed(\"mouse_left\"):
 				var unit = units.get_unit_on_cell(mouse_cell)
-				if unit:
+				if unit and unit.is_in_group(current_group):
 					player.unit = unit
 					move_area = grid.get_map_distance_area(player.unit.map_position, player.unit.move_remains, units.get_surrounding_units_cells(player.unit))
 					
@@ -93,7 +103,12 @@ func _process(delta):
 					player.go_path()
 					player.unit.deduct_move(max(player.get_unit_path_point_count()-1, 0))
 					SWaitPlayer()
-					
+			
+			if Input.is_action_just_pressed(\"ui_focus_next\"):
+				current_group = player_group if current_group == enemy_group else enemy_group
+				player.clear_settings()
+				move_area = PoolVector2Array()
+
 		States.TARGETING:
 			var p = grid.get_cell_center_global(grid.get_map_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit)))
 			player.aim_to_point(p)
@@ -116,9 +131,9 @@ func _on_Player_unit_attacked():
 	SReady()
 
 func _on_Field_ready():
-	units.create_unit(robot, Vector2(3, 3))
-	units.create_unit(robot, Vector2(8, 4))
-	units.create_unit(robot, Vector2(4, 7))
+	units.create_unit(robot, Vector2(3, 3), player_group)
+	units.create_unit(robot, Vector2(8, 4), player_group)
+	units.create_unit(robot, Vector2(4, 7), enemy_group)
 
 func _on_Units_unit_damaged(unit):
 	print(unit.health)

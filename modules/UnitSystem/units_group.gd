@@ -11,7 +11,7 @@ export(NodePath) var navigation_grid_path
 
 onready var _grid:NavigationGrid = get_node_or_null(navigation_grid_path)
 
-func create_unit(unit:PackedScene, cell:Vector2):
+func create_unit(unit:PackedScene, cell:Vector2, group:String=""):
 	if _grid == null:
 		printerr("Can't create unit without NavigationGrid instance")
 		return
@@ -25,11 +25,15 @@ func create_unit(unit:PackedScene, cell:Vector2):
 	
 	add_child(inst)
 	
+	if group != "":
+		inst.add_to_group(group)
+	
 	emit_signal("unit_created")
 	
 func destroy_unit(unit:Unit):
 	if unit.is_connected("damaged", self, "_on_unit_damaged"):
 		unit.disconnect("damaged", self, "_on_unit_damaged")
+		
 	if unit.is_connected("out_of_health", self, "_on_unit_out_of_health"):
 		unit.disconnect("out_of_health", self, "_on_unit_out_of_health")
 		
@@ -40,11 +44,21 @@ func destroy_unit(unit:Unit):
 func get_all_units() -> Array:
 	return get_children()
 	
+func get_units_in_group(group:String):
+	return get_tree().get_nodes_in_group(group)
+	
 func get_occupied_cells() -> PoolVector2Array:
 	var res:PoolVector2Array = PoolVector2Array()
 	for i in get_all_units():
 		res.append(i.map_position)
 		
+	return res
+	
+func get_occupied_cells_by_group(group:String):
+	var res:PoolVector2Array = PoolVector2Array()
+	for i in get_units_in_group(group):
+		res.append(i.map_position)
+	
 	return res
 	
 func get_unit_on_cell(cell:Vector2) -> Unit:
