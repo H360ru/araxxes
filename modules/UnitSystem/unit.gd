@@ -8,8 +8,10 @@ export(int, 1, 10_000) var move_distance
 
 signal move_finished
 signal attacked
+
 signal out_of_health
 signal out_of_move
+
 signal damaged
 signal move_deducted
 
@@ -18,9 +20,20 @@ var map_position:Vector2
 var health:int
 var move_remains:int
 
+var active:bool = true
+
 func _ready():
 	health = max_health
 	move_remains = move_distance
+
+func is_active():
+	return active
+
+func disable():
+	active = false
+	
+func enable():
+	active = true
 
 func move_along_path(path:Curve2D):
 	emit_signal("move_finished")

@@ -25,11 +25,11 @@ func _draw():
 	if player != null and player.unit != null:
 		draw_circle(player.unit.global_position-global_position, 25.0, Color(0.0, 1.0, 0.0, 0.3))
 		
-	for i in units.get_occupied_cells_by_group(control.player_group):
-		draw_circle(to_local(grid.get_cell_center_global(i)), 15.0, Color.green)
+	for i in units.get_units_in_group(control.player_group):
+		draw_circle(to_local(grid.get_cell_center_global(i.map_position)), 15.0, Color.green if i.is_active() else Color.black)
 		
-	for i in units.get_occupied_cells_by_group(control.enemy_group):
-		draw_circle(to_local(grid.get_cell_center_global(i)), 15.0, Color.red)
+	for i in units.get_units_in_group(control.enemy_group):
+		draw_circle(to_local(grid.get_cell_center_global(i.map_position)), 15.0, Color.red if i.is_active() else Color.black)
 		
 	match control.state:
 		control.States.READY:
@@ -84,7 +84,7 @@ func _process(delta):
 		States.READY:
 			if Input.is_action_just_pressed(\"mouse_left\"):
 				var unit = units.get_unit_on_cell(mouse_cell)
-				if unit and unit.is_in_group(current_group):
+				if unit and unit.is_in_group(current_group) and unit.is_active():
 					player.unit = unit
 					move_area = grid.get_map_distance_area(player.unit.map_position, player.unit.move_remains, units.get_surrounding_units_cells(player.unit))
 					
@@ -97,7 +97,15 @@ func _process(delta):
 				
 			if Input.is_action_just_pressed(\"mouse_right\"):
 				STargeting()
+			
+			if Input.is_action_just_pressed(\"ui_left\"):
+				player.unit.disable()
+				player.clear_settings()
 				
+			if Input.is_action_just_pressed(\"ui_right\"):
+				for i in units.get_all_units():
+					i.enable()
+			
 			if Input.is_action_just_pressed(\"ui_select\"):
 				if player.unit != null and player.can_move():
 					player.go_path()
