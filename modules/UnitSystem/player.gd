@@ -44,7 +44,7 @@ func add_unit_path_point(point:Vector2):
 		
 		var normal = (n1+n2).tangent().normalized()
 		
-		var t = pow(min((left-mid).length(), (right-mid).length()), 1/1.5)
+		var t = min((left-mid).length(), (right-mid).length()) * 0.2
 		
 		if (mid+normal-right).length() > (mid-normal-right).length():
 			_unit_path.set_point_in(mid_idx, normal*t)

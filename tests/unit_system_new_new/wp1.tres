@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource( 1 )
 damage = 5
+shoot_action_cost = 3

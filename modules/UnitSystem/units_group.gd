@@ -2,10 +2,15 @@ extends Node2D
 
 class_name UnitsGroup
 
-signal unit_damaged(unit)
-signal unit_deleted(unit)
+
+signal unit_destroyed(unit)
 signal unit_created(unit)
+
+signal unit_damaged(unit, by)
 signal unit_out_of_health(unit)
+
+signal unit_acted(unit, by)
+signal unit_exhausted(unit)
 
 export(NodePath) var navigation_grid_path
 
@@ -17,11 +22,14 @@ func create_unit(unit:PackedScene, cell:Vector2, group:String=""):
 		return
 		
 	var inst:Unit = unit.instance() as Unit
+	
 	inst.map_position = cell
 	inst.global_position = _grid.get_cell_center_global(cell)
 	
 	inst.connect("damaged", self, "_on_unit_damaged", [inst])
 	inst.connect("out_of_health", self, "_on_unit_out_of_health", [inst])
+	inst.connect("exhausted", self, "_on_unit_exhausted", [inst])
+	inst.connect("acted", self, "_on_unit_acted", [inst])
 	
 	add_child(inst)
 	
@@ -31,15 +39,9 @@ func create_unit(unit:PackedScene, cell:Vector2, group:String=""):
 	emit_signal("unit_created")
 	
 func destroy_unit(unit:Unit):
-	if unit.is_connected("damaged", self, "_on_unit_damaged"):
-		unit.disconnect("damaged", self, "_on_unit_damaged")
-		
-	if unit.is_connected("out_of_health", self, "_on_unit_out_of_health"):
-		unit.disconnect("out_of_health", self, "_on_unit_out_of_health")
-		
 	unit.queue_free()
 	
-	emit_signal("unit_deleted")
+	emit_signal("unit_destroyed")
 	
 func get_all_units() -> Array:
 	return get_children()
@@ -80,9 +82,17 @@ func get_surrounding_units_cells(unit:Unit):
 			
 	return res
 	
-func _on_unit_damaged(unit:Unit):
-	emit_signal("unit_damaged", unit)
+	
+func _on_unit_damaged(by:int, unit:Unit):
+	emit_signal("unit_damaged", unit, by)
 	
 func _on_unit_out_of_health(unit:Unit):
 	emit_signal("unit_out_of_health", unit)
+	
+	
+func _on_unit_acted(by:int, unit:Unit):
+	emit_signal("unit_acted", unit, by)
+	
+func _on_unit_exhausted(unit:Unit):
+	emit_signal("unit_exhausted")
 	

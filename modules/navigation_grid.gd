@@ -518,6 +518,9 @@ func _disable_points(pts:PoolVector2Array):
 			
 		id = _calc_cell_id_vec(i)
 		
+		if not navigator.has_point(id):
+			continue
+		
 		navigator.set_point_disabled(id, true)
 		
 func _enable_points(pts:PoolVector2Array):
@@ -528,6 +531,9 @@ func _enable_points(pts:PoolVector2Array):
 			
 		id = _calc_cell_id_vec(i)
 		
+		if not navigator.has_point(id):
+			continue
+			
 		navigator.set_point_disabled(id, false)
 	
 func _is_cell_obstacle(cell):
