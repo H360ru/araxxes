@@ -265,34 +265,36 @@ func get_map_distance(cell1:Vector2, cell2:Vector2) -> int:
 func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obstacles:PoolVector2Array=[], global=false, accuracity:int=0) -> Vector2:
 	var pixel1 = get_cell_center_local(cell1)
 	var pixel2 = get_cell_center_local(cell2)
+	
 	if cell1 == cell2:
 		return pixel1
-	var offset = pixel2 - pixel1
-	var angle = offset.abs().angle() # Нужна положительная тригонометрия
-	# Выведено из правильного треугольника, образуемого тремя соседними точками
-	var a = abs(PI/3 - angle) if angle > PI/6 else angle
-	# cell_size.x/cos(a) - длина вектора до соединяющей две ячейки линии по направлению нужного
-	var step = cell_size.x/cos(a) / offset.length()
+		
+	if _is_cell_obstacle(cell1) or cell1 in temporary_obstacles:
+		return pixel1
 	
 	var lerp_pixel = pixel1
 	var lerp_cell = world_to_map(lerp_pixel)
-	var weight = -step/3 # Нужно небольшое смещение что бы 100% захватить cell2
 	
-	while weight < 1:
+	var dist = get_map_distance(cell1, cell2)
+	
+	for i in range(dist+1):
+		
+		lerp_pixel = lerp(pixel1, pixel2, float(i)/dist)
 		lerp_cell = world_to_map(lerp_pixel)
-		if get_cellv(lerp_cell) in obstacles_ids or lerp_cell in temporary_obstacles:
-			# Если < 0, значит приращений не было и это первая точка
-			if weight < 0 or accuracity == 0: 
+		
+		if _is_cell_obstacle(lerp_cell) or lerp_cell in temporary_obstacles:
+			
+			if accuracity == 0 or i == 0: 
 				return to_global(lerp_pixel) if global else lerp_pixel
 			
 			var obst = Rect2(map_to_world(world_to_map(lerp_pixel)), cell_size)
 			
-			var left_bound:Vector2 = lerp_pixel - offset*step
+			var left_bound:Vector2 = lerp(pixel1, pixel2, float(i-1)/dist)
 			var right_bound:Vector2 = lerp_pixel
 			var mid:Vector2
 			# Если наткнулись на препятствие, значит мы перескачили пересечение с ним
 			# поэтому возвращаемся назад на половину и уточняем
-			for i in range(accuracity):
+			for j in range(accuracity):
 				mid = left_bound + (right_bound - left_bound)/2
 				# Если точка внутри препятствия
 				if obst.has_point(mid):
@@ -301,9 +303,6 @@ func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obstacles
 					left_bound = mid # перешли пересечение, смещаемся веперед
 					
 			return to_global(mid) if global else mid
-			
-		weight += step
-		lerp_pixel += offset * step
 	# Не встретили ни одного препятствия
 	return to_global(pixel2) if global else pixel2
 
@@ -385,13 +384,13 @@ func _get_dist_y(off):
 	
 func _get_dist_x(off):
 	var y = off.y as int
-	var x = off.x - (y-abs(y%2))/2
+	var x = int(off.x) - (y + abs(y%2))/2
 	var z = -x-y
 	return int(abs(x) + abs(y) + abs(z))/2
 	
 func _get_dist_neg_x(off):
 	var y = off.y as int
-	var x = off.x - (y+abs(y%2))/2
+	var x = int(off.x) - (y - abs(y%2))/2
 	var z = -x-y
 	return int(abs(x) + abs(y) + abs(z))/2
 
@@ -530,6 +529,10 @@ func _enable_points(pts:PoolVector2Array):
 		id = _calc_cell_id_vec(i)
 		
 		navigator.set_point_disabled(id, false)
+	
+func _is_cell_obstacle(cell):
+	var id = get_cellv(cell)
+	return id in obstacles_ids
 	
 func  _is_cell_in_map_rect_vec(cell:Vector2) -> bool:
 	# Находится ли клетка внутри тайлмапа
