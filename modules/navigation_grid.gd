@@ -249,14 +249,22 @@ func get_cell_neighbors(cell:Vector2) -> Array:
 func get_map_distance(cell1:Vector2, cell2:Vector2) -> int:
 	var off = cell2-cell1
 	match cell_half_offset:
-		HALF_OFFSET_NEGATIVE_Y:
-			return _get_dist_neg_y(off)
-		HALF_OFFSET_Y:
-			return _get_dist_y(off)
-		HALF_OFFSET_X:
-			return _get_dist_x(off)
-		HALF_OFFSET_NEGATIVE_X:
-			return _get_dist_neg_x(off)
+		HALF_OFFSET_NEGATIVE_Y, HALF_OFFSET_Y:
+			var x = cell1.x as int
+			var offset = 1 if cell_half_offset == HALF_OFFSET_Y else 0
+			
+			if x%2 == offset:
+				return _get_dist_neg_y(off)
+			else:
+				return _get_dist_y(off)
+		HALF_OFFSET_X, HALF_OFFSET_NEGATIVE_X:
+			var y = cell1.y as int
+			var offset = 1 if cell_half_offset == HALF_OFFSET_X else 0
+			
+			if y%2 == offset:
+				return _get_dist_x(off)
+			else:
+				return _get_dist_neg_x(off)
 		_:
 			printerr("No distance support for ", cell_half_offset, " offset")
 			return 0
@@ -386,7 +394,7 @@ func _get_dist_x(off):
 	var y = off.y as int
 	var x = int(off.x) - (y + abs(y%2))/2
 	var z = -x-y
-	return int(abs(x) + abs(y) + abs(z))/2
+	return (abs(x) + abs(y) + abs(z)) / 2
 	
 func _get_dist_neg_x(off):
 	var y = off.y as int
@@ -475,10 +483,7 @@ func _get_cell_neighs_y(cell:Vector2) -> Array:
 func _get_cell_neighs_x(cell:Vector2):
 	var res:Array
 	
-	var x = cell.x as int
-	var y = cell.y as int
-	
-	var parity = y%2
+	var parity = int(abs(cell.y))%2
 	
 	res = [
 		cell + Vector2(parity-1, -1),
@@ -494,10 +499,7 @@ func _get_cell_neighs_x(cell:Vector2):
 func _get_cell_neighs_neg_x(cell:Vector2):
 	var res:Array
 	
-	var x = cell.x as int
-	var y = cell.y as int
-	
-	var parity = y%2
+	var parity = int(abs(cell.y))%2
 	
 	res = [
 		cell + Vector2(-1, 0),

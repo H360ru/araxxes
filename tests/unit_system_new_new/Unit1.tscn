@@ -164,12 +164,14 @@ directions = 8
 frames = 16
 counter_clock_wise = true
 zero_direction_angle = -90
-frame = 13
+direction = 1
+frame = 4
 centered = true
 offset = Vector2( 0, -23 )
 transpose = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Idle"
 anims/Idle = SubResource( 3 )
 anims/Walk = SubResource( 4 )
 

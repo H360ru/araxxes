@@ -16,7 +16,9 @@ func set_unit(value:Unit):
 
 
 var _unit_path:Curve2D = Curve2D.new()
-var _unit_target:Vector2 = Vector2()
+var _visible_global_aim:Vector2 = Vector2()
+var _aim_damage_cell:Vector2 = Vector2()
+
 
 
 func can_move():
@@ -42,8 +44,13 @@ func add_unit_path_point(point:Vector2):
 		var n1 = (left-mid).normalized()
 		var n2 = (right-mid).normalized()
 		
-		var normal = (n1+n2).tangent().normalized()
+		var normal 
 		
+		if (n1+n2).length() < 0.01: # при очень маленьких искривлениях нормаль посчитается неверно и будет дефект
+			normal = Vector2()
+		else:
+			normal = (n1+n2).tangent().normalized()
+			
 		var t = min((left-mid).length(), (right-mid).length()) * 0.2
 		
 		if (mid+normal-right).length() > (mid-normal-right).length():
@@ -65,10 +72,12 @@ func clear_unit_path():
 func get_unit_path_point_count():
 	return _unit_path.get_point_count()
 	
+	
 func clear_settings():
 	_unit_path.clear_points()
-	_unit_target = Vector2()
+	_aim_damage_cell = Vector2()
 	unit = null
+	
 	
 func go_path():
 	unit.move_along_path(_unit_path)
@@ -80,14 +89,21 @@ func go_path():
 	clear_unit_path()
 	emit_signal("move_finished")
 
-func aim_to_point(global_position:Vector2):
-	_unit_target = global_position
 
-func get_global_aim():
-	return _unit_target
+func set_visible_aim(global_position:Vector2):
+	_visible_global_aim = global_position
+
+func get_visible_aim():
+	return _visible_global_aim
+
+func aim_to_cell(cell:Vector2):
+	_aim_damage_cell = cell
+
+func get_aimed_cell():
+	return _aim_damage_cell
 
 func attack():
-	unit.shoot_to_global(_unit_target)
+	unit.shoot_to_global(_visible_global_aim)
 	
 	yield(unit, "attacked")
 	

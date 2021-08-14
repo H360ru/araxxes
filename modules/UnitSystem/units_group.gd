@@ -85,10 +85,11 @@ func get_surrounding_units_cells(unit:Unit):
 	
 func _on_unit_damaged(by:int, unit:Unit):
 	emit_signal("unit_damaged", unit, by)
+	print(unit, " damaged by ", by, " health balance ", unit.health)
 	
 func _on_unit_out_of_health(unit:Unit):
 	emit_signal("unit_out_of_health", unit)
-	
+	print(unit, " out of health")
 	
 func _on_unit_acted(by:int, unit:Unit):
 	emit_signal("unit_acted", unit, by)

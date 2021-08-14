@@ -38,7 +38,8 @@ func _draw():
 			for i in control.move_area:
 				draw_circle(grid.get_cell_center_global(i), 10.0, Color(0.0, 1.0, 0.0, 0.3))
 		control.States.TARGETING:
-			draw_line(player.unit.global_position-global_position, player.get_global_aim(), Color.red, 2.0, true)
+			draw_line(player.unit.global_position, player.get_visible_aim(), Color.red, 2.0, true)
+			draw_circle(grid.get_cell_center_global(player.get_aimed_cell()), 10.0, Color.red)
 "
 
 [sub_resource type="GDScript" id=2]
@@ -121,8 +122,13 @@ func _process(delta):
 				move_area = PoolVector2Array()
 
 		States.TARGETING:
-			var p = grid.get_cell_center_global(grid.get_map_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit)))
-			player.aim_to_point(p)
+			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), true, 5)
+			
+			var c = grid.get_map_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit))
+			
+			if grid.get_map_distance(player.unit.map_position, mouse_cell) <= player.unit.weapon.shoot_distance:
+				player.aim_to_cell(c)
+				player.set_visible_aim(p)
 			
 			# test only #######
 			player.unit.sprite.direct_by_rad((p-player.unit.global_position).angle())
@@ -131,12 +137,15 @@ func _process(delta):
 			if Input.is_action_just_pressed(\"ui_select\"):
 				player.attack()
 				SWaitPlayer()
+				
+			if Input.is_action_just_pressed(\"mouse_right\"):
+				SReady()
 
 func _on_Player_move_finished():
 	SReady()
 
 func _on_Player_unit_attacked():
-	units.damage_unit_at_cell(grid.global_world_to_map(player.get_global_aim()), player.unit.weapon.damage)
+	units.damage_unit_at_cell(player.get_aimed_cell(), player.unit.weapon.damage)
 	player.unit.act(player.unit.weapon.shoot_action_cost)
 	SReady()
 
