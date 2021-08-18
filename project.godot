@@ -24,6 +24,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/MenuManager/controls_loader.gd"
 }, {
+"base": "Reference",
+"class": "MiscFunctions",
+"language": "GDScript",
+"path": "res://modules/misc_functions.gd"
+}, {
 "base": "Node",
 "class": "MouseManager",
 "language": "GDScript",
@@ -113,6 +118,7 @@ _global_script_class_icons={
 "IsoSprite": "",
 "Lobby": "",
 "MenuTransition": "res://Assets/AcceptDialog.svg",
+"MiscFunctions": "",
 "MouseManager": "",
 "NavigationGrid": "",
 "NetRequest": "",

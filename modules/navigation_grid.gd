@@ -270,7 +270,7 @@ func get_map_distance(cell1:Vector2, cell2:Vector2) -> int:
 			return 0
 
 
-func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obstacles:PoolVector2Array=[], global=false, accuracity:int=0) -> Vector2:
+func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obstacles:PoolVector2Array=[], distance:int=-1, global=false, accuracity:int=0) -> Vector2:
 	var pixel1 = get_cell_center_local(cell1)
 	var pixel2 = get_cell_center_local(cell2)
 	
@@ -311,12 +311,15 @@ func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obstacles
 					left_bound = mid # перешли пересечение, смещаемся веперед
 					
 			return to_global(mid) if global else mid
+		
+		if distance > 0 and i >= distance:
+			return to_global(lerp_pixel) if global else lerp_pixel
 	# Не встретили ни одного препятствия
 	return to_global(pixel2) if global else pixel2
 
 
-func get_map_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obstacles:PoolVector2Array=[]):
-	var cell = world_to_map(get_obstacle_intersection(cell1, cell2, temporary_obstacles))
+func get_map_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obstacles:PoolVector2Array=[], distance:int=-1):
+	var cell = world_to_map(get_obstacle_intersection(cell1, cell2, temporary_obstacles, distance))
 	return cell
 
 

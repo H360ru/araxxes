@@ -93,6 +93,7 @@ func _on_unit_out_of_health(unit:Unit):
 	
 func _on_unit_acted(by:int, unit:Unit):
 	emit_signal("unit_acted", unit, by)
+	print(unit, " acted by ", by, " action balance ", unit.action_points)
 	
 func _on_unit_exhausted(unit:Unit):
 	emit_signal("unit_exhausted")

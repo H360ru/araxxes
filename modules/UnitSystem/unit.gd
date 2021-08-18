@@ -35,10 +35,10 @@ func disable():
 func enable():
 	active = true
 
-func move_along_path(path:Curve2D):
+func move_along_global_path(path:PoolVector2Array):
 	emit_signal("move_finished")
 
-func shoot_to_global(global_pos:Vector2):
+func attack_to_global(global_pos:Vector2):
 	emit_signal("attacked")
 
 func damage(by:int):

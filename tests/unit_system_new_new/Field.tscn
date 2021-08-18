@@ -33,13 +33,13 @@ func _draw():
 		
 	match control.state:
 		control.States.READY:
-			if player.get_unit_path_point_count() > 0:
-				draw_polyline(player.get_baked_path_points(), Color.green, 2.0, true)
+			if len(player.unit_pixel_path) > 0:
+				draw_polyline(player.unit_pixel_path, Color.green, 2.0, true)
 			for i in control.move_area:
 				draw_circle(grid.get_cell_center_global(i), 10.0, Color(0.0, 1.0, 0.0, 0.3))
 		control.States.TARGETING:
-			draw_line(player.unit.global_position, player.get_visible_aim(), Color.red, 2.0, true)
-			draw_circle(grid.get_cell_center_global(player.get_aimed_cell()), 10.0, Color.red)
+			draw_line(player.unit.global_position, player.unit_attack_aim_pixel, Color.red, 2.0, true)
+			draw_circle(grid.get_cell_center_global(player.unit_attack_target_cell), 10.0, Color.red)
 "
 
 [sub_resource type="GDScript" id=2]
@@ -91,62 +91,60 @@ func _process(delta):
 					
 				elif player.unit != null:
 					if mouse_cell in move_area:
-						player.clear_unit_path()
 						var path = grid.find_pixel_path(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), true)
-						for i in path:
-							player.add_unit_path_point(i)
+						player.prepare_move_along_path(path)
+						player.set_move_target_cell(mouse_cell)
 				
 			if Input.is_action_just_pressed(\"mouse_right\"):
-				if player.unit.can_shoot():
+				if player.unit != null and player.unit.can_shoot():
 					STargeting()
 				else:
 					print(\"Not enough action points to shoot\")
 			
 			if Input.is_action_just_pressed(\"ui_left\"):
 				player.unit.disable()
-				player.clear_settings()
+				player.unit = null
+				move_area = PoolVector2Array()
 				
 			if Input.is_action_just_pressed(\"ui_right\"):
 				for i in units.get_all_units():
 					i.enable()
 			
 			if Input.is_action_just_pressed(\"ui_select\"):
-				if player.unit != null and player.can_move():
-					player.go_path()
-					player.unit.act(max(player.get_unit_path_point_count()-1, 0))
+				if player.unit != null and player.has_path():
+					player.start_move()
 					SWaitPlayer()
 			
 			if Input.is_action_just_pressed(\"ui_focus_next\"):
 				current_group = player_group if current_group == enemy_group else enemy_group
-				player.clear_settings()
 				move_area = PoolVector2Array()
-
+				player.unit = null
+		
 		States.TARGETING:
-			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), true, 5)
+			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), player.unit.weapon.shoot_distance, true, 5)
+			var c = grid.get_map_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), player.unit.weapon.shoot_distance)
 			
-			var c = grid.get_map_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit))
-			
-			if grid.get_map_distance(player.unit.map_position, mouse_cell) <= player.unit.weapon.shoot_distance:
-				player.aim_to_cell(c)
-				player.set_visible_aim(p)
-			
-			# test only #######
-			player.unit.sprite.direct_by_rad((p-player.unit.global_position).angle())
-			###################
+			player.set_aim_cell(c)
+			player.aim_unit_to_pixel(p)
 			
 			if Input.is_action_just_pressed(\"ui_select\"):
-				player.attack()
+				player.start_attack()
 				SWaitPlayer()
 				
 			if Input.is_action_just_pressed(\"mouse_right\"):
 				SReady()
 
-func _on_Player_move_finished():
+func _on_Player_unit_move_finished():
+	player.unit.act(player.get_move_cost())
+	player.unit.map_position = player.unit_move_target_cell
+	player.unit.global_position = grid.get_cell_center_global(player.unit_move_target_cell)
+	
 	SReady()
 
 func _on_Player_unit_attacked():
-	units.damage_unit_at_cell(player.get_aimed_cell(), player.unit.weapon.damage)
-	player.unit.act(player.unit.weapon.shoot_action_cost)
+	units.damage_unit_at_cell(player.unit_attack_target_cell, player.unit.weapon.damage)
+	player.unit.act(player.get_shoot_cost())
+	
 	SReady()
 
 func _on_Field_ready():
@@ -230,6 +228,6 @@ smoothing_enabled = true
 script = SubResource( 3 )
 
 [connection signal="ready" from="." to="Control" method="_on_Field_ready"]
-[connection signal="move_finished" from="Player" to="Control" method="_on_Player_move_finished"]
 [connection signal="unit_attacked" from="Player" to="Control" method="_on_Player_unit_attacked"]
+[connection signal="unit_move_finished" from="Player" to="Control" method="_on_Player_unit_move_finished"]
 [connection signal="unit_out_of_health" from="Units" to="Control" method="_on_Units_unit_out_of_health"]

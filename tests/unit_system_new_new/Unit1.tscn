@@ -21,8 +21,8 @@ var bullet = preload(\"res://tests/unit_system_new_new/Bullet.tscn\")
 func _init():
 	map_position = Vector2(5, 4)
 
-func move_along_path(path:Curve2D):
-	_path.curve = path
+func move_along_global_path(path:PoolVector2Array):
+	_path.curve = MiscFunctions.get_curve_from_points(path)
 	
 	var t = _path.curve.get_baked_length()/speed
 	
@@ -31,7 +31,7 @@ func move_along_path(path:Curve2D):
 	
 	_to_move()
 
-func shoot_to_global(point:Vector2):
+func attack_to_global(point:Vector2):
 	var bul = bullet.instance()
 	add_child(bul)
 	var bul_speed = 500.0
@@ -150,7 +150,7 @@ script = SubResource( 1 )
 weapon = ExtResource( 3 )
 max_health = 11
 max_action_points = 10
-speed = 300.0
+speed = 200.0
 
 [node name="Path" type="Path2D" parent="."]
 curve = SubResource( 2 )
