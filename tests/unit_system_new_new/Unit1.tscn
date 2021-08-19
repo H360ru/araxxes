@@ -149,7 +149,7 @@ tracks/2/keys = {
 script = SubResource( 1 )
 weapon = ExtResource( 3 )
 max_health = 11
-max_action_points = 10
+max_action_points = 5
 speed = 200.0
 
 [node name="Path" type="Path2D" parent="."]

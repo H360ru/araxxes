@@ -69,10 +69,21 @@ func get_unit_on_cell(cell:Vector2) -> Unit:
 			return i
 	return null
 	
+func is_unit_in_group(unit:Unit, group:String):
+	return unit.is_in_group(group)
+	
 func damage_unit_at_cell(cell:Vector2, damage:int):
 	var unit:Unit = get_unit_on_cell(cell)
 	if unit != null:
 		unit.damage(damage)
+	
+func restore_points_all_units():
+	for i in get_all_units():
+		i.restore_points()
+		
+func restore_points_unit_in_group(group:String):
+	for i in get_units_in_group(group):
+		i.restore_points()
 	
 func get_surrounding_units_cells(unit:Unit):
 	var res:PoolVector2Array = PoolVector2Array()

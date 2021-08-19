@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://tests/hex_grid/tileset_horizontal.tres" type="TileSet" id=1]
 [ext_resource path="res://modules/navigation_grid.gd" type="Script" id=2]
 [ext_resource path="res://modules/UnitSystem/units_group.gd" type="Script" id=3]
 [ext_resource path="res://modules/UnitSystem/player.gd" type="Script" id=4]
+[ext_resource path="res://modules/UnitSystem/ai_script.gd" type="Script" id=5]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -13,9 +14,9 @@ export(NodePath) var player_path
 export(NodePath) var units_path
 export(NodePath) var control_path
 
-onready var grid = get_node_or_null(grid_path)
-onready var player = get_node_or_null(player_path)
-onready var units = get_node_or_null(units_path)
+onready var grid:NavigationGrid = get_node_or_null(grid_path)
+onready var player:Player = get_node_or_null(player_path)
+onready var units:UnitsGroup = get_node_or_null(units_path)
 onready var control = get_node_or_null(control_path)
 
 func _process(delta):
@@ -30,11 +31,12 @@ func _draw():
 		
 	for i in units.get_units_in_group(control.enemy_group):
 		draw_circle(to_local(grid.get_cell_center_global(i.map_position)), 15.0, Color.red if i.is_active() else Color.black)
+	
+	if len(player.unit_pixel_path) > 0:
+		draw_polyline(player.unit_pixel_path, Color.green, 2.0, true)
 		
 	match control.state:
 		control.States.READY:
-			if len(player.unit_pixel_path) > 0:
-				draw_polyline(player.unit_pixel_path, Color.green, 2.0, true)
 			for i in control.move_area:
 				draw_circle(grid.get_cell_center_global(i), 10.0, Color(0.0, 1.0, 0.0, 0.3))
 		control.States.TARGETING:
@@ -50,6 +52,7 @@ var robot:PackedScene = preload(\"res://tests/unit_system_new_new/Unit1.tscn\")
 onready var units:UnitsGroup = $\"../Units\"
 onready var grid:NavigationGrid = $\"../Grid\"
 onready var player:Player = $\"../Player\"
+onready var bot:Bot = $\"../Bot\"
 
 const player_group = \"team\"
 const enemy_group = \"enemies\"
@@ -81,6 +84,8 @@ func _ready():
 
 func _process(delta):
 	var mouse_cell = grid.global_world_to_map(grid.get_global_mouse_position())
+	if current_group != player_group:
+		return
 	match state:
 		States.READY:
 			if Input.is_action_just_pressed(\"mouse_left\"):
@@ -102,6 +107,8 @@ func _process(delta):
 					print(\"Not enough action points to shoot\")
 			
 			if Input.is_action_just_pressed(\"ui_left\"):
+				if player.unit == null:
+					return
 				player.unit.disable()
 				player.unit = null
 				move_area = PoolVector2Array()
@@ -110,19 +117,17 @@ func _process(delta):
 				for i in units.get_all_units():
 					i.enable()
 			
+			if Input.is_action_just_pressed(\"ui_focus_next\"):
+				next_turn()
+			
 			if Input.is_action_just_pressed(\"ui_select\"):
 				if player.unit != null and player.has_path():
 					player.start_move()
 					SWaitPlayer()
-			
-			if Input.is_action_just_pressed(\"ui_focus_next\"):
-				current_group = player_group if current_group == enemy_group else enemy_group
-				move_area = PoolVector2Array()
-				player.unit = null
 		
 		States.TARGETING:
-			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), player.unit.weapon.shoot_distance, true, 5)
-			var c = grid.get_map_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), player.unit.weapon.shoot_distance)
+			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), -1, true, 5)
+			var c = grid.get_map_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), -1)
 			
 			player.set_aim_cell(c)
 			player.aim_unit_to_pixel(p)
@@ -134,8 +139,20 @@ func _process(delta):
 			if Input.is_action_just_pressed(\"mouse_right\"):
 				SReady()
 
+func next_turn():
+	current_group = player_group if current_group == enemy_group else enemy_group
+	move_area = PoolVector2Array()
+	player.unit = null
+	units.restore_points_all_units()
+	if current_group == enemy_group:
+		for i in units.get_units_in_group(enemy_group):
+			bot.make_turn(i, player_group)
+			yield(bot, \"turn_made\")
+		current_group = player_group
+	
+
 func _on_Player_unit_move_finished():
-	player.unit.act(player.get_move_cost())
+	player.unit.act(player.get_path_length()-1)
 	player.unit.map_position = player.unit_move_target_cell
 	player.unit.global_position = grid.get_cell_center_global(player.unit_move_target_cell)
 	
@@ -206,6 +223,11 @@ obstacles_ids = PoolIntArray( 3, 5, 1, 15, 11, 6, 7 )
 [node name="Player" type="Node" parent="."]
 script = ExtResource( 4 )
 grid_node_path = NodePath("../Grid")
+
+[node name="Bot" type="Node" parent="."]
+script = ExtResource( 5 )
+units_node = NodePath("../Units")
+grid_node = NodePath("../Grid")
 
 [node name="Drawer" type="Node2D" parent="."]
 script = SubResource( 1 )
