@@ -2,190 +2,14 @@
 
 [ext_resource path="res://tests/hex_grid/tileset_horizontal.tres" type="TileSet" id=1]
 [ext_resource path="res://modules/navigation_grid.gd" type="Script" id=2]
-[ext_resource path="res://modules/UnitSystem/units_group.gd" type="Script" id=3]
-[ext_resource path="res://modules/UnitSystem/player.gd" type="Script" id=4]
-[ext_resource path="res://modules/UnitSystem/ai_script.gd" type="Script" id=5]
+[ext_resource path="res://modules/UnitsModule/units_group.gd" type="Script" id=3]
+[ext_resource path="res://modules/UnitsModule/player.gd" type="Script" id=4]
+[ext_resource path="res://modules/UnitsModule/ai_script.gd" type="Script" id=5]
+[ext_resource path="res://tests/unit_system_new_new/Scripts/control.gd" type="Script" id=6]
+[ext_resource path="res://tests/unit_system_new_new/Scripts/drawer.gd" type="Script" id=7]
 
 [sub_resource type="GDScript" id=1]
-script/source = "extends Node2D
-
-export(NodePath) var grid_path
-export(NodePath) var player_path
-export(NodePath) var units_path
-export(NodePath) var control_path
-
-onready var grid:NavigationGrid = get_node_or_null(grid_path)
-onready var player:Player = get_node_or_null(player_path)
-onready var units:UnitsGroup = get_node_or_null(units_path)
-onready var control = get_node_or_null(control_path)
-
-func _process(delta):
-	update()
-	
-func _draw():
-	if player != null and player.unit != null:
-		draw_circle(player.unit.global_position-global_position, 25.0, Color(0.0, 1.0, 0.0, 0.3))
-		
-	for i in units.get_units_in_group(control.player_group):
-		draw_circle(to_local(grid.get_cell_center_global(i.map_position)), 15.0, Color.green if i.is_active() else Color.black)
-		
-	for i in units.get_units_in_group(control.enemy_group):
-		draw_circle(to_local(grid.get_cell_center_global(i.map_position)), 15.0, Color.red if i.is_active() else Color.black)
-	
-	if len(player.unit_pixel_path) > 0:
-		draw_polyline(player.unit_pixel_path, Color.green, 2.0, true)
-		
-	match control.state:
-		control.States.READY:
-			for i in control.move_area:
-				draw_circle(grid.get_cell_center_global(i), 10.0, Color(0.0, 1.0, 0.0, 0.3))
-		control.States.TARGETING:
-			draw_line(player.unit.global_position, player.unit_attack_aim_pixel, Color.red, 2.0, true)
-			draw_circle(grid.get_cell_center_global(player.unit_attack_target_cell), 10.0, Color.red)
-"
-
-[sub_resource type="GDScript" id=2]
-script/source = "extends Node
-
-var robot:PackedScene = preload(\"res://tests/unit_system_new_new/Unit1.tscn\")
-
-onready var units:UnitsGroup = $\"../Units\"
-onready var grid:NavigationGrid = $\"../Grid\"
-onready var player:Player = $\"../Player\"
-onready var bot:Bot = $\"../Bot\"
-
-const player_group = \"team\"
-const enemy_group = \"enemies\"
-
-enum States{
-	WAIT_PLAYER,
-	READY,
-	TARGETING,
-	
-}
-
-var state:int
-var current_group = player_group
-var move_area:PoolVector2Array = PoolVector2Array()
-
-func SReady():
-	state = States.READY
-	if player != null and player.unit != null:
-		move_area = grid.get_map_distance_area(player.unit.map_position, player.unit.action_points, units.get_surrounding_units_cells(player.unit))
-	
-func SWaitPlayer():
-	state = States.WAIT_PLAYER
-	
-func STargeting():
-	state = States.TARGETING
-
-func _ready():
-	SReady()
-
-func _process(delta):
-	var mouse_cell = grid.global_world_to_map(grid.get_global_mouse_position())
-	if current_group != player_group:
-		return
-	match state:
-		States.READY:
-			if Input.is_action_just_pressed(\"mouse_left\"):
-				var unit = units.get_unit_on_cell(mouse_cell)
-				if unit and unit.is_in_group(current_group) and unit.is_active():
-					player.unit = unit
-					move_area = grid.get_map_distance_area(player.unit.map_position, player.unit.action_points, units.get_surrounding_units_cells(player.unit))
-					
-				elif player.unit != null:
-					if mouse_cell in move_area:
-						var path = grid.find_pixel_path(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), true)
-						player.prepare_move_along_path(path)
-						player.set_move_target_cell(mouse_cell)
-				
-			if Input.is_action_just_pressed(\"mouse_right\"):
-				if player.unit != null and player.unit.can_shoot():
-					STargeting()
-				else:
-					print(\"Not enough action points to shoot\")
-			
-			if Input.is_action_just_pressed(\"ui_left\"):
-				if player.unit == null:
-					return
-				player.unit.disable()
-				player.unit = null
-				move_area = PoolVector2Array()
-				
-			if Input.is_action_just_pressed(\"ui_right\"):
-				for i in units.get_all_units():
-					i.enable()
-			
-			if Input.is_action_just_pressed(\"ui_focus_next\"):
-				next_turn()
-			
-			if Input.is_action_just_pressed(\"ui_select\"):
-				if player.unit != null and player.has_path():
-					player.start_move()
-					SWaitPlayer()
-		
-		States.TARGETING:
-			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), -1, true, 5)
-			var c = grid.get_map_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), -1)
-			
-			player.set_aim_cell(c)
-			player.aim_unit_to_pixel(p)
-			
-			if Input.is_action_just_pressed(\"ui_select\"):
-				player.start_attack()
-				SWaitPlayer()
-				
-			if Input.is_action_just_pressed(\"mouse_right\"):
-				SReady()
-
-func next_turn():
-	current_group = player_group if current_group == enemy_group else enemy_group
-	move_area = PoolVector2Array()
-	player.unit = null
-	units.restore_points_all_units()
-	if current_group == enemy_group:
-		for i in units.get_units_in_group(enemy_group):
-			bot.make_turn(i, player_group)
-			yield(bot, \"turn_made\")
-		current_group = player_group
-	
-
-func _on_Player_unit_move_finished():
-	player.unit.act(player.get_path_length()-1)
-	player.unit.map_position = player.unit_move_target_cell
-	player.unit.global_position = grid.get_cell_center_global(player.unit_move_target_cell)
-	
-	SReady()
-
-func _on_Player_unit_attacked():
-	units.damage_unit_at_cell(player.unit_attack_target_cell, player.unit.weapon.damage)
-	player.unit.act(player.get_shoot_cost())
-	
-	SReady()
-
-func _on_Field_ready():
-	units.create_unit(robot, Vector2(3, 3), player_group)
-	units.create_unit(robot, Vector2(9, 6), player_group)
-	units.create_unit(robot, Vector2(3, 9), enemy_group)
-
-func _on_Units_unit_out_of_health(unit):
-	units.destroy_unit(unit)
-"
-
-[sub_resource type="GDScript" id=3]
 script/source = "extends Camera2D
-
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = \"text\"
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
 
 func _process(delta):
 	if Input.is_action_pressed(\"A\"):
@@ -230,14 +54,14 @@ units_node = NodePath("../Units")
 grid_node = NodePath("../Grid")
 
 [node name="Drawer" type="Node2D" parent="."]
-script = SubResource( 1 )
+script = ExtResource( 7 )
 grid_path = NodePath("../Grid")
 player_path = NodePath("../Player")
 units_path = NodePath("../Units")
 control_path = NodePath("../Control")
 
 [node name="Control" type="Node" parent="."]
-script = SubResource( 2 )
+script = ExtResource( 6 )
 
 [node name="Units" type="Node2D" parent="."]
 script = ExtResource( 3 )
@@ -247,7 +71,7 @@ navigation_grid_path = NodePath("../Grid")
 current = true
 zoom = Vector2( 2, 2 )
 smoothing_enabled = true
-script = SubResource( 3 )
+script = SubResource( 1 )
 
 [connection signal="ready" from="." to="Control" method="_on_Field_ready"]
 [connection signal="unit_attacked" from="Player" to="Control" method="_on_Player_unit_attacked"]
