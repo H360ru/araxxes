@@ -81,7 +81,6 @@ func clear() -> void:
 	.clear()
 	reset_navigator()
 
-
 ################################################################################
 # Public методы ----------------------------------------------------------------
 ################################################################################
@@ -118,8 +117,8 @@ func build_navigator() -> void:
 				if id != INVALID_CELL and not id in obstacles_ids:
 					navigator.connect_points(_calc_cell_id(x, y), _calc_cell_id(i.x, i.y))
 
-	
-func find_pixel_path(cell1:Vector2, cell2:Vector2) -> PoolVector2Array:
+
+func find_pixel_path(cell1:Vector2, cell2:Vector2, temporary_obstacles:PoolVector2Array=[], global=false) -> PoolVector2Array:
 	# Если ячейки вне тайлмапа то нет смысла их проверять
 	if not _is_cell_in_map_rect_vec(cell1) or not _is_cell_in_map_rect_vec(cell2):
 		return PoolVector2Array()
@@ -127,10 +126,20 @@ func find_pixel_path(cell1:Vector2, cell2:Vector2) -> PoolVector2Array:
 	var idx1:int = _calc_cell_id_vec(cell1)
 	var idx2:int = _calc_cell_id_vec(cell2)
 	
-	if navigator.has_point(idx1) and navigator.has_point(idx2):
-		return navigator.get_point_path(idx1, idx2)
-	else:
+	if not navigator.has_point(idx1) or not navigator.has_point(idx2):
 		return PoolVector2Array()
+	
+	_disable_points(temporary_obstacles)
+	
+	var path = navigator.get_point_path(idx1, idx2)
+	
+	_enable_points(temporary_obstacles)
+	
+	if global:
+		for i in range(len(path)):
+			path[i] = to_global(path[i])
+		
+	return path
 
 
 func find_map_path(cell1:Vector2, cell2:Vector2) -> PoolVector2Array:
@@ -140,14 +149,17 @@ func find_map_path(cell1:Vector2, cell2:Vector2) -> PoolVector2Array:
 	return path
 
 
-func get_distance_area(cell:Vector2, distance:int) -> PoolVector2Array:
+func get_distance_area(cell:Vector2, distance:int, temporary_obstacles:PoolVector2Array=[], global=false) -> PoolVector2Array:
 	# Если вне карты то индекс посчитается неправильно
 	if not _is_cell_in_map_rect_vec(cell):
 		return PoolVector2Array()
-	# Если точки нет то нее никуда не пройти
+	# Если точки нет то от нее никуда не пройти
 	if not navigator.has_point(_calc_cell_id_vec(cell)):
 		return PoolVector2Array()
-		
+	
+	if cell in temporary_obstacles:
+		return PoolVector2Array()
+	
 	# Везде работаем с id, а не координатами
 	var start:int = _calc_cell_id_vec(cell)
 	var queue:Array = [start] # Колхозная очередь из списка
@@ -161,13 +173,22 @@ func get_distance_area(cell:Vector2, distance:int) -> PoolVector2Array:
 	var current:int # id рассматриваемой точки
 	var new_distance:int
 	
+	_disable_points(temporary_obstacles)
+	
 	# Типичный проход в шрину
 	while not queue.empty():
 		
 		current = queue.pop_front()
-		area.append(navigator.get_point_position(current))
+		
+		if not global:
+			area.append(navigator.get_point_position(current))
+		else:
+			area.append(to_global(navigator.get_point_position(current)))
 		
 		for neigh in navigator.get_point_connections(current):
+			if navigator.is_point_disabled(neigh):
+				continue
+				
 			new_distance = distances[current] + 1
 			# Добавляем новую точку только если расстояние до нее не больше чем надо
 			if not neigh in distances:
@@ -180,8 +201,19 @@ func get_distance_area(cell:Vector2, distance:int) -> PoolVector2Array:
 					# Перерассматриваем точку что бы от нее все посчиталось правильно
 					queue.append(neigh)
 	
+	_enable_points(temporary_obstacles)
+	
 	return area
-
+	
+	
+func get_map_distance_area(cell:Vector2, distance:int, temporary_obstacles:PoolVector2Array=[]):
+	var area = get_distance_area(cell, distance, temporary_obstacles)
+	var res:PoolVector2Array = PoolVector2Array()
+	for i in area:
+		res.append(world_to_map(i))
+		
+	return res
+	
 
 func get_cell_center_local(cell:Vector2) -> Vector2:
 	return map_to_world(cell)+cell_size/2
@@ -191,59 +223,86 @@ func get_cell_center_global(cell:Vector2) -> Vector2:
 	return to_global(get_cell_center_local(cell))
 	
 
+func global_world_to_map(world:Vector2):
+	return world_to_map(to_local(world))
+
+
+func global_map_to_world(map:Vector2):
+	return to_global(map_to_world(map))
+
+
 func get_cell_neighbors(cell:Vector2) -> Array:
 	match cell_half_offset:
 		HALF_OFFSET_Y:
 			return _get_cell_neighs_y(cell)
 		HALF_OFFSET_NEGATIVE_Y:
 			return _get_cell_neighs_neg_y(cell)
+		HALF_OFFSET_X:
+			return _get_cell_neighs_x(cell)
+		HALF_OFFSET_NEGATIVE_X:
+			return _get_cell_neighs_neg_x(cell)
 		_:
-			printerr("No support")
+			printerr("No neighbors support for ", cell_half_offset, " offset")
 			return []
 
 
 func get_map_distance(cell1:Vector2, cell2:Vector2) -> int:
 	var off = cell2-cell1
 	match cell_half_offset:
-		HALF_OFFSET_NEGATIVE_Y:
-			return _get_dist_neg_y(off)
-		HALF_OFFSET_Y:
-			return _get_dist_y(off)
+		HALF_OFFSET_NEGATIVE_Y, HALF_OFFSET_Y:
+			var x = cell1.x as int
+			var offset = 1 if cell_half_offset == HALF_OFFSET_Y else 0
+			
+			if x%2 == offset:
+				return _get_dist_neg_y(off)
+			else:
+				return _get_dist_y(off)
+		HALF_OFFSET_X, HALF_OFFSET_NEGATIVE_X:
+			var y = cell1.y as int
+			var offset = 1 if cell_half_offset == HALF_OFFSET_X else 0
+			
+			if y%2 == offset:
+				return _get_dist_x(off)
+			else:
+				return _get_dist_neg_x(off)
 		_:
 			printerr("No distance support for ", cell_half_offset, " offset")
 			return 0
 
 
-func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, accuracity:int=0) -> Vector2:
+func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obstacles:PoolVector2Array=[], distance:int=-1, global=false, accuracity:int=0) -> Vector2:
 	var pixel1 = get_cell_center_local(cell1)
 	var pixel2 = get_cell_center_local(cell2)
+	
 	if cell1 == cell2:
 		return pixel1
-	var offset = pixel2 - pixel1
-	var angle = offset.abs().angle() # Нужна положительная тригонометрия
-	# Выведено из правильного треугольника, образуемого тремя соседними точками
-	var a = abs(PI/3 - angle) if angle > PI/6 else angle
-	# cell_size.x/cos(a) - расстояние до следующей ячейки
-	var step = cell_size.x/cos(a) / offset.length()
+		
+	if _is_cell_obstacle(cell1) or cell1 in temporary_obstacles:
+		return pixel1
 	
-	var lerp_point = pixel1
-	var weight = -step/3 # Нужно небольшое смещение что бы 100% захватить cell2
+	var lerp_pixel = pixel1
+	var lerp_cell = world_to_map(lerp_pixel)
 	
-	while weight < 1:
-		if get_cellv(world_to_map(lerp_point)) in obstacles_ids:
-			# Если < 0, значит приращений не было и это первая точка
-			if weight < 0 or accuracity == 0: 
-				return lerp_point
+	var dist = get_map_distance(cell1, cell2)
+	
+	for i in range(dist+1):
+		
+		lerp_pixel = lerp(pixel1, pixel2, float(i)/dist)
+		lerp_cell = world_to_map(lerp_pixel)
+		
+		if _is_cell_obstacle(lerp_cell) or lerp_cell in temporary_obstacles:
 			
-			var obstacle_coord:Vector2 = map_to_world(world_to_map(lerp_point))
-			var obst = Rect2(map_to_world(world_to_map(lerp_point)), cell_size)
+			if accuracity == 0 or i == 0: 
+				return to_global(lerp_pixel) if global else lerp_pixel
 			
-			var left_bound:Vector2 = lerp_point - offset*step
-			var right_bound:Vector2 = lerp_point
+			var obst = Rect2(map_to_world(world_to_map(lerp_pixel)), cell_size)
+			
+			var left_bound:Vector2 = lerp(pixel1, pixel2, float(i-1)/dist)
+			var right_bound:Vector2 = lerp_pixel
 			var mid:Vector2
 			# Если наткнулись на препятствие, значит мы перескачили пересечение с ним
 			# поэтому возвращаемся назад на половину и уточняем
-			for i in range(accuracity):
+			for j in range(accuracity):
 				mid = left_bound + (right_bound - left_bound)/2
 				# Если точка внутри препятствия
 				if obst.has_point(mid):
@@ -251,16 +310,21 @@ func get_obstacle_intersection(cell1:Vector2, cell2:Vector2, accuracity:int=0) -
 				else:
 					left_bound = mid # перешли пересечение, смещаемся веперед
 					
-			return mid
-			
-		weight += step
-		lerp_point += offset * step
+			return to_global(mid) if global else mid
+		
+		if distance > 0 and i >= distance:
+			return to_global(lerp_pixel) if global else lerp_pixel
 	# Не встретили ни одного препятствия
-	return pixel2
+	return to_global(pixel2) if global else pixel2
+
+
+func get_map_obstacle_intersection(cell1:Vector2, cell2:Vector2, temporary_obstacles:PoolVector2Array=[], distance:int=-1):
+	var cell = world_to_map(get_obstacle_intersection(cell1, cell2, temporary_obstacles, distance))
+	return cell
 
 
 func is_cells_visible(cell1:Vector2, cell2:Vector2):
-	return world_to_map(get_obstacle_intersection(cell1, cell2)) == cell2
+	return get_map_obstacle_intersection(cell1, cell2) == cell2
 
 
 func add_cell_flag(cell:Vector2, flag:int) -> void:
@@ -328,19 +392,59 @@ func _get_dist_y(off):
 	var y = off.y - (x - abs(x%2))/2
 	var z = -x-y
 	return (abs(x) + abs(y) + abs(z)) / 2
+	
+func _get_dist_x(off):
+	var y = off.y as int
+	var x = int(off.x) - (y + abs(y%2))/2
+	var z = -x-y
+	return (abs(x) + abs(y) + abs(z)) / 2
+	
+func _get_dist_neg_x(off):
+	var y = off.y as int
+	var x = int(off.x) - (y - abs(y%2))/2
+	var z = -x-y
+	return int(abs(x) + abs(y) + abs(z))/2
 
 func _get_three_left_top_neighbors(x:int, y:int) -> Array:
-	# Возвращает двух левых и верхнего соседей
-	# Пока работает только для смещений по Y
+	match cell_half_offset:
+		HALF_OFFSET_NEGATIVE_X, HALF_OFFSET_X:
+			return _get_three_left_top_neighbors_x_neg_x(x, y)
+		HALF_OFFSET_NEGATIVE_Y, HALF_OFFSET_Y:
+			return _get_three_left_top_neighbors_y_neg_y(x, y)
+		_:
+			printerr("No neighbors support for ", cell_half_offset, " offset")
+			return []
+
+func _get_three_left_top_neighbors_x_neg_x(x:int, y:int) -> Array:
+	var res:Array
+	
+	var offset = 0 if cell_half_offset == HALF_OFFSET_X else 1
+	
+	var type = abs(y%2)==offset
+	
+	if type:
+		res = [
+			Vector2(x-1, y),
+			Vector2(x-1, y-1),
+			Vector2(x, y-1)
+		]
+	else:
+		res = [
+			Vector2(x-1, y),
+			Vector2(x, y-1),
+			Vector2(x+1, y-1)
+		]
+	
+	return res
+
+func _get_three_left_top_neighbors_y_neg_y(x:int, y:int) -> Array:
+	# Возвращает двух левых и верхнего соседей для Y и Neg Y смещений
 	var res:Array
 	var parity:int
 	if cell_half_offset == HALF_OFFSET_NEGATIVE_Y:
 		parity = 1
 	elif cell_half_offset == HALF_OFFSET_Y:
 		parity = -1
-	else:
-		printerr("No neighbors support for ", cell_half_offset, " offset support")
-		return []
 		
 	var y_offset:int = parity*(1 - 2*(int(abs(x))%2))
 	
@@ -378,20 +482,78 @@ func _get_cell_neighs_y(cell:Vector2) -> Array:
 	]
 	return res
 	
+
+func _get_cell_neighs_x(cell:Vector2):
+	var res:Array
+	
+	var parity = int(abs(cell.y))%2
+	
+	res = [
+		cell + Vector2(parity-1, -1),
+		cell + Vector2(-1, 0),
+		cell + Vector2(parity-1, 1),
+		cell + Vector2(parity, -1),
+		cell + Vector2(1, 0),
+		cell + Vector2(parity, 1)
+	]
+	
+	return res
+	
+func _get_cell_neighs_neg_x(cell:Vector2):
+	var res:Array
+	
+	var parity = int(abs(cell.y))%2
+	
+	res = [
+		cell + Vector2(-1, 0),
+		cell + Vector2(-parity, -1),
+		cell + Vector2(-parity, 1),
+		cell + Vector2(1-parity, -1),
+		cell + Vector2(1, 0),
+		cell + Vector2(1-parity, 1)
+	]
+	
+	return res
+
+func _disable_points(pts:PoolVector2Array):
+	var id:int
+	for i in pts:
+		if not _is_cell_in_map_rect_vec(i):
+			continue
+			
+		id = _calc_cell_id_vec(i)
+		
+		if not navigator.has_point(id):
+			continue
+		
+		navigator.set_point_disabled(id, true)
+		
+func _enable_points(pts:PoolVector2Array):
+	var id:int
+	for i in pts:
+		if not _is_cell_in_map_rect_vec(i):
+			continue
+			
+		id = _calc_cell_id_vec(i)
+		
+		if not navigator.has_point(id):
+			continue
+			
+		navigator.set_point_disabled(id, false)
+	
+func _is_cell_obstacle(cell):
+	var id = get_cellv(cell)
+	return id in obstacles_ids
 	
 func  _is_cell_in_map_rect_vec(cell:Vector2) -> bool:
 	# Находится ли клетка внутри тайлмапа
-	var is_x:bool = (cell.x >= _navigator_used_rect.position.x and 
-		cell.x < _navigator_used_rect.position.x + _navigator_used_rect.size.x)
-	var is_y:bool = (cell.y >= _navigator_used_rect.position.y and
-		cell.y < _navigator_used_rect.position.y + _navigator_used_rect.size.y)
-		
-	return is_x and is_y
-	
+	return _navigator_used_rect.has_point(cell)
+
+
 func _is_cell_in_map_rect(x:int, y:int) -> bool:
 	return _is_cell_in_map_rect_vec(Vector2(x, y))
-	
-	
+
+
 func _calc_cell_id(x:int, y:int) -> int:
 	var x_id_component:int = x + abs(_navigator_used_rect.position.x)
 	var y_id_component:int = (y + abs(_navigator_used_rect.position.y))*_navigator_used_rect.size.x

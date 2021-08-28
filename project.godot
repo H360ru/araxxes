@@ -18,6 +18,9 @@ _global_script_classes=[ {
 "class": "DataBase",
 "language": "GDScript",
 "path": "res://network/server_files/data_base/data_base.gd"
+"class": "Bot",
+"language": "GDScript",
+"path": "res://modules/UnitsModule/ai_script.gd"
 }, {
 "base": "Node2D",
 "class": "IsoSprite",
@@ -33,6 +36,11 @@ _global_script_classes=[ {
 "class": "MenuTransition",
 "language": "GDScript",
 "path": "res://addons/MenuManager/controls_loader.gd"
+}, {
+"base": "Reference",
+"class": "MiscFunctions",
+"language": "GDScript",
+"path": "res://modules/misc_functions.gd"
 }, {
 "base": "Node",
 "class": "MouseManager",
@@ -67,7 +75,17 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Player",
 "language": "GDScript",
-"path": "res://modules/UnitSystem/player.gd"
+"path": "res://modules/UnitsModule/player.gd"
+}, {
+"base": "Node2D",
+"class": "Projectile",
+"language": "GDScript",
+"path": "res://modules/WeaponsModule/projectile.gd"
+}, {
+"base": "Node2D",
+"class": "ProjectilesManager",
+"language": "GDScript",
+"path": "res://modules/WeaponsModule/projectile_container.gd"
 }, {
 "base": "Reference",
 "class": "ResourceAsyncLoader",
@@ -107,7 +125,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "Unit",
 "language": "GDScript",
-"path": "res://modules/UnitSystem/unit.gd"
+"path": "res://modules/UnitsModule/unit.gd"
 }, {
 "base": "Reference",
 "class": "UnitSceneState",
@@ -117,12 +135,12 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "UnitsGroup",
 "language": "GDScript",
-"path": "res://modules/UnitSystem/units_group.gd"
+"path": "res://modules/UnitsModule/units_group.gd"
 }, {
 "base": "Resource",
 "class": "Weapon",
 "language": "GDScript",
-"path": "res://modules/UnitSystem/weapon.gd"
+"path": "res://modules/WeaponsModule/weapon.gd"
 }, {
 "base": "Control",
 "class": "ui_screen",
@@ -132,9 +150,11 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Component": "",
 "DataBase": "",
+"Bot": "",
 "IsoSprite": "",
 "Lobby": "",
 "MenuTransition": "res://Assets/AcceptDialog.svg",
+"MiscFunctions": "",
 "MouseManager": "",
 "NavigationGrid": "",
 "NetRequest": "",
@@ -142,6 +162,8 @@ _global_script_class_icons={
 "Option": "",
 "OptionButtonSetting": "",
 "Player": "",
+"Projectile": "",
+"ProjectilesManager": "",
 "ResourceAsyncLoader": "",
 "SaveSettings": "",
 "Session": "",

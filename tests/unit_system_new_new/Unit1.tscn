@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://modules/isometric_sprite.gd" type="Script" id=1]
 [ext_resource path="res://tests/unit_system_new_new/walker3.png" type="Texture" id=2]
 [ext_resource path="res://tests/unit_system_new_new/wp1.tres" type="Resource" id=3]
+[ext_resource path="res://modules/WeaponsModule/projectile_container.gd" type="Script" id=4]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Unit
@@ -12,17 +13,17 @@ export var speed = 30.0
 onready var sprite = $IsoSprite
 onready var _anim = $AnimationPlayer
 onready var _move_tween = $MoveTween
-onready var _shoot_tween = $ShootTween
 onready var _path = $Path
 onready var _explorer = $Path/Explorer
+onready var _projectiles_manager = $ProjectilesManager
 
 var bullet = preload(\"res://tests/unit_system_new_new/Bullet.tscn\")
 
 func _init():
 	map_position = Vector2(5, 4)
 
-func move_along_path(path:Curve2D):
-	_path.curve = path
+func move_along_global_path(path:PoolVector2Array):
+	_path.curve = MiscFunctions.get_curve_from_points(path)
 	
 	var t = _path.curve.get_baked_length()/speed
 	
@@ -31,17 +32,12 @@ func move_along_path(path:Curve2D):
 	
 	_to_move()
 
-func shoot_to_global(point:Vector2):
-	var bul = bullet.instance()
-	add_child(bul)
-	var bul_speed = 500.0
-	var t = (point - global_position).length() / bul_speed
-	bul.rotation = (point - global_position).angle()
-	_shoot_tween.interpolate_property(bul, \"global_position\", global_position, point, t, Tween.TRANS_SINE, Tween.EASE_IN)
-	_shoot_tween.start()
+func attack_to_global(point:Vector2):
+	_projectiles_manager.launch_projectile_between_global(bullet, global_position, point+Vector2(30, 0))
+	_projectiles_manager.launch_projectile_between_global(bullet, global_position, point-Vector2(30, 0))
 	
-	yield(_shoot_tween, \"tween_all_completed\")
-	bul.queue_free()
+	yield(_projectiles_manager, \"all_projectiles_moved\")
+	
 	emit_signal(\"attacked\")
 
 func _on_MoveTween_tween_step(object, key, elapsed, value):
@@ -49,6 +45,8 @@ func _on_MoveTween_tween_step(object, key, elapsed, value):
 
 func _on_MoveTween_tween_completed(object, key):
 	if object == _explorer:
+		global_position = _explorer.position
+		_move_tween.stop_all()
 		_to_idle()
 		emit_signal(\"move_finished\")
 
@@ -146,6 +144,8 @@ tracks/2/keys = {
 script = SubResource( 1 )
 weapon = ExtResource( 3 )
 max_health = 11
+max_action_points = 100
+speed = 200.0
 
 [node name="Path" type="Path2D" parent="."]
 curve = SubResource( 2 )
@@ -159,18 +159,21 @@ directions = 8
 frames = 16
 counter_clock_wise = true
 zero_direction_angle = -90
-frame = 13
+direction = 1
+frame = 4
 centered = true
 offset = Vector2( 0, -23 )
 transpose = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Idle"
 anims/Idle = SubResource( 3 )
 anims/Walk = SubResource( 4 )
 
 [node name="MoveTween" type="Tween" parent="."]
 
-[node name="ShootTween" type="Tween" parent="."]
+[node name="ProjectilesManager" type="Node2D" parent="."]
+script = ExtResource( 4 )
 
 [connection signal="tween_completed" from="MoveTween" to="." method="_on_MoveTween_tween_completed"]
 [connection signal="tween_step" from="MoveTween" to="." method="_on_MoveTween_tween_step"]
