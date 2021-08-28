@@ -9,6 +9,16 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "Component",
+"language": "GDScript",
+"path": "res://modules/component.gd"
+}, {
+"base": "Component",
+"class": "DataBase",
+"language": "GDScript",
+"path": "res://network/server_files/data_base/data_base.gd"
+}, {
 "base": "Node2D",
 "class": "IsoSprite",
 "language": "GDScript",
@@ -38,6 +48,11 @@ _global_script_classes=[ {
 "class": "NetRequest",
 "language": "GDScript",
 "path": "res://Server/rpc_request.gd"
+}, {
+"base": "Component",
+"class": "NetworkClient",
+"language": "GDScript",
+"path": "res://network/client/web_client/client.gd"
 }, {
 "base": "Control",
 "class": "Option",
@@ -94,6 +109,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://modules/UnitSystem/unit.gd"
 }, {
+"base": "Reference",
+"class": "UnitSceneState",
+"language": "GDScript",
+"path": "res://modules/UnitSystem/unit_scene_state.gd"
+}, {
 "base": "Node2D",
 "class": "UnitsGroup",
 "language": "GDScript",
@@ -110,12 +130,15 @@ _global_script_classes=[ {
 "path": "res://scripts/ui_tab_script.gd"
 } ]
 _global_script_class_icons={
+"Component": "",
+"DataBase": "",
 "IsoSprite": "",
 "Lobby": "",
 "MenuTransition": "res://Assets/AcceptDialog.svg",
 "MouseManager": "",
 "NavigationGrid": "",
 "NetRequest": "",
+"NetworkClient": "",
 "Option": "",
 "OptionButtonSetting": "",
 "Player": "",
@@ -127,6 +150,7 @@ _global_script_class_icons={
 "SoundManagerModule": "",
 "Tweening": "",
 "Unit": "",
+"UnitSceneState": "",
 "UnitsGroup": "",
 "Weapon": "",
 "ui_screen": ""
@@ -154,6 +178,12 @@ SettingsSaveLoad="*res://addons/Autoload/SettingsSaveLoad.gd"
 Settings="*res://addons/Autoload/Settings.gd"
 Console="*res://addons/quentincaffeino-console/src/Console.tscn"
 Network="*res://network/network.gd"
+Actor="*res://modules/actor.gd"
+
+[components]
+
+server=""
+path="res://tests/override_architecture/config/features.gd"
 
 [debug]
 
@@ -174,12 +204,11 @@ back=false
 sprite_path="res://tests/hex_grid/troll.png"
 global_path="res://scenes/global/global.gd"
 global_path.HTML5="res://scenes/global/global_web.gd"
-client_path="res://network/client/client.gd"
+client_path="res://network/client/web_client/client.gd"
 client_path.HTML5="res://network/client/web_client/client.gd"
 server_path="res://network/server_files/websocket_server/ws_server.gd"
 server_path.ENet="res://network/server_files/enet_server/enet_server.gd"
-sprite_path.E3_promo="res://icon.png"
-sprite_path.debug="res://icon.png"
+message_agent_path="res://network/client/message_agent.gd"
 
 [importer_defaults]
 

@@ -32,6 +32,21 @@ func _init(console):
 	self._console.add_command('server_chat', self, '_server_chat')\
 		.register()
 	
+	self._console.add_command('show_lobby', self, '_show_lobby')\
+		.register()
+	
+	self._console.add_command('show_components', self, '_show_components')\
+		.register()
+	
+	self._console.add_command('reconnect', self, '_reconnect')\
+		.register()
+	
+	self._console.add_command('disconnect', self, '_disconnect')\
+		.register()
+	
+	self._console.add_command('close_chat', self, '_close_chat_ui')\
+		.register()
+	
 	self._console.add_command('screen_orientation', self, '_screen_orientation')\
 		.register()
 
@@ -105,14 +120,7 @@ func _server_chat():
 	self._console.write_line('Exited server app')
 
 func _chat(_login_name):
-	var server = Global.get_tree().get_root().get_node_or_null('Server')
-	if !server:
-		server = load('res://Server/Server.tscn').instance()
-		Global.get_tree().get_root().add_child(server)
-	#	yield(server, "ready")
 	# TODO: проверить соединение
-		server.create_client()
-	#server.login_name = _login_name
 	
 	var _exit = true
 	var prefix = '!'
@@ -138,12 +146,33 @@ func _chat(_login_name):
 
 func _chat_message(_text):
 	_console.Line.clear()
-	Global.get_tree().get_root().get_node("Server")._push_message(_text)
-	var _test = Lobby.new()
-	_test.start_conditions = 777
-	Global.get_tree().multiplayer.send_bytes(var2bytes(inst2dict(_test)), 0)
+	Global.component_call('Chat', '_push_message', [_text])
 	
+func _show_lobby():
+	self._console.write_line(str(Network.get_node('Server').get_meta('lobby').get_players()))
 
+func _show_components():
+	#self._console.write_line(str(Global.COMPONENTS.has('Client')))
+	for i in Global.COMPONENTS:
+		self._console.write_line("[color=#66ffff][url="+str(i)+"]"+str(i)+"[/url][/color]"+": "+str(Global.COMPONENTS[i].discription))
+		# var m_list = Global.COMPONENTS[i].get_method_list()
+		# var m_name_list = []
+		# for inx in m_list:
+		# 	m_name_list += [inx['name']]
+		# self._console.write_line(str(m_name_list))
+	# Возможно, синглтонам/сущностям "контейнерам компонентов" нужно наследоваться от общего родителя
+	#Global.component_call('MessageAgent', '_test_component')
+	#Global.COMPONENTS['MessageAgent'].set_process(false)
+#		self._console.write_line(str(i.name)+": "+str(i.discription))
+
+func _close_chat_ui():
+	Global.get_component('ChatUI').queue_free()
+
+func _reconnect():
+	Global.component_call('Client', 'connect_to_ip')
+
+func _disconnect():
+	Global.component_call('Client', 'disconnect_client')
 
 func _try_call(command_name = null, node = null, arg = ['тест1', 'тест2']):
 	if command_name:

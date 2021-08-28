@@ -8,15 +8,8 @@ onready var _client = ClientData.new(OS.get_cmdline_args()[0] if OS.get_cmdline_
 var server_mode = 1
 
 var network: NetworkedMultiplayerPeer
-var port = 1929
+var port = 1920
 var max_peers = 100
-
-const DATA_BASE: Dictionary = {
-	'admin': 'admin_password',
-	'player1': 'player1_password',
-	'player2': 'player2_password',
-	'player3': 'player3_password',
-}
 
 signal Data
 
@@ -37,6 +30,9 @@ class ClientData:
 		if !(_login or _password):
 			printerr('ClientData null instantiation!!!')
 
+func _ready():
+	Global.add_feature_component(self, 'DataBase')
+
 func create_multiplayer_peer(_mode = 0):
 
 	network = WebSocketServer.new()# NetworkedMultiplayerENet.new()
@@ -48,7 +44,7 @@ func create_multiplayer_peer(_mode = 0):
 	# warning-ignore:return_value_discarded
 	network.connect("connection_failed", self, "_on_peer_event")
 	
-	get_tree().multiplayer.connect('network_peer_packet', self, '_on_packet')
+	get_tree().multiplayer.connect('network_peer_packet', Network.MESSAGE_AGENT, '_on_packet')
 	
 	# warning-ignore:return_value_discarded
 	network.connect("peer_connected", self, "_on_client_connected")
@@ -77,7 +73,7 @@ func _on_peer_event(id = null):
 # TODO: разделить на отдельные объекты
 func create_server(_cli: bool = true):
 	create_multiplayer_peer(1)
-	#network.allow_object_decoding = true
+	network.allow_object_decoding = true
 	
 	var check
 	check = network.listen( port, PoolStringArray(), true)#network.create_server(port, max_peers)
@@ -92,46 +88,47 @@ func create_server(_cli: bool = true):
 		#TODO: при ошибке 20 и тесте в локальной сети сделать переход на
 		# новый незанятый порт
 		return
-	
-#	prints(_client.login)
 
+
+# TODO: переработать регистрирование клиентов в лобби
+# TODO: разделить функцию клиента и вызов rpc для универсализации сингл/мультиплеера
 func _on_client_connected(_user_id):
 	Console.write("client_connected: "+str(_user_id))
 	# TODO: написать библиотеку rpc запросов с асинхронным ожиданием и сигналом
 	#HACK:
-	rpc_id(_user_id,'_request_data','_client')
-	var _client_data
-	# NetRequest
-	while true:
-		var check = yield(self, "Data")
-		if check[0] == _user_id:
-			_client_data = check[1]
-			break
+	var _req = Network.MESSAGE_AGENT.request(_user_id, '_client')
+	var _d = yield(_req, "data")
+	var _client_data = _d.data
+	printerr(_d)
+	printerr(_d.data)
+
 	if _is_client_valid(_client_data):
-		rpc_id(_user_id,'_print_message', 'true login/password', 'Server')
+		Console.write('true login/password')
+		#rpc_id(_user_id,'_print_message', 'true login/password', 'Server')
 	else:
 		#_disconnect_client(_user_id)
+		Console.write('false login/password')
 		pass
+	Console.write('login passed')
 	get_meta('lobby').add_player(_user_id, _client_data['login'])#players[_user_id] = _client_data['login']#'name_'+str(_user_id)
 	Console.write(" as " + get_meta('lobby').players[_user_id] + '\n')
-#	if !has_meta('players'):
-#		set_meta('players', {})
-#	get_meta('players')[_user_id] = 'name_'+str(_user_id)
+
 	pass
 
 func _on_client_disconnected(_user_id):
-	Console.write_line("client_disconnected"+str(_user_id))
+	Console.write_line("client_disconnected "+str(_user_id))
 	get_meta('lobby').remove_player(_user_id)
 	pass
 
 remote func _receive_message(_text):#, _login_name):
 	var _login_name = get_meta('lobby').players[get_tree().get_rpc_sender_id()]
 	rpc('_print_message', _text, _login_name)
-#	Console.write_line("New_massege: " + _text)
 
 func _is_client_valid(_client_data: Dictionary) -> bool:
-	if DATA_BASE.has(_client_data['login']):
-		if DATA_BASE[_client_data['login']] == _client_data['password']:
+	Console.write('Check data: '+ str(_client_data))
+	
+	if Global.component_call('DataBase', 'has', [_client_data['login']]):
+		if Global.component_call('DataBase', 'get_value', [_client_data['login']]) == _client_data['password']:
 			return true
 	return false
 
@@ -143,24 +140,6 @@ func _disconnect_client(_user_id):
 func _process(delta):
 	if network:
 		network.poll()
-
-func _push_message(_text):
-	rpc_id(1, '_receive_message', _text)#, login_name)
-
-remotesync func _print_message(_text, _login_name):
-	Console.write_line(_login_name+": "+ _text)
-
-remote func _request_data(_data_request: String):
-#	var dcr = {}
-	var _data = to_json(get(_data_request).data)
-	var _user_id = network.get_unique_id()
-	rpc_id(1, '_receive_data', _user_id, _data)#str(_data.login+' '+_data.password))
-#	pass
-	
-remote func _receive_data(_user_id, _data):
-#	validate_json(
-	emit_signal("Data", _user_id, parse_json(_data))
-#	return
 
 func allow_new_connections(_allow: bool):
 	Global.get_tree().refuse_new_network_connections = !_allow

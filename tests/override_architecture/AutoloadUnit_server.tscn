@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+
+var grid_position
+
+# func _ready():
+# 	Console.write_line('Server: unit ' + name)
+"
+
+[node name="Unit" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.2063, 0.2063 )
+texture = ExtResource( 1 )

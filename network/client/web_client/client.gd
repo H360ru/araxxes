@@ -1,15 +1,15 @@
-extends Node
+extends Component
 
+class_name NetworkClient
 var login_name = 'default_nick'
 onready var _client = ClientData.new(OS.get_cmdline_args()[0] if OS.get_cmdline_args().size() else 'admin',\
 'admin_password')#.new('admin', 'admin_password')
-var server_mode = 1
 
 var network: NetworkedMultiplayerPeer
-var port: int = 1929
+var port: int = 1920
 var max_peers = 100
 
-signal Data
+signal connection_resoult
 
 class ClientData:
 	extends Resource
@@ -28,10 +28,11 @@ class ClientData:
 		if !(_login or _password):
 			printerr('ClientData null instantiation!!!')
 
+func _init():
+	discription = 'WebSocket клиент Версия 0.1'
+
 func _ready():
 	create_client()
-
-# TODO Протестировать возможность RPC вызова на различных для клиент/сервера нодах
 
 # TODO: #39 добавить поддержку WebRTCMultiplayer для браузера
 # вместо NetworkedMultiplayerENet
@@ -48,7 +49,7 @@ func create_multiplayer_peer(_mode = 0):
 	# warning-ignore:return_value_discarded
 	network.connect("connection_failed", self, "_on_peer_event")
 	
-	get_tree().multiplayer.connect('network_peer_packet', self, '_on_packet')
+	get_tree().multiplayer.connect('network_peer_packet', Network.MESSAGE_AGENT, '_on_packet')
 	
 	network.connect("server_disconnected", self, "_on_peer_event")
 	pass
@@ -70,11 +71,12 @@ func _on_packet(_one, _two):
 func _on_peer_event(id = null):
 	Console.write_line(str(network.get_packet_peer()) + ' connection_status: '\
 	 + str(network.get_connection_status()))
+	emit_signal('connection_resoult')
 
 func create_client(_cli: bool = true):
 
 	create_multiplayer_peer()
-	#network.allow_object_decoding = true
+	network.allow_object_decoding = true
 	
 	var _ip = '127.0.0.1'
 	var _port = port # 1909
@@ -82,35 +84,39 @@ func create_client(_cli: bool = true):
 
 	var _socket_adress = "ws://"+_ip+":"+str(port)
 	check = network.connect_to_url(_socket_adress, PoolStringArray(), true);
-	# web_poll()
+	#yield(self, 'connection_resoult')
 	
 	Global.get_tree().set_network_peer(network)
+	#BUG: нерабочая проверка
+	if check == OK:#network.get_connection_status() == 2:#
+		Console.write_line("Connection succeeded")
+	else:
+		Console.write_line("Connection error: "+ check)
+		return
+
+func connect_to_ip():
+	var _ip = '127.0.0.1'
+	var _port = port
+	var check
+
+	var _socket_adress = "ws://"+_ip+":"+str(port)
+	check = network.connect_to_url(_socket_adress, PoolStringArray(), true)
+	#yield(self, 'connection_resoult')
+
+	Global.get_tree().set_network_peer(null) #необходимо для ресета соединения
+	Global.get_tree().set_network_peer(network)
+	#BUG: нерабочая проверка
 	if check == OK:
 		Console.write_line("Welcome to chat!")
 	else:
 		Console.write_line("Connection error: "+ check)
 		return
 
+func disconnect_client():
+	network.disconnect_from_host(1)
+
 func _process(delta):
 	if network:
 		network.poll()
-		print('network.poll')
 
-func _push_message(_text):
-	rpc_id(1, '_receive_message', _text)#, login_name)
-
-remotesync func _print_message(_text, _login_name):
-	Console.write_line(_login_name+": "+ _text)
-
-remote func _request_data(_data_request: String):
-#	var dcr = {}
-	var _data = to_json(get(_data_request).data)
-	var _user_id = network.get_unique_id()
-	rpc_id(1, '_receive_data', _user_id, _data)#str(_data.login+' '+_data.password))
-#	pass
-	
-remote func _receive_data(_user_id, _data):
-#	validate_json(
-	emit_signal("Data", _user_id, parse_json(_data))
-#	return
 

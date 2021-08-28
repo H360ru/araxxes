@@ -23,7 +23,7 @@
             "address": "127.0.0.1",
             "launch_game_instance": true,
             "launch_scene": true,
-            "scene_file": "res://tests/path_follow_server.tscn"
+            "scene_file": "res://tests/override_architecture/Main_test_server.tscn"
         }
     ],
     "compounds": [

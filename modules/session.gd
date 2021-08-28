@@ -6,7 +6,7 @@ extends Node
 
 class_name Session
 
-var win_conditions
+var win_conditions # предполагаю, что лучше ему быть объектом или даже нодой в дереве
 var players: Dictionary
 var spectators: Dictionary
 
@@ -19,6 +19,7 @@ func _turn():
 	while true:
 		for player in players:
 			#player.your_turn()
+			# TODO: нужна возможность прерывания админом очереди ходов
 			yield(player, 'finished_turn')
 		
 		if win_conditions:

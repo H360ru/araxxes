@@ -15,7 +15,7 @@ func _process(delta):
 	position = grid.map_to_world(grid.world_to_map(grid.get_local_mouse_position()))
 "
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node2D
 
 onready var pl = $\"../\"
@@ -33,7 +33,7 @@ func _process(delta):
 	update()
 "
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Node
 
 var robot:PackedScene = preload(\"res://tests/unit_system_new_new/Unit1.tscn\")
@@ -114,7 +114,7 @@ func _on_Units_unit_out_of_health(unit):
 	units.destroy_unit(unit)
 "
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Camera2D
 
 
@@ -172,10 +172,10 @@ script = ExtResource( 4 )
 grid_node_path = NodePath("../Grid")
 
 [node name="Canvas" type="Node2D" parent="Player"]
-script = SubResource( 4 )
+script = SubResource( 2 )
 
 [node name="Control" type="Node" parent="."]
-script = SubResource( 2 )
+script = SubResource( 3 )
 
 [node name="Units" type="Node2D" parent="."]
 script = ExtResource( 3 )
@@ -185,7 +185,7 @@ navigation_grid_path = NodePath("../Grid")
 current = true
 zoom = Vector2( 2, 2 )
 smoothing_enabled = true
-script = SubResource( 3 )
+script = SubResource( 4 )
 
 [connection signal="ready" from="." to="Control" method="_on_Field_ready"]
 [connection signal="move_finished" from="Player" to="Control" method="_on_Player_move_finished"]

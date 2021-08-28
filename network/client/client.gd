@@ -9,8 +9,6 @@ var network: NetworkedMultiplayerPeer
 var port = 1929
 var max_peers = 100
 
-signal Data
-
 class ClientData:
 	extends Resource
 #	var login: String
@@ -79,6 +77,7 @@ func create_client(_cli: bool = true):
 	check = network.create_client(_ip, _port)
 	
 	Global.get_tree().set_network_peer(network)
+
 	if check == OK:
 		Console.write_line("Welcome to chat!")
 	else:
@@ -90,16 +89,4 @@ func _push_message(_text):
 
 remotesync func _print_message(_text, _login_name):
 	Console.write_line(_login_name+": "+ _text)
-
-remote func _request_data(_data_request: String):
-#	var dcr = {}
-	var _data = to_json(get(_data_request).data)
-	var _user_id = network.get_unique_id()
-	rpc_id(1, '_receive_data', _user_id, _data)#str(_data.login+' '+_data.password))
-#	pass
-	
-remote func _receive_data(_user_id, _data):
-#	validate_json(
-	emit_signal("Data", _user_id, parse_json(_data))
-#	return
 

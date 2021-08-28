@@ -22,7 +22,10 @@ func add_player(_user_id, _login):
 
 func get_player(_user_id):
 	return players[_user_id]
-	
+
+func get_players():
+	return players
+
 func remove_player(_user_id):
 	emit_signal('lobby_change')
 	return players.erase(_user_id)

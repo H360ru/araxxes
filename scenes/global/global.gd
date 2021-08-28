@@ -12,6 +12,10 @@ var SETTINGS = SettingsManager.new()
 onready var SOUND = SoundManager.new()
 onready var MOUSE = MouseManager.new()
 
+#TEST
+var COMPONENTS: Dictionary = {}
+var FEATURE_COMPONENTS_OVERRIDE: Dictionary = {}
+
 func _init():
 	print("GLOBAL INIT")
 	initialisation()
@@ -43,6 +47,7 @@ func _notification(what: int):
 
 func initialisation(cmdline_args = null):
 	print("Cmdline args: ", OS.get_cmdline_args())
+	_config_setup()
 	# system_check()
 
 func system_check():
@@ -63,6 +68,48 @@ func system_check():
 	
 #	if OS.screen_orientation == OS.SCREEN_ORIENTATION_LANDSCAPE:
 #	get_screen_orientation()
+
+#TEST POOP:
+func _config_setup():
+	var config = ConfigFile.new()
+	var err = config.load(ProjectSettings.get_setting("components/path"))
+	if err != OK:
+		Console.Log.warn('config load err')
+		return
+	
+	for i in config.get_section_keys('features'):
+		FEATURE_COMPONENTS_OVERRIDE[i] = config.get_value('features', i)
+	
+	
+func get_component(_key):
+	return Global.COMPONENTS.get(_key)
+
+# TEST POOP:
+func component_call(_key, _method: String, _args = []):
+	var _node = Global.COMPONENTS.get(_key)
+	if _node:
+		var _res = _node.callv(_method, _args)
+		return _res
+		#TODO: обработка ошибок
+	else:
+		Console.Log.warn('Не могу найти ' + str(_key))
+		return null
+
+func _create_component(_path: String, _name: String, _on_node: Node):
+	var _component = load(_path).new()
+	if !_component:
+		assert(false)
+	_component.name = _name
+	yield(get_tree(),"idle_frame")
+	_on_node.add_child(_component)
+	return _component
+
+func add_feature_component(_for_node: Node, _feature_name: String):
+	var _path = Global.FEATURE_COMPONENTS_OVERRIDE[_feature_name]
+	if _path:
+		var _component = yield(_create_component(_path, _feature_name, _for_node), 'completed')
+		return _component
+	return null
 
 #TODO: #30 сделать понятнее интерфейс
 func get_screen_orientation() -> float:
