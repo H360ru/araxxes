@@ -23,7 +23,7 @@ func fly_between_globals(g1:Vector2, g2:Vector2):
 
 [node name="Projectile" type="Node2D"]
 script = SubResource( 1 )
-speed = 100.0
+speed = 43383.2
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )

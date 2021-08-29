@@ -22,8 +22,14 @@ var bullet = preload(\"res://tests/unit_system_new_new/Bullet.tscn\")
 func _init():
 	map_position = Vector2(5, 4)
 
-func move_along_global_path(path:PoolVector2Array):
-	_path.curve = MiscFunctions.get_curve_from_points(path)
+func move_by_unit_move(unit_move:UnitMove):
+	move_along_global_path(unit_move.get_path_as_curve2D())
+
+func attack_by_unit_aim(unit_aim:UnitAim):
+	attack_to_global(unit_aim.global_pixel_aim)
+
+func move_along_global_path(path:Curve2D):
+	_path.curve = path
 	
 	var t = _path.curve.get_baked_length()/speed
 	
@@ -45,7 +51,6 @@ func _on_MoveTween_tween_step(object, key, elapsed, value):
 
 func _on_MoveTween_tween_completed(object, key):
 	if object == _explorer:
-		global_position = _explorer.position
 		_move_tween.stop_all()
 		_to_idle()
 		emit_signal(\"move_finished\")
@@ -174,6 +179,12 @@ anims/Walk = SubResource( 4 )
 
 [node name="ProjectilesManager" type="Node2D" parent="."]
 script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 2 )
+hframes = 16
+vframes = 8
 
 [connection signal="tween_completed" from="MoveTween" to="." method="_on_MoveTween_tween_completed"]
 [connection signal="tween_step" from="MoveTween" to="." method="_on_MoveTween_tween_step"]

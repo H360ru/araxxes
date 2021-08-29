@@ -39,11 +39,11 @@ func disable():
 func enable():
 	active = true
 
-func move_along_global_path(path:PoolVector2Array):
-	emit_signal("move_finished") # по дефолту никаких анимаций
-
-func attack_to_global(global_pos:Vector2):
-	emit_signal("attacked") # по дефолту никаких анимаций
+func move_by_unit_move(unit_path:UnitMove):
+	emit_signal("move_finished") # метод только для анимаций, не должно быть никаких игровых изменений
+	
+func attack_by_unit_aim(unit_aim:UnitAim):
+	emit_signal("attacked") # метод только для анимаций, не должно быть никаких игровых изменений
 
 func damage(by:int):
 	health -= by

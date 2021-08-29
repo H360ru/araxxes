@@ -1,13 +1,28 @@
 extends Reference
 
-class_name MiscFunctions
+class_name UnitMove
 
-# Надеюсь, что этот модуль временное решение)
+# Класс только для запаковывания схожих данных в один объект
+# Класс гарантирует правильность даных для конкретного юнита,
+# при условии получениия объекта из валидных источников. 
+# т.е. все поля расчитаны для конкретного экземпляра юнита, с 
+# учетом баффов и всего такого ситуативного
 
-static func get_curve_from_points(points:PoolVector2Array) -> Curve2D:
+var global_pixel_path:PoolVector2Array
+var map_path:PoolVector2Array
+var target_cell:Vector2
+var move_cost:int
+
+func _init():
+	global_pixel_path = PoolVector2Array()
+	map_path = PoolVector2Array()
+	target_cell = Vector2()
+	move_cost = 0
+
+func get_path_as_curve2D() -> Curve2D:
 	var curve:Curve2D = Curve2D.new()
 	
-	for i in points:
+	for i in global_pixel_path:
 		curve.add_point(i)
 	
 	var npoints:int = curve.get_point_count()
@@ -36,3 +51,6 @@ static func get_curve_from_points(points:PoolVector2Array) -> Curve2D:
 		curve.set_point_out(i, -normal*grade)
 		
 	return curve
+	
+func get_path_length() -> int:
+	return len(global_pixel_path)

@@ -50,8 +50,11 @@ func _process(delta):
 				elif player.unit != null:
 					if mouse_cell in move_area:
 						var path = grid.find_pixel_path(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), true)
-						player.prepare_move_along_path(path)
-						player.set_move_target_cell(mouse_cell)
+						var unit_move:UnitMove = UnitMove.new()
+						unit_move.global_pixel_path = path
+						unit_move.target_cell = mouse_cell
+						unit_move.move_cost = len(path)-1
+						player.prepare_to_move(unit_move)
 				
 			if Input.is_action_just_pressed("mouse_right"):
 				if player.unit != null and player.unit.can_shoot():
@@ -74,7 +77,7 @@ func _process(delta):
 				next_turn()
 			
 			if Input.is_action_just_pressed("ui_select"):
-				if player.unit != null and player.has_path():
+				if player.unit != null and player.move_settings != null:
 					player.start_move()
 					SWaitPlayer()
 		
@@ -82,8 +85,14 @@ func _process(delta):
 			var p = grid.get_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), -1, true, 5)
 			var c = grid.get_map_obstacle_intersection(player.unit.map_position, mouse_cell, units.get_surrounding_units_cells(player.unit), -1)
 			
-			player.set_aim_cell(c)
-			player.aim_unit_to_pixel(p)
+			var t = UnitAim.new()
+			
+			t.global_pixel_aim = p
+			t.cell_to_damage = c
+			t.shoot_cost = player.get_shoot_cost()
+			
+			player.prepare_to_aim(t)
+			
 			
 			if Input.is_action_just_pressed("ui_select"):
 				player.start_attack()
@@ -105,15 +114,15 @@ func next_turn():
 	
 
 func _on_Player_unit_move_finished():
-	player.unit.act(player.get_path_length()-1)
-	player.unit.map_position = player.unit_move_target_cell
-	player.unit.global_position = grid.get_cell_center_global(player.unit_move_target_cell)
+	player.unit.act(player.move_settings.move_cost)
+	player.unit.map_position = player.move_settings.target_cell
+	player.unit.global_position = grid.get_cell_center_global(player.move_settings.target_cell)
 	
 	SReady()
 
 func _on_Player_unit_attacked():
-	units.damage_unit_at_cell(player.unit_attack_target_cell, player.unit.weapon.damage)
-	player.unit.act(player.get_shoot_cost())
+	units.damage_unit_at_cell(player.aim_settings.cell_to_damage, player.unit.weapon.damage)
+	player.unit.act(player.aim_settings.shoot_cost)
 	
 	SReady()
 
