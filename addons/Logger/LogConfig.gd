@@ -31,7 +31,7 @@ func is_group_allow_setting(group:String, setting:String, value:String): # ес�
 	
 	var csv_values = _config_file.get_value(group, setting)
 	
-	return _is_value_in_csv(value, csv_values)
+	return _is_value_in_csv(value.dedent().to_lower(), csv_values)
 
 func get_groups():
 	return _config_file.get_sections()

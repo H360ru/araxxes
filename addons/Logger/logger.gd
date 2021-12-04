@@ -32,28 +32,17 @@ func _enter_tree():
 	
 	_groups_presets = {} 
 	
-	var tags = Tags.keys() # список имен тегов
-	
-	_default_preset = LogPrinter.new([funcref(self, "_log_to_console"), funcref(self, "_log_to_file")], Tags.values())
+	_default_preset = _create_preset_for_group("DEFAULT")
 	
 	for i in _config.get_groups(): # парс конфиг файла в словарь
-		var funcrefs = []
-		var allowed_tags = []
+		if i == "DEFAULT":
+			continue
 		
-		if _config.is_group_allow_setting(i, "write_to", "console"):
-			funcrefs.append(funcref(self, "_log_to_console"))
-			
-		if _config.is_group_allow_setting(i, "write_to", "file"):
-			funcrefs.append(funcref(self, "_log_to_file"))
-			
-		for j in tags:
-			if _config.is_group_allow_setting(i, "write_tags", j.to_lower()):
-				allowed_tags.append(Tags[j])
-		
-		var preset = LogPrinter.new(funcrefs, allowed_tags)
+		var preset = _create_preset_for_group(i)
 		
 		_groups_presets[i] = preset
-
+	
+	_delete_extra_logs(10)
 
 func _exit_tree():
 	_file.close()
@@ -114,3 +103,74 @@ func _create_mesage(numb:int, group:String, time:float, msg:String, tag:int):
 
 func _gtnfi(numb:int): # get tag name from integer
 	return Tags.keys()[numb]
+
+
+func _create_preset_for_group(group):
+	var tags = Tags.keys() # список имен тегов
+	
+	var funcrefs = []
+	var allowed_tags = []
+	
+	if _config.is_group_allow_setting(group, "write_to", "console"):
+		funcrefs.append(funcref(self, "_log_to_console"))
+		
+	if _config.is_group_allow_setting(group, "write_to", "file"):
+		funcrefs.append(funcref(self, "_log_to_file"))
+		
+	for j in tags:
+		if _config.is_group_allow_setting(group, "write_tags", j):
+			allowed_tags.append(Tags[j])
+	
+	var preset = LogPrinter.new(funcrefs, allowed_tags)
+	
+	return preset
+
+
+func _delete_extra_logs(max_to_hold):
+	var dir = Directory.new()
+	assert(dir.open(logs_path) == OK)
+	var csv_files = []
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+	
+	while file_name != "":
+		if file_name.ends_with(".csv"):
+			csv_files.append(file_name.substr(0, file_name.length()-4))
+			
+		file_name = dir.get_next()
+		
+	if len(csv_files) < max_to_hold+1:
+		return 
+	
+	# Возможно просто называть файл кол-вом секунд с начала эпохи для простоты сравнения
+	# Для сравнения можно было бы использовать дату изменения, но это очень долгое сравнение, 
+	# ибо надо открыть файл, считать время, закрыть файл. По имени гораздо быстрее
+	csv_files.sort_custom(self, "_compare_files_with_date_as_name")
+	
+	# убираем лишнее (дорогу молодым)
+	for i in range(max_to_hold, len(csv_files)):
+		dir.remove(csv_files[i]+".csv") 
+
+
+func _compare_files_with_date_as_name(a:String, b:String):
+	var at = a.split("-") as Array
+	var bt = b.split("-") as Array
+	
+	if at[2] != bt[2]:
+		return int(at[2]) > int(bt[2])
+		
+	elif at[1] != bt[1]:
+		return int(at[1]) > int(bt[1])
+		
+	elif at[0] != bt[0]:
+		return int(at[0]) > int(bt[0])
+		
+	elif at[3] != bt[3]:
+		return int(at[3]) > int(bt[3])
+		
+	elif at[4] != bt[4]:
+		return int(at[4]) > int(bt[4])
+		
+	else:
+		return int(at[5]) > int(bt[5])
+
